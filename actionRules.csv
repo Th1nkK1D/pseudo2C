@@ -1,0 +1,16 @@
+14
+name,preKey,preIn,preOut,preVar,postKey,postIn,postOut,postVar,fChild,description
+If,IF,$con,if %s,$con,ENDIF,,,,else,Doing something if the statement is true
+Else,ELSE,$key,else,,,,,,,To be done…
+Print,PRINT,$v_name,"printf(/“%%%c/”,%s);","$v_symbol,$v_name",,,,,,
+Do While,DO,,do,,WHILE,$con,while(%s);,$con,,
+While,WHILE,$con,while(%s),$con,ENDWHILE,,,,,
+For Loop,FOR,$v_name = $value UNTIL $con ,for(%s = %s;%s;%s),"$v_name,$value,$con,$increm",ENDFOR,,,,,
+Get,GET,$v_name,"getData(%s,%c,stdin)","$v_name,$v_symbol",,,,,,Custom function including gets and sscanf
+Set,SET,$v_name TO $value,%s = %s;,"$v_name,$value",,,,,,
+Variable,VARIABLE,$v_name IS $v_type,%s %s;,"$v_type,$v_name",,,,,,
+Open,OPEN,$f_path TO $f_mode,"FILE* %s = fopen(%s,/”%c/”);","$f_pointer,$f_path,$f_mode",,,,,,
+Read,READ,$v_name FROM $f_path,"getData(%s,%c,&%s);","$v_name,$v_symbol,$f_pointer",,,,,,
+Get Line,GETLINE,$v_name FROM $f_path,"fgets(&%s,sizeof(%s),%s);","$v_name,$v_name,$f_pointer",,,,,,
+Write,WRITE,$v_name TO $f_path,"fprintf(%s,/“%%%c/”,%s);","$f_pointer,$v_symbol,&v_name",,,,,,
+Close,CLOSE,$f_path,fclose(%s);,$f_pointer,,,,,,
