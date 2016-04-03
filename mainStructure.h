@@ -17,6 +17,7 @@ typedef struct
  	char postOut[64];
  	char postVar[32];
  	char fChild[16];
+ 	char description[128];
  	} RULE_T;
 
 /* 2. Temporary Data (tempData Module)

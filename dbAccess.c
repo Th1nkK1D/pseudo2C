@@ -18,15 +18,15 @@ static RULE_T** rulesArray = NULL;
 static int rulesCount;
 
 /* Private function declaration */
-int extractProperty(char* target,char* input);
+int extractProperty(char* target,char* buffer);
 
 /* Import rules to array from rules file */
 int prepareDB()
 	{
 	char buffer[128];
 	int i = 0;
-	char *token = NULL;
-	char bSym[] = ",";
+	char* token;
+	RULE_T* pRule;
 
 	/* Open rules file */
 	printf("Open file\n");
@@ -64,8 +64,29 @@ int prepareDB()
 		printf("Get Rule: %d\n",i);
 		printf("%s",buffer);
 
-		
-		if(	extractProperty(rulesArray[i]->name,buffer) == 0 ||
+		/* Allocate struct */
+		rulesArray[i] = (RULE_T*) calloc(1,sizeof(RULE_T));
+
+		if(rulesArray[i] == NULL)
+			{
+			return -2;
+			}
+
+		/* Extraxt rule properties */
+			token = strtok(buffer,",");
+			printf("token = %s\n",token);
+			strcpy(pRule->name,token);
+			strcpy(pRule->key,strtok(NULL,","));
+			strcpy(pRule->preIn,strtok(NULL,","));
+			strcpy(pRule->preOut,strtok(NULL,","));
+			strcpy(pRule->preVar,strtok(NULL,","));
+			strcpy(pRule->postIn,strtok(NULL,","));
+			strcpy(pRule->postOut,strtok(NULL,","));
+			strcpy(pRule->postVar,strtok(NULL,","));
+			strcpy(pRule->fChild,strtok(NULL,","));
+			strcpy(pRule->description,strtok(NULL,","));
+
+		/*if(	extractProperty(rulesArray[i]->name,buffer) == 0 ||
 			extractProperty(rulesArray[i]->key,NULL) == 0 ||
 			extractProperty(rulesArray[i]->preIn,NULL) == 0 ||
 			extractProperty(rulesArray[i]->preOut,NULL) == 0 ||
@@ -73,51 +94,69 @@ int prepareDB()
 			extractProperty(rulesArray[i]->postIn,NULL) == 0 ||
 			extractProperty(rulesArray[i]->postOut,NULL) == 0 ||
 			extractProperty(rulesArray[i]->postVar,NULL) == 0 ||
-			extractProperty(rulesArray[i]->fChild,NULL) == 0)
+			extractProperty(rulesArray[i]->fChild,NULL) == 0 ||
+			extractProperty(rulesArray[i]->description,NULL) == 0)
 			{
 			return -3;
-			}
+			}*/
+
+
+			printf("test: %s\n",rulesArray[i]->name);
+		break;
 		i++;
 		}
 
 	return 1;
 	}
 
-int extractProperty(char target[],char input[])
+int extractProperty(char* target,char* buffer)
 	{
 	printf("extractProperty\n");
-	char *pDelim = NULL;
-	char bSym[] = ",";
+	char* token;
 
-	printf("input = %s\n",input);
+	//printf("buffer = %s\n",buffer);
+	//printf("pos = %d\n",*pos);
 
-	if(input != NULL)
+	if(buffer != NULL)
 		{
-		token = strtok(input,bSym);
+		token = strtok(buffer,",");
 		}
 	else
 		{
-		token = strtok(NULL,bSym);
+		token = strtok(NULL,",");
 		}
 
-	printf("target = %s\n",target);
-	printf("token = %s\n",token);
+	//printf("target = %s\n",target);
+	//printf("token = %s\n",token);
 
-	if(token != NULL)
+	//pDelim = strpbrk(buffer,bSym);
+
+	//printf("got pDelim\n");
+	/*
+	while(*pos < size)
 		{
-		target = strdup(token);
+		if(buffer[*pos] == ',')
+			{
+			printf("found pos at %d\n",*pos);
+			buffer[*pos] = '\0';
+			target = strdup(buffer);
+			printf("data imported = %s\n",target);
+			*pos = *pos+1;
+			return 1;
+			}
+		*pos = *pos+1;
+		}
+	return 0;
+
+	*/
+
+		//*pDelim = '\0';
+		strcpy(target,token);
 		printf("data imported = %s\n",target);
-		return 1;
-		}
-	else
-		{
-		return 0;
-		}
 	}
 
 int main()
 	{
 	prepareDB();
 
-	printf("test: %s\n",rulesArray[0]->name);
 	}
