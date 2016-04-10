@@ -94,8 +94,48 @@ void extractProperty(char* target,char* buffer)
 		}
 	}
 
+RULE_T* getRule(char field,char keyword[])
+	{
+	int i = 0;
+
+	if(field == 'k')
+		{
+		/* Search by key */
+		while(i < rulesCount)
+			{
+			printf("%s\n",rulesArray[i]->key);
+			if(strcmp(rulesArray[i]->key,keyword) == 0)
+				{
+				return rulesArray[i];
+				}
+			i++;
+			}
+		}
+	else
+		{
+		/* Search by name */
+		while(i < rulesCount)
+			{
+			if(strcmp(rulesArray[i]->name,keyword) == 0)
+				{
+				return rulesArray[i];
+				}
+			i++;
+			}
+		}
+
+		return NULL;
+	}
+
 int main()
 	{
+	printf("dbAccess start\n");
 	prepareDB();
-	printf("test: %s\n",rulesArray[0]->description);
+	printf("prepareDB completed\n");
+	RULE_T* get = getRule('k',"IF");
+	if (get == NULL)
+	{
+		printf("Error not found\n");
+	}
+	printf("test: %s\n",get->preIn);
 	}
