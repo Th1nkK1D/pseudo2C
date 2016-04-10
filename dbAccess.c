@@ -127,6 +127,16 @@ RULE_T* getRule(char field,char keyword[])
 		return NULL;
 	}
 
+void freeDB()
+	{
+	int i;
+	for(i = 0; i < rulesCount; i++)
+		{
+		free(rulesArray[i]);
+		}
+	free(rulesArray);
+	}
+
 int main()
 	{
 	printf("dbAccess start\n");
@@ -138,4 +148,6 @@ int main()
 		printf("Error not found\n");
 	}
 	printf("test: %s\n",get->preIn);
+
+	freeDB();
 	}
