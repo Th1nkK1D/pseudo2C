@@ -149,6 +149,7 @@ int dataUpdate (RULE_T* rule,char line[],TEMP_DATA_T* data)
 			tempFormat = strtok(NULL," ");
 			tempLine = strtok(NULL," ");
 			}
+			return 1;
 		}
 
 	else
