@@ -20,7 +20,12 @@ static int rulesCount;
 /* Private function declaration */
 void extractProperty(char* target,char* buffer);
 
-/* Import rules to array from rules file */
+/* Import rules to array from rules file 
+ *	Return:	1 = Success
+ *			0 = Can't open input file
+ *			-1 = Can't read count
+ *			-2 = Allocattion error
+ */
 int prepareDB()
 	{
 	char buffer[128];
@@ -82,6 +87,10 @@ int prepareDB()
 	return 1;
 	}
 
+/* Extract property from each rule into a structure
+ *	Argument:	target = Name of property in structure
+ *				buffer = line buffer
+ */
 void extractProperty(char* target,char* buffer)
 	{
 	char* token;
@@ -94,11 +103,16 @@ void extractProperty(char* target,char* buffer)
 		}
 	}
 
-RULE_T* getRule(char field,char keyword[])
+/* Get rule structure pointer from keyword
+ *	Argument:	target = Name of property to search
+ *				keyword = Keyword to search
+ *	Return:	Matched RULE_T structure pointer if keyword found, NULL if not
+ */
+RULE_T* getRule(char target,char keyword[])
 	{
 	int i = 0;
 
-	if(field == 'k')
+	if(target == 'k')
 		{
 		/* Search by key */
 		while(i < rulesCount)
@@ -127,6 +141,32 @@ RULE_T* getRule(char field,char keyword[])
 		return NULL;
 	}
 
+/* Get number of rules 
+ * Return: number of rule in array 
+ */
+int countRule()
+	{
+	return rulesCount;
+	}
+
+/* Get number of rules 
+ * Argument:	nameList = array to store each rule name
+ * Return: total rule name that added to array
+ */
+int getAllRuleName(char nameList[][16])
+	{
+	int i;
+
+	for(i = 0; i < rulesCount; i++)
+		{
+		strcpy(nameList[i],rulesArray[i]->name);
+		}
+
+	return i+1;
+	}
+
+/* Free the rules database
+ */
 void freeDB()
 	{
 	int i;
@@ -148,6 +188,17 @@ int main()
 		printf("Error not found\n");
 	}
 	printf("test: %s\n",get->preIn);
+
+	int count = countRule();
+
+	char nameList[count][16];
+
+	getAllRuleName(nameList);
+
+	for (int i = 0; i < count; ++i)
+	{
+		printf("%s\n",nameList[i]);
+	}
 
 	freeDB();
 	}
