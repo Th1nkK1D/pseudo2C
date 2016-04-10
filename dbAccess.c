@@ -176,29 +176,3 @@ void freeDB()
 		}
 	free(rulesArray);
 	}
-
-int main()
-	{
-	printf("dbAccess start\n");
-	prepareDB();
-	printf("prepareDB completed\n");
-	RULE_T* get = getRule('k',"IF");
-	if (get == NULL)
-	{
-		printf("Error not found\n");
-	}
-	printf("test: %s\n",get->preIn);
-
-	int count = countRule();
-
-	char nameList[count][16];
-
-	getAllRuleName(nameList);
-
-	for (int i = 0; i < count; ++i)
-	{
-		printf("%s\n",nameList[i]);
-	}
-
-	freeDB();
-	}
