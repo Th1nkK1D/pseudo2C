@@ -58,47 +58,100 @@ int findDollar (char input[])
  * 1 => if line is in correct format and update data in structure already.
  */
 
-void dataUpdate (RULE_T* rule,char line[],TEMP_DATA_T** data)
+int dataUpdate (RULE_T* rule,char line[],TEMP_DATA_T* data)
 	{
 	RULE_T* tempRule = NULL;
-	char lineCopied[512];
-	char pre_post_in[512];
+	char lineCopied_1[512];
+	char lineCopied_2[512];
+	char pre_post_in_1[512];	
+	char pre_post_in_2[512];
 	char* tempFormat = NULL;
 	char* tempLine = NULL;
-	int foundDollar = 0;	
+	int foundDollar = 0;
+	int bFormat = 0;
 
 
 	tempRule = rule;
-	strcpy(lineCopied,line);
+	strcpy(lineCopied_1,line);
+	strcpy(lineCopied_2,line);
 
 	if ( tempRule->preIn == NULL )
 		{
-		strcpy(pre_post_in,tempRule->postIn);
+		strcpy(pre_post_in_1,tempRule->postIn);
+		strcpy(pre_post_in_2,tempRule->postIn);
 		}
 	else
 		{
-		strcpy(pre_post_in,tempRule->preIn);
+		strcpy(pre_post_in_2,tempRule->preIn);
+		strcpy(pre_post_in_2,tempRule->preIn);
 		}
 
-	if ( strlen(pre_post_in) != 0 && strlen(lineCopied) != 0 )
+	if ( strlen(pre_post_in_1) != 0 && strlen(lineCopied_1) != 0 )
 		{
+		bFormat = 0;
+		bFormat = checkFormat(pre_post_in_1,lineCopied_1);
 
-	
-		tempFormat = strtok(pre_post_in," ");
+		if ( bFormat != 1 )
+			{
+			return 0;
+			}
+		tempFormat = strtok(pre_post_in_2," ");
+		tempLine = strtok(lineCopied_2," ");
+
 		while ( tempFormat != NULL )
 			{
 			foundDollar = 0;
 			foundDollar = findDollar(tempFormat);
-			if ( foundDollar == 0 )
+
+			if ( foundDollar == 1 )
 				{
-				tempFormat = strtok(NULL," ");
+				if ( strstr("con",tempFormat) != NULL )
+					{
+					data->con = tempLine;
+					}
+				else if ( strstr("v_name",tempFormat) != NULL )
+					{
+					data->v_name = tempLine;
+					}
+				else if ( strstr("v_type",tempFormat) != NULL )
+					{
+					data->v_type = tempLine;
+					}
+				else if ( strstr("v_symbol",tempFormat) != NULL )
+					{
+					data->v_symbol = tempLine;
+					}
+				else if ( strstr("value",tempFormat) != NULL )
+					{
+					data->value = tempLine;
+					}
+				else if ( strstr("increm",tempFormat) != NULL )
+					{
+					data->increm = tempLine;
+					}
+				else if ( strstr("f_pointer",tempFormat) != NULL )
+					{
+					data->f_pointer = tempLine;
+					}
+				else if ( strstr("f_path",tempFormat) != NULL )
+					{
+					data->f_path = tempLine;
+					}
+				else if ( strstr("f_mode",tempFormat) != NULL )
+					{
+					data->f_mode = tempLine;
+					}
+				else
+					{
+					data->key = tempLine;
+					}
 				}
-			tempLine = strtok(lineCopied," ");
-		
+			tempFormat = strtok(NULL," ");
+			tempLine = strtok(NULL," ");
 			}
-		while (
+		}
 
 	else
 		{
-		return 0;
+		return -1;
 		}
