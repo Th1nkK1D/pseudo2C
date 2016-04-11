@@ -14,7 +14,7 @@
 /* Function Declaration */
 void writeStdFunction(FILE* pOut);
 void writeIndent(FILE* pOut);
-void processLine(char buffer[],FILE* pOut);
+void processLine(char buffer[],FILE* pOut,int line);
 
 int translator()
 	{
@@ -23,6 +23,7 @@ int translator()
 	char buffer[256];
 	char inName[32];
 	char outName[32];
+	int line = 0;
 
 	/* Prepare input file name */
 	printf("Input pseudocode file name : ");
@@ -58,6 +59,8 @@ int translator()
 	/* Read each line */
 	while(fgets(buffer,sizeof(buffer),pIn) != NULL)
 		{
+		line++;
+
 		if(buffer[0] == '\n')
 			{
 			fprintf(pOut,"\n");
@@ -69,7 +72,7 @@ int translator()
 				buffer[strlen(buffer)-1] = '\0';
 				}
 
-			processLine(buffer,pOut);
+			processLine(buffer,pOut,line);
 			}
 		}
 
@@ -98,12 +101,23 @@ void writeIndent(FILE* pOut)
 		}
 	}
 
-void processLine(char buffer[],FILE* pOut)
+int processLine(char buffer[],FILE* pOut,int line)
 	{
 	char key[8];
+	RULE_T* pRule = NULL;
 
 	/* Key = first word */
 	sscanf(buffer,"%s",key);
 
+	pRule = getRule('k',key);
 
+	if(pRule == NULL)
+		{
+		printf("Error: Key not found at line %d\n",line);
+		printf(">>> %s\n",buffer);
+
+		return 0;
+		}
+
+	return 1;
 	}
