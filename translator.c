@@ -105,6 +105,8 @@ int processLine(char buffer[],FILE* pOut,int line)
 	{
 	char key[8];
 	RULE_T* pRule = NULL;
+	char currentStack[64];
+	char target;
 
 	/* Key = first word */
 	sscanf(buffer,"%s",key);
@@ -117,6 +119,19 @@ int processLine(char buffer[],FILE* pOut,int line)
 		printf(">>> %s\n",buffer);
 
 		return 0;
+		}
+
+	strcpy(currentStack,"TO_DO");
+
+	/* Check if end stack found */
+	if (strcmp(buffer,currentStack) == 0)
+		{
+		//--Pop stack
+		writeIndent(pOut);
+		}
+	else
+		{
+
 		}
 
 	return 1;
