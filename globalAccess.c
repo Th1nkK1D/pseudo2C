@@ -7,7 +7,7 @@
 static VARIABLE_T* pRoot = NULL;
 static NEST_T* head = NULL;
 
-VARIABLE_T * findPerson(PERSON_T* pCurrent,char name[])
+VARIABLE_T * findWord(PERSON_T* pCurrent,char name[])
     {
     VARIABLE_T* foundPerson = NULL;
     if(pCurrent != NULL)
@@ -28,7 +28,7 @@ VARIABLE_T * findPerson(PERSON_T* pCurrent,char name[])
     return foundPerson;
     }
 
-VARIABLE_T * searchPerson(char name[])
+VARIABLE_T * searchWord(char name[])
 	{
 	VARIABLE_T* person = NULL;
 	person = findPerson(pRoot,name);
@@ -84,7 +84,7 @@ int * pop(char postIn[])
    		}
 	}
 /*This function for insert the people in the trees*/
-void insertNode(PERSON_T* pRoot, PERSON_T* pNewNode)
+void insertVariable(VARIABLE_T* pRoot, VARIABLE_T* pNewNode)
     {
     if (compare(pNewNode,pRoot) == 0)
         {
@@ -100,7 +100,7 @@ void insertNode(PERSON_T* pRoot, PERSON_T* pNewNode)
             }
         else
             {
-            insertNode(pRoot->leftChild,pNewNode);
+            insertVariable(pRoot->leftChild,pNewNode);
             }
         }
     else
@@ -111,7 +111,7 @@ void insertNode(PERSON_T* pRoot, PERSON_T* pNewNode)
             }
         else
         	{
-            insertNode(pRoot->rightChild,pNewNode);
+            insertVariable(pRoot->rightChild,pNewNode);
             }
         }
     }
