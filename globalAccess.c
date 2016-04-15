@@ -7,31 +7,31 @@
 static VARIABLE_T* pRoot = NULL;
 static NEST_T* head = NULL;
 
-VARIABLE_T * findWord(PERSON_T* pCurrent,char name[])
+VARIABLE_T * findWord(VARIABLE_T* pCurrent,char name[])
     {
-    VARIABLE_T* foundPerson = NULL;
+    VARIABLE_T* foundWord = NULL;
     if(pCurrent != NULL)
         {
         if(strcmp(name,pCurrent->name) == 0)
             {
-            foundPerson = pCurrent;
+            foundWord = pCurrent;
             }
         else if(strcmp(pCurrent->name,name) > 0)
             {
-            foundPerson = findPerson(pCurrent->leftChild,name);
+            foundWord = findWord(pCurrent->leftChild,name);
             }
         else
             {
-            foundPerson = findPerson(pCurrent->rightChild,name);
+            foundWord = findWord(pCurrent->rightChild,name);
             }
         }
-    return foundPerson;
+    return foundWord;
     }
 
 VARIABLE_T * searchWord(char name[])
 	{
 	VARIABLE_T* person = NULL;
-	person = findPerson(pRoot,name);
+	person = findWord(pRoot,name);
 	return person;
 	}
 
@@ -136,7 +136,7 @@ void addVariable(char in_word[],char in_type[])
 			{
 			in_symbol = '%s';
 			}
-		in_variable = (PERSON_T*) calloc(1,sizeof(PERSON_T));
+		in_variable = (VARIABLE_T*) calloc(1,sizeof(VARIABLE_T));
         if(in_variable) == NULL)
 			{
 			printf("ERROR, cannot allocate.");
@@ -153,7 +153,7 @@ void addVariable(char in_word[],char in_type[])
  				}
  			else
  				{
- 				insertNode(pRoot,in_variable);
+ 				insertVariable(pRoot,in_variable);
  				}
  			}
 		}
