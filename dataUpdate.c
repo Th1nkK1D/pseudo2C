@@ -1,3 +1,13 @@
+/* 
+ * dataUpdate.c
+ * 
+ * Use for updateing temporary data.
+ *
+ * Created by Siriwimon Suksukhon (Poo), ID 3436
+ * - Team We Must Survived -
+ * 17 April 2016
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
