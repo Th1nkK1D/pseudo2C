@@ -1,9 +1,11 @@
 /*
  * dataUpdate.h
+ * 
  * A header file that contains all functions from dataUpdate.c
  * Use for checking and storing string of line into temporary structure.
  * 
  * Created by Siriwimon Suksukhon (Poo), ID 3436
+ * - Team We Must Survived -
  * 17 April 2016
  */
 
