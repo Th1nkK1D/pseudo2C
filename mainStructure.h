@@ -28,7 +28,7 @@ typedef struct
  	char $con[64];
  	char $v_name[16];
 	char $v_type[64];
-	char $v_symbol;
+	char $v_symbol[4];
 	char $value[64];
 	char $increm[4];
 	char $f_pointer[8];
