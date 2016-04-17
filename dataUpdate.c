@@ -1,3 +1,8 @@
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+#include "mainStructure.h"
+
 /* Function to check that line is in correct format 
  * Argument : 
  * pre_post_in => correct format of that line

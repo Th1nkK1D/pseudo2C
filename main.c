@@ -2,6 +2,8 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+#include "mainStructure.h"
+#include "translator.h"
 
 int checkLine (char input[])
 	{
@@ -68,17 +70,19 @@ int main ()
 
 		if ( option == 1 )
 			{
-			pseudoRule();
+			//pseudoRule();
+			printf("To be implement soon\n");
 			}
 
 		else if ( option == 2 )
 			{
-			compiler();
+			translator();
 			}
 	
 		else if ( option == 3 )
 			{
 			/* ... Get help function ... */
+			printf("To be implement soon\n");
 			}
 		else
 			{
