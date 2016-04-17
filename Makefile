@@ -17,7 +17,10 @@ all : $(EXECUTABLES)
 dbAccess.o :	dbAccess.c mainStructure.h
 	gcc -c dbAccess.c
 
-dataUpdate.o :	dataUpdate.c mainStructure.h
+globalAccess.o :	globalAccess.c mainStructure.h
+	gcc -c globalAccess.c
+
+dataUpdate.o :	dataUpdate.c mainStructure.h globalAccess.h
 	gcc -c dataUpdate.c
 
 translator.o :	translator.c mainStructure.h dataUpdate.h
@@ -26,8 +29,8 @@ translator.o :	translator.c mainStructure.h dataUpdate.h
 main.o :	main.c translator.h
 	gcc -c main.c
 
-Pseudo2C$(EXECEXT) : main.o dbAccess.o dataUpdate.o translator.o
-	gcc -o Pseudo2C$(EXECEXT) main.o dbAccess.o dataUpdate.o translator.o
+Pseudo2C$(EXECEXT) : main.o dbAccess.o globalAccess.o dataUpdate.o translator.o
+	gcc -o Pseudo2C$(EXECEXT) main.o dbAccess.o globalAccess.o dataUpdate.o translator.o
 
 clean : 
 	-rm *.o

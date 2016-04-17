@@ -2,6 +2,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "mainStructure.h"
+#include "globalAccess.h"
 
 /* Function to check that line is in correct format 
  * Argument : 
