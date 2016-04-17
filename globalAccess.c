@@ -61,19 +61,20 @@ int push(char data[])
 		}
 	else
 		{
-       	newItem->pData = data;
-       	newItem->pNext = head;
+        strcpy(newItem->postIn,data);
+        strcpy(newItem->pNext,head);
        	head = newItem;
 		}
 	return check;
 }
 
-int * pop(char postIn[])
+int pop()
 	{
     NEST_T * top = head;
+    char * data = NULL;
     if (top != NULL)
        	{
-       	strcpy(postIn,top->pData);
+       	data = top->postIn;
        	head = top->pNext;
        	free(top);
        	return 1;
@@ -83,16 +84,17 @@ int * pop(char postIn[])
    		return 0;
    		}
 	}
+
 /*This function for insert the people in the trees*/
 void insertVariable(VARIABLE_T* pRoot, VARIABLE_T* pNewNode)
     {
-    if (compare(pNewNode,pRoot) == 0)
+    if (strcmp(pNewNode->name, pRoot->name) == 0)
         {
-        free(pNewNode->word);
+        free(pNewNode->name);
         free(pNewNode->type);
         free(pNewNode->symbol);
         }
-	else if (compare(pNewNode,pRoot) < 0)
+	else if (strcmp(pNewNode->name, pRoot->name) < 0)
         {
         if (pRoot->leftChild == NULL)
             {
@@ -119,34 +121,34 @@ void insertVariable(VARIABLE_T* pRoot, VARIABLE_T* pNewNode)
 void addVariable(char in_word[],char in_type[])
 	{
 	char input[32];
-	char in_symbol[64];
+	char in_symbol;
 	VARIABLE_T* in_variable = NULL;
 	while(strcmp(input,"DONE") != 0)
 		{
 
-		if(strcmp(in_type),"int" == 0)
+		if(strcmp(in_type,"int") == 0)
 			{
-			in_symbol = '%d';
+			in_symbol = 'd';
 			}
-		else if(strcmp(in_type),"char" == 0)
+		else if(strcmp(in_type,"char") == 0)
 			{
-			in_symbol = '%c';
+			in_symbol = 'c';
 			}
-		else if(strcmp(in_type),"string" == 0)
+		else if(strcmp(in_type,"string") == 0)
 			{
-			in_symbol = '%s';
+			in_symbol = 's';
 			}
 		in_variable = (VARIABLE_T*) calloc(1,sizeof(VARIABLE_T));
-        if(in_variable) == NULL)
+        if(in_variable == NULL)
 			{
 			printf("ERROR, cannot allocate.");
 			exit(0);
  			}
  		else
  			{
- 			strcpy(in_variable->word,in_word);
+ 			strcpy(in_variable->name,in_word);
  			strcpy(in_variable->type,in_type);
- 			strcpy(in_variable->symbol,in_symbol);
+ 			strcpy(in_variable->symbol,&in_symbol);
  			if(pRoot == NULL)
  				{
  				pRoot = in_variable;
