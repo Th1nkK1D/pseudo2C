@@ -106,7 +106,11 @@ int processLine(char buffer[],FILE* pOut,int line)
 	char key[8];
 	RULE_T* pRule = NULL;
 	char currentStack[64];
-	char target;
+	int target;
+	TEMP_T tempData;
+	char arg[4][12];
+	char varSet[64]
+	char printSet[64]
 
 	/* Key = first word */
 	sscanf(buffer,"%s",key);
@@ -118,7 +122,7 @@ int processLine(char buffer[],FILE* pOut,int line)
 		printf("Error: Key not found at line %d\n",line);
 		printf(">>> %s\n",buffer);
 
-		return 0;
+		return -1;
 		}
 
 	strcpy(currentStack,"TO_DO");
@@ -128,11 +132,122 @@ int processLine(char buffer[],FILE* pOut,int line)
 		{
 		//--Pop stack
 		writeIndent(pOut);
+		target = 1;
 		}
 	else
 		{
-
+		target = 2;
 		}
 
+	/* Update temp data */
+	if(dataUpdate(pRule,line,&tempData) == 0)
+		{
+		printf("dataUpdate Error");
+		return 0;
+		}
+
+	/* Detemine pre/post fot variable/print set */
+	if(target == 1)
+		{
+		strcpy(varSet,pRule->preVar);
+		strcpy(printSet,pRule->preOut);
+		}
+	else
+		{
+		strcpy(varSet,pRule->postVar);
+		strcpy(printSet,pRule->postOut);
+		}
+
+	/* Prepare Argument */
+	prepareArg(arg,varSet,tempData);
+	//printOut()
+
+
 	return 1;
+	}
+
+int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData)
+	{
+	int i = 0;
+	char varSet[64];
+	char* var = NULL;
+
+	/* Get each variable */
+	var = strtok(buffer,",");
+
+	if(var != NULL)
+		{
+		/* Push data from tempData to arg array */
+		if(strcmp(var,"$con") == 0)
+			{
+			strcpy(arg[i],tempData.$con);
+			}
+		else if(strcmp(var,"$value") == 0)
+			{
+			strcpy(arg[i],tempData.$value);
+			}
+		else if(strcmp(var,"$v_name") == 0)
+			{
+			strcpy(arg[i],tempData.$v_name);
+			}
+		else if(strcmp(var,"$v_symbol") == 0)
+			{
+			strcpy(arg[i],tempData.$v_symbol);
+			}
+		else if(strcmp(var,"$v_type") == 0)
+			{
+			strcpy(arg[i],tempData.$v_type);
+			}
+		else if(strcmp(var,"$increm") == 0)
+			{
+			strcpy(arg[i],tempData.$increm);
+			}
+		else if(strcmp(var,"$f_pointer") == 0)
+			{
+			strcpy(arg[i],tempData.$f_pointer);
+			}
+		else if(strcmp(var,"$f_path") == 0)
+			{
+			strcpy(arg[i],tempData.$f_path);
+			}
+		else if(strcmp(var,"$f_mode") == 0)
+			{
+			strcpy(arg[i],tempData.$f_mode);
+			}
+		else 
+			{
+			return -1;
+			}
+
+		i++;
+		strtok(NULL,",");
+		}
+
+	return i;
+	}
+
+int writeOut(char arg[4][12],char printSet[64],int count,FILE* pOut)
+	{
+	if(count == 1)
+		{
+		fprintf(pOut,printSet,arg[1]);
+		}
+	else if(count == 2)
+		{
+		fprintf(pOut,printSet,arg[1],arg[2]);
+		}
+	else if(count == 3)
+		{
+		fprintf(pOut,printSet,arg[1],arg[2],arg[3]);
+		}
+	else if(count == 4)
+		{
+		fprintf(pOut,printSet,arg[1],arg[2],arg[3],arg[4]);
+		}
+	else
+		{
+		return 0;
+		}
+		
+	fprintf(pOut, "\n");
 	}
