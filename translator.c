@@ -9,12 +9,15 @@
 #include <string.h>
 #include "mainStructure.h"
 #include "dbAccess.h"
+#include "dataUpdate.h"
 
 
 /* Function Declaration */
 void writeStdFunction(FILE* pOut);
 void writeIndent(FILE* pOut);
-void processLine(char buffer[],FILE* pOut,int line);
+int processLine(char buffer[],FILE* pOut,int line);
+int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData);
+int writeOut(char arg[4][12],char printSet[64],int count,FILE* pOut);
 
 int translator()
 	{
@@ -109,8 +112,8 @@ int processLine(char buffer[],FILE* pOut,int line)
 	int target;
 	TEMP_T tempData;
 	char arg[4][12];
-	char varSet[64]
-	char printSet[64]
+	char varSet[64];
+	char printSet[64];
 
 	/* Key = first word */
 	sscanf(buffer,"%s",key);
@@ -140,7 +143,7 @@ int processLine(char buffer[],FILE* pOut,int line)
 		}
 
 	/* Update temp data */
-	if(dataUpdate(pRule,line,&tempData) == 0)
+	if(dataUpdate(pRule,buffer,&tempData) == 0)
 		{
 		printf("dataUpdate Error");
 		return 0;
@@ -169,11 +172,10 @@ int processLine(char buffer[],FILE* pOut,int line)
 int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData)
 	{
 	int i = 0;
-	char varSet[64];
 	char* var = NULL;
 
 	/* Get each variable */
-	var = strtok(buffer,",");
+	var = strtok(var,",");
 
 	if(var != NULL)
 		{
@@ -248,6 +250,8 @@ int writeOut(char arg[4][12],char printSet[64],int count,FILE* pOut)
 		{
 		return 0;
 		}
-		
+
 	fprintf(pOut, "\n");
+
+	return 1;
 	}
