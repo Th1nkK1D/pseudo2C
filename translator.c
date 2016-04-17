@@ -68,6 +68,8 @@ int translator()
 	writeStdFunction(pOut);
 
 	//push main
+	fprintf(pOut,"int main()\n{\n");
+
 
 	/* Read each line */
 	while(fgets(buffer,sizeof(buffer),pIn) != NULL)
@@ -91,6 +93,7 @@ int translator()
 			}
 		}
 
+	fprintf(pOut,"}");
 
 	/* Close file */
 	fclose(pIn);
@@ -134,6 +137,7 @@ int processLine(char buffer[],FILE* pOut,int line)
 	char arg[4][12];
 	char varSet[64];
 	char printSet[64];
+	int count;
 
 	printf("processLine at line %d\n",line);
 
@@ -198,8 +202,8 @@ int processLine(char buffer[],FILE* pOut,int line)
 	printf("printSet: %s\n",printSet);
 
 	/* Prepare Argument */
-	prepareArg(arg,varSet,tempData);
-	//printOut()
+	count = prepareArg(arg,varSet,tempData);
+	writeOut(arg,printSet,count,pOut);
 
 
 	return 1;
@@ -216,7 +220,7 @@ int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData)
 	/* Get each variable */
 	var = strtok(varSet,",");
 
-	if(var != NULL)
+	while(var != NULL)
 		{
 		printf("arg %d : %s\n",i,var);
 		/* Push data from tempData to arg array */
@@ -262,9 +266,10 @@ int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData)
 			}
 
 		i++;
-		strtok(NULL,",");
+		var = strtok(NULL,",");
 		}
 
+	printf("count arg = %d\n",i);
 	return i;
 	}
 

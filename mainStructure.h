@@ -13,6 +13,7 @@ typedef struct
  	char preIn[64];
  	char preOut[64];
  	char preVar[32];
+ 	char postKey[16];
  	char postIn[64];
  	char postOut[64];
  	char postVar[32];
