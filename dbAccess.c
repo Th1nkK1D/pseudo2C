@@ -81,6 +81,18 @@ int prepareDB()
 		extractProperty(rulesArray[i]->postVar,NULL);
 		extractProperty(rulesArray[i]->fChild,NULL);
 		extractProperty(rulesArray[i]->description,NULL);
+
+		printf("name: %s\n",rulesArray[i]->name);
+		printf("key: %s\n",rulesArray[i]->key);
+		printf("preIn: %s\n",rulesArray[i]->preIn);
+		printf("preOut: %s\n",rulesArray[i]->preOut);
+		printf("preVar: %s\n",rulesArray[i]->preVar);
+		printf("postIn: %s\n",rulesArray[i]->postIn);
+		printf("postOut: %s\n",rulesArray[i]->postOut);
+		printf("postVar: %s\n",rulesArray[i]->postVar);
+		printf("fChild: %s\n",rulesArray[i]->fChild);
+		printf("description: %s\n",rulesArray[i]->description);
+
 		i++;
 		}
 
@@ -95,7 +107,7 @@ void extractProperty(char* target,char* buffer)
 	{
 	char* token;
 
-	token = strtok(buffer,",");
+	token = strtok(buffer,"|");
 
 	if(token[0] != '-')
 		{
@@ -137,7 +149,7 @@ RULE_T* getRule(char target,char keyword[])
 			i++;
 			}
 		}
-
+		printf("Key not found\n");
 		return NULL;
 	}
 
@@ -175,6 +187,6 @@ void freeDB()
 		{
 		free(rulesArray[i]);
 		}
-		
+
 	free(rulesArray);
 	}

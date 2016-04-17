@@ -28,6 +28,13 @@ int translator()
 	char outName[32];
 	int line = 0;
 
+	/* Prepare rule file */
+	if(prepareDB() != 1)
+		{
+		printf("Error preparing rule database\n");
+		return 0;
+		}
+
 	/* Prepare input file name */
 	printf("Input pseudocode file name : ");
 	fgets(buffer,sizeof(buffer),stdin);
@@ -46,7 +53,9 @@ int translator()
 	fgets(buffer,sizeof(buffer),stdin);
 	sscanf(buffer,"%s",outName);
 
-	pIn = fopen(outName,"w");
+	printf("Open input completed\n");
+
+	pOut = fopen(outName,"w");
 
 	if(pIn == NULL)
 		{
@@ -54,6 +63,7 @@ int translator()
 		return 0;
 		}
 
+	printf("Open output completed\n");
 	/* Write standard function */
 	writeStdFunction(pOut);
 
@@ -62,6 +72,8 @@ int translator()
 	/* Read each line */
 	while(fgets(buffer,sizeof(buffer),pIn) != NULL)
 		{
+		printf("Buffer read: %s\n",buffer);
+
 		line++;
 
 		if(buffer[0] == '\n')
@@ -80,12 +92,20 @@ int translator()
 		}
 
 
+	/* Close file */
+	fclose(pIn);
+	fclose(pOut);
+
+	freeDB();
+
+	printf("Translation Completed!\n");
 
 	return 1;
 	}
 
 void writeStdFunction(FILE* pOut)
 	{
+	printf("writeStdFunction\n");
 	fprintf(pOut,"#include <stdio.h>\n");
 	fprintf(pOut,"#include <stdlib.h>\n");
 	fprintf(pOut,"#include <string.h>\n");
@@ -109,14 +129,18 @@ int processLine(char buffer[],FILE* pOut,int line)
 	char key[8];
 	RULE_T* pRule = NULL;
 	char currentStack[64];
-	int target;
+	int target = 1; //To-Do for post key
 	TEMP_T tempData;
 	char arg[4][12];
 	char varSet[64];
 	char printSet[64];
 
+	printf("processLine at line %d\n",line);
+
 	/* Key = first word */
 	sscanf(buffer,"%s",key);
+
+	printf("Key read: %s\n",key);
 
 	pRule = getRule('k',key);
 
@@ -128,9 +152,12 @@ int processLine(char buffer[],FILE* pOut,int line)
 		return -1;
 		}
 
-	strcpy(currentStack,"TO_DO");
+	printf("Rule got: %s\n",pRule->name);
+
+	//strcpy(currentStack,"TO_DO");
 
 	/* Check if end stack found */
+	/*
 	if (strcmp(buffer,currentStack) == 0)
 		{
 		//--Pop stack
@@ -141,7 +168,7 @@ int processLine(char buffer[],FILE* pOut,int line)
 		{
 		target = 2;
 		}
-
+	*/
 	/* Update temp data */
 	if(dataUpdate(pRule,buffer,&tempData) == 0)
 		{
@@ -149,17 +176,26 @@ int processLine(char buffer[],FILE* pOut,int line)
 		return 0;
 		}
 
+	printf("Data Update success\n");
+
 	/* Detemine pre/post fot variable/print set */
 	if(target == 1)
 		{
+		printf("Target = Pre\n");
+		printf("preVar: %s\n",pRule->preVar);
+		printf("preOut: %s\n",pRule->preOut);
+
 		strcpy(varSet,pRule->preVar);
 		strcpy(printSet,pRule->preOut);
 		}
 	else
 		{
+		printf("Target = Post\n");
 		strcpy(varSet,pRule->postVar);
 		strcpy(printSet,pRule->postOut);
 		}
+	printf("varSet: %s\n",varSet);
+	printf("printSet: %s\n",printSet);
 
 	/* Prepare Argument */
 	prepareArg(arg,varSet,tempData);
@@ -174,11 +210,15 @@ int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData)
 	int i = 0;
 	char* var = NULL;
 
+	printf("prepareArg\n");
+	printf("varSet: %s\n",varSet);
+
 	/* Get each variable */
-	var = strtok(var,",");
+	var = strtok(varSet,",");
 
 	if(var != NULL)
 		{
+		printf("arg %d : %s\n",i,var);
 		/* Push data from tempData to arg array */
 		if(strcmp(var,"$con") == 0)
 			{
