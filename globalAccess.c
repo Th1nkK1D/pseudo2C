@@ -5,7 +5,7 @@
 
 
 static VARIABLE_T* pRoot = NULL;
-static NEST_T* head = NULL;
+static NEST_T * head = NULL;
 
 VARIABLE_T * findWord(VARIABLE_T* pCurrent,char name[])
     {
@@ -54,15 +54,15 @@ void freeTree()
 int push(char data[])
 	{
 	int check = 1;
-	NEST_T * newItem = (NEST_T *)calloc(1,sizeof(NEST_T));
+	NEST_T *newItem = (NEST_T *)calloc(1,sizeof(NEST_T));
 	if (newItem == NULL)
 		{
 		check = 0;
 		}
 	else
 		{
+        newItem->pNext = head;
         strcpy(newItem->postIn,data);
-        strcpy(newItem->pNext,head);
        	head = newItem;
 		}
 	return check;
