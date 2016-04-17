@@ -170,9 +170,11 @@ int getAllRuleName(char nameList[][16])
 void freeDB()
 	{
 	int i;
+
 	for(i = 0; i < rulesCount; i++)
 		{
 		free(rulesArray[i]);
 		}
+		
 	free(rulesArray);
 	}
