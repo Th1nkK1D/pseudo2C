@@ -14,6 +14,26 @@
 #include "mainStructure.h"
 #include "globalAccess.h"
 
+/* Function to find dollar sign
+ * Argument :
+ * input => string that we want to look
+ * Return :
+ * 1 => if it has a dollar sign
+ * 0 => if not
+ */
+int findDollar (char input[])
+	{
+	int i = 0;
+	for (i=0;i<strlen(input);i++)
+		{
+		if ( input[i] == '$' )
+			{
+			return 1;
+			}
+		}
+	return 0;
+	}
+
 /* Function to check that line is in correct format 
  * Argument : 
  * pre_post_in => correct format of that line
@@ -70,26 +90,6 @@ int checkFormat (char pre_post_in[], char lineCopied[])
 	return 1;
 	}		
 
-/* Function to find dollar sign
- * Argument :
- * input => string that we want to look
- * Return :
- * 1 => if it has a dollar sign
- * 0 => if not
- */
-int findDollar (char input[])
-	{
-	int i = 0;
-	for (i=0;i<strlen(input);i++)
-		{
-		if ( input[i] == '$' )
-			{
-			return 1;
-			}
-		}
-	return 0;
-	}
-
 /* Function for store all data in that line into the structure
  * Argument :
  * rule => rule for that line.
@@ -128,7 +128,7 @@ int dataUpdate (RULE_T* rule,char line[],TEMP_T* data)
 	strcpy(lineCopied_1,delim+1);
 	strcpy(lineCopied_2,delim+1);
 
-	if ( tempRule->preIn == NULL )
+	if (strlen(tempRule->preIn) == 0)
 		{
 		strcpy(pre_post_in_1,tempRule->postIn);
 		strcpy(pre_post_in_2,tempRule->postIn);
