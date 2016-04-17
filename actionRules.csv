@@ -1,16 +1,15 @@
 14
-name,preKey,preIn,preOut,preVar,postKey,postIn,postOut,postVar,fChild,description
-If,IF,$con,if (%s),$con,ENDIF,-,-,-,else,Doing something if the statement is true
-Else,ELSE,$key,else,-,-,-,-,-,-,To be done‚Ä¶
-Print,PRINT,$v_name,"printf(/‚Äú%%%s/‚Äù,%s);","$v_symbol,$v_name",-,-,-,-,-,To be done‚Ä¶
-Do While,DO,-,do,-,WHILE,$con,while(%s);,$con,-,To be done‚Ä¶
-While,WHILE,$con,while(%s),$con,ENDWHILE,-,-,-,-,To be done‚Ä¶
-For Loop,FOR,$v_name = $value UNTIL $con ,for(%s = %s;%s;%s),"$v_name,$value,$con,$increm",ENDFOR,-,-,-,-,To be done‚Ä¶
-Get,GET,$v_name,"getData(%s,%s,stdin)","$v_name,$v_symbol",-,-,-,-,-,Custom function including gets and sscanf
-Set,SET,$v_name TO $value,%s = %s;,"$v_name,$value",-,-,-,-,-,To be done‚Ä¶
-Variable,VARIABLE,$v_name IS $v_type,%s %s;,"$v_type,$v_name",-,-,-,-,-,To be done‚Ä¶
-Open,OPEN,$f_path TO $f_mode,"FILE* %s = fopen(%s,/‚Äù%s/‚Äù);","$f_pointer,$f_path,$f_mode",-,-,-,-,-,To be done‚Ä¶
-Read,READ,$v_name FROM $f_path,"getData(%s,%s,&%s);","$v_name,$v_symbol,$f_pointer",-,-,-,-,-,To be done‚Ä¶
-Get Line,GETLINE,$v_name FROM $f_path,"fgets(&%s,sizeof(%s),%s);","$v_name,$v_name,$f_pointer",-,-,-,-,-,To be done‚Ä¶
-Write,WRITE,$v_name TO $f_path,"fprintf(%s,/‚Äú%%%s/‚Äù,%s);","$f_pointer,$v_symbol,&v_name",-,-,-,-,-,To be done‚Ä¶
-Close,CLOSE,$f_path,fclose(%s);,$f_pointer,-,-,-,-,-,To be done‚Ä¶
+If|IF|$con|if %s|$con|ENDIF|-|-|-|else|Doing something if the statement is true
+Else|ELSE|$key|else|-|-|-|-|-|-|To be doneÖ
+Print|PRINT|$v_name|printf(/ì%%%s/î,%s);|$v_symbol,$v_name|-|-|-|-|-|To be doneÖ
+Do While|DO|-|do|-|WHILE|$con|while(%s);|$con|-|To be doneÖ
+While|WHILE|$con|while(%s)|$con|ENDWHILE|-|-|-|-|To be doneÖ
+For Loop|FOR|$v_name = $value UNTIL $con |for(%s = %s;%s;%s)|$v_name,$value,$con,$increm|ENDFOR|-|-|-|-|To be doneÖ
+Get|GET|$v_name|getData(%s,%s,stdin)|$v_name,$v_symbol|-|-|-|-|-|Custom function including gets and sscanf
+Set|SET|$v_name TO $value|%s = %s;|$v_name,$value|-|-|-|-|-|To be doneÖ
+Variable|VARIABLE|$v_name IS $v_type|%s %s;|$v_type,$v_name|-|-|-|-|-|To be doneÖ
+Open|OPEN|$f_path TO $f_mode|FILE* %s = fopen(%s,/î%s/î);|$f_pointer,$f_path,$f_mode|-|-|-|-|-|To be doneÖ
+Read|READ|$v_name FROM $f_path|getData(%s,%s,&%s);|$v_name,$v_symbol,$f_pointer|-|-|-|-|-|To be doneÖ
+Get Line|GETLINE|$v_name FROM $f_path|fgets(&%s,sizeof(%s),%s);|$v_name,$v_name,$f_pointer|-|-|-|-|-|To be doneÖ
+Write|WRITE|$v_name TO $f_path|fprintf(%s,/ì%%%s/î,%s);|$f_pointer,$v_symbol,&v_name|-|-|-|-|-|To be doneÖ
+Close|CLOSE|$f_path|fclose(%s);|$f_pointer|-|-|-|-|-|To be doneÖ
