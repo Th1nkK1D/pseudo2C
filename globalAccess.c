@@ -7,6 +7,7 @@
 static VARIABLE_T* pRoot = NULL;
 static NEST_T * head = NULL;
 
+/*this function for find the word that user enter*/
 VARIABLE_T * findWord(VARIABLE_T* pCurrent,char name[])
     {
     VARIABLE_T* foundWord = NULL;
@@ -27,14 +28,14 @@ VARIABLE_T * findWord(VARIABLE_T* pCurrent,char name[])
         }
     return foundWord;
     }
-
+/*this function for search the word*/
 VARIABLE_T * searchWord(char name[])
 	{
 	VARIABLE_T* person = NULL;
 	person = findWord(pRoot,name);
 	return person;
 	}
-
+/*this function for free the tree*/
 void freeTree()
     {
     if (pRoot->leftChild != NULL)
@@ -51,6 +52,9 @@ void freeTree()
     free(pRoot);
     }
 
+ /*this function for push a data item onto the stack
+  *return 1 if successful,0 if we have an overflow 
+  */
 int push(char data[])
 	{
 	int check = 1;
@@ -68,6 +72,9 @@ int push(char data[])
 	return check;
 }
 
+/* Removes and returns the top item on the stack.
+ * Returns 0 if the queue is empty.
+ */
 int pop()
 	{
     NEST_T * top = head;
@@ -117,7 +124,7 @@ void insertVariable(VARIABLE_T* pRoot, VARIABLE_T* pNewNode)
             }
         }
     }
-
+/*this function for add the name of variable,type of variable and symbol*/
 void addVariable(char in_word[],char in_type[])
 	{
 	char input[32];
