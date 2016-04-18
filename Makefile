@@ -1,4 +1,5 @@
 # Makefile for Pseudo2C Project
+# We Must Survired Team
 
 ifeq ($(OSTYPE),WINDOWS)
 	EXECEXT =.exe
