@@ -277,19 +277,19 @@ int writeOut(char arg[4][12],char printSet[64],int count,FILE* pOut)
 	{
 	if(count == 1)
 		{
-		fprintf(pOut,printSet,arg[1]);
+		fprintf(pOut,printSet,arg[0]);
 		}
 	else if(count == 2)
 		{
-		fprintf(pOut,printSet,arg[1],arg[2]);
+		fprintf(pOut,printSet,arg[0],arg[1]);
 		}
 	else if(count == 3)
 		{
-		fprintf(pOut,printSet,arg[1],arg[2],arg[3]);
+		fprintf(pOut,printSet,arg[0],arg[1],arg[2]);
 		}
 	else if(count == 4)
 		{
-		fprintf(pOut,printSet,arg[1],arg[2],arg[3],arg[4]);
+		fprintf(pOut,printSet,arg[0],arg[1],arg[2],arg[3]);
 		}
 	else
 		{
