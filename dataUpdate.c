@@ -123,7 +123,7 @@ int dataUpdate (RULE_T* rule,char line[],TEMP_T* data)
 
 	strcpy(lineCopied_0,line);
 
-	delim = strpbrk(lineCopied_0," ");
+	delim = strpbrk(lineCopied_0," ");			/* To get first string of line */
 	*delim = '\0';
 	strcpy(lineCopied_1,delim+1);
 	strcpy(lineCopied_2,delim+1);
@@ -152,15 +152,18 @@ int dataUpdate (RULE_T* rule,char line[],TEMP_T* data)
 		hold_format = pre_post_in_2;
 		hold_line = lineCopied_2;
 
+		/* strtok format and line until NULL */
 		while ( (tempFormat = strtok_r(hold_format," ",&hold_format)) && (tempLine = strtok_r(hold_line," ",&hold_line)) )
 			{
 	
 			foundDollar = 0;
 			foundDollar = findDollar(tempFormat);
 
+			/* if we found Dollar, we knew it is a variable */
 			if ( foundDollar == 1 )
 				{
 		
+				/* store each type of data into structure */
 				if ( strcmp("$con",tempFormat) == 0 )
 					{
 					strcpy(data->$con,tempLine);
