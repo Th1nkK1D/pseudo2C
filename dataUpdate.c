@@ -168,6 +168,13 @@ int dataUpdate (RULE_T* rule,char line[],TEMP_T* data)
 				else if ( strcmp("$v_name",tempFormat) == 0 )
 					{
 					strcpy(data->$v_name,tempLine);
+					if ( data->$v_name[0] == '"' )
+						{
+						strcpy(data->$v_symbol,"s");
+						}
+
+					printf("name = %s\n",data->$v_name);
+					printf("symbol = %s\n",data->$v_symbol);
 					}
 				else if ( strcmp("$v_type",tempFormat) == 0 )
 					{
