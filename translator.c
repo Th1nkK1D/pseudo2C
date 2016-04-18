@@ -121,7 +121,7 @@ void writeIndent(FILE* pOut)
 	int indent; //= countStack()
 	int i;
 
-	for (int i = 0; i < indent; i++)
+	for (i = 0; i < indent; i++)
 		{
 		fprintf(pOut,"\t");
 		}
