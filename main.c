@@ -16,9 +16,16 @@
 #include "mainStructure.h"
 #include "translator.h"
 
+/* Function to check that user choose option 0,1,2,3 only
+ * Argument:
+ * - input => choice from user
+ * Return:
+ * 1 => if choice is valid
+ * 0 => if not
+ */
 int checkLine (char input[])
 	{
-	char* menu = "0123"; 
+	char* menu = "0123"; 				/* declaration of valid choices */
 	int i = 0;
 
 	if ( strlen(input) != 1 )
@@ -46,10 +53,10 @@ int checkLine (char input[])
 
 int main ()
 	{
-	int bChoice = 0;
-	char input[64];
-	int option = 0;
-	int bExit = 0;
+	int bChoice = 0;			/* Boolean to check that choice from user is valid */
+	char input[64];				/* Get data from user */
+	int option = 0;				/* Get option that user want */
+	int bExit = 0;				/* Boolean to check that user want to exit program */
 
 	printf("\n--- MAIN MENU ---\n");
 	printf("0 - Exit\n");
