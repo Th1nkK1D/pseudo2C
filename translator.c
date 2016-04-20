@@ -1,4 +1,4 @@
-/* Psudocode translator - Pseudo2C Project
+/* Pseudo to C Translator Module - Pseudo2C Project
  * 
  * Withee Poositasai (Lookkid) 58070503429
  * Team We Must Survived */
@@ -23,6 +23,11 @@ int writeOut(char arg[4][12],char printSet[64],int count,FILE* pOut);
 static char currentStack[16];
 static int indentCount = 0;
 
+/* Translator from Pseudocode to C
+ *	Return:	1 = Success
+ *			0 = Error opening input/output file
+ *			-1 = Preparing database failed
+ */
 int translator()
 	{
 	FILE* pIn = NULL;
@@ -36,7 +41,7 @@ int translator()
 	if(prepareDB() != 1)
 		{
 		printf("Error preparing rule database\n");
-		return 0;
+		return -1;
 		}
 
 	/* Prepare input file name */
@@ -61,7 +66,7 @@ int translator()
 
 	pOut = fopen(outName,"w");
 
-	if(pIn == NULL)
+	if(pOut == NULL)
 		{
 		printf("Can't create C file: \"%s\"\n",outName);
 		return 0;
@@ -112,6 +117,9 @@ int translator()
 	return 1;
 	}
 
+/* Write standard include function to file
+ *	Argument:	pOut = Output file pointer
+ */
 void writeStdFunction(FILE* pOut)
 	{
 	printf("writeStdFunction\n");
@@ -122,6 +130,9 @@ void writeStdFunction(FILE* pOut)
 	//To-Do : custom function
 	}
 
+/* Write standard indenting to file
+ *	Argument:	pOut = Output file pointer
+ */
 void writeIndent(FILE* pOut)
 	{
 	int i;
@@ -132,6 +143,14 @@ void writeIndent(FILE* pOut)
 		}
 	}
 
+/* Translate a single line of pseudo code
+ *	Argument:	buffer = Output file pointer
+ *				pOut = Output file pointer
+ *				line = number of input file current line
+ *	Return:	-1 = Key not found
+ *			0 = Data update error
+ *			1 = Success	
+ */
 int processLine(char buffer[],FILE* pOut,int line)
 	{
 	char key[8];
@@ -229,6 +248,12 @@ int processLine(char buffer[],FILE* pOut,int line)
 	return 1;
 	}
 
+/* Preparing argument for writing out
+ *	Argument:	arg = Array of argument
+ *				varSet = Set of variable pattern
+ *				tempData = Temp data structure
+ *	Return:	Number of variable, -1 if varSet is invalid
+ */
 int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData)
 	{
 	int i = 0;
@@ -293,6 +318,13 @@ int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData)
 	return i;
 	}
 
+/* Writing C statement into C file
+ *	Argument:	arg = Array of argument
+ *				printSet = C statement pattern
+ *				count = number of argument
+ 				pOut = Pointer to output file
+ *	Return:	1 if success, 0 if not
+ */
 int writeOut(char arg[4][12],char printSet[64],int count,FILE* pOut)
 	{
 	if(count == 1)

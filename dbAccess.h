@@ -7,7 +7,7 @@
  *	Return:	1 = Success
  *			0 = Can't open input file
  *			-1 = Can't read count
- *			-2 = Allocattion error
+ *			-2 = Allocation error
  */
 int prepareDB();
 
