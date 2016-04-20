@@ -1,9 +1,3 @@
-
-/*this function for find the word that user enter
- *return NULL if word does not exist.
-*/
-VARIABLE_T * findWord(VARIABLE_T* pCurrent,char name[]);
-
 /*this function for search the word
  *return NULL if word does not exist.
 */

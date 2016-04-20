@@ -6,6 +6,7 @@
 
 static VARIABLE_T* pRoot = NULL;
 static NEST_T * head = NULL;
+static int i = 1;
 
 /*this function for find the word that user enter*/
 VARIABLE_T * findWord(VARIABLE_T* pCurrent,char name[])
@@ -28,6 +29,7 @@ VARIABLE_T * findWord(VARIABLE_T* pCurrent,char name[])
         }
     return foundWord;
     }
+
 /*this function for search the word*/
 VARIABLE_T * searchWord(char name[])
 	{
@@ -35,6 +37,26 @@ VARIABLE_T * searchWord(char name[])
 	person = findWord(pRoot,name);
 	return person;
 	}
+int addFile(char nameFile[32],char type[6])
+    {
+    FILE_T* inStruct = NULL;
+    char name[32];
+    sprintf(name,"file%d",i);
+    i++;
+    inStruct = (FILE_T*) calloc(1,sizeof(FILE_T));
+    if(inStruct == NULL)
+        {
+        printf("ERROR, cannot allocate.");
+        exit(0);
+        }
+    else
+        {
+        strcpy(inStruct->handle,name);
+        strcpy(inStruct->path,nameFile);
+        strcpy(inStruct->mode);
+        }
+    }
+
 /*this function for free the tree*/
 void freeTree()
     {
