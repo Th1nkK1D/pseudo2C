@@ -96,7 +96,9 @@ int checkFormat (char pre_post_in[], char lineCopied[])
  * line => string of that line.
  * data => stucture for hold all data in line.
  * Return :
- * -1- => if that line or that rule is NULL.
+ * -3 => file not found
+ * -2 => variable is undeclared
+ * -1 => if that line or that rule is NULL.
  * 0 => if that line does not be in the correct format.
  * 1 => if line is in correct format and update data in structure already.
  */
@@ -115,9 +117,8 @@ int dataUpdate (RULE_T* rule,char line[],TEMP_T* data)
 	int foundDollar = 0;
 	int bFormat = 0;
 	char* delim = NULL;
-	VARIABLE_T* findVar_temp = NULL;
-	VARIABLE_T* findVariable = NULL;
-	FILE_T* findFile = NULL;
+	VARIABLE_T* tempVar = NULL;
+	FILE_T* tempFile = NULL;
 
 	tempRule = rule;
 
@@ -152,109 +153,136 @@ int dataUpdate (RULE_T* rule,char line[],TEMP_T* data)
 		hold_format = pre_post_in_2;
 		hold_line = lineCopied_2;
 
-		/* strtok format and line until NULL */
-		while ( (tempFormat = strtok_r(hold_format," ",&hold_format)) && (tempLine = strtok_r(hold_line," ",&hold_line)) )
+		if ( strcasecmp("variable",lineCopied_0) == 0 )
 			{
-	
-			foundDollar = 0;
-			foundDollar = findDollar(tempFormat);
-
-			/* if we found Dollar, we knew it is a variable */
-			if ( foundDollar == 1 )
+			while ( (tempFormat = strtok_r(hold_format," ",&hold_format)) && (tempLine = strtok_r(hold_line," ",&hold_line)) )
 				{
-		
-				/* store each type of data into structure */
-				if ( strcmp("$con",tempFormat) == 0 )
+				foundDollar = 0;
+				foundDollar = findDollar(tempFormat);
+				
+				if ( foundDollar == 1 )
 					{
-					strcpy(data->$con,tempLine);
-					}
-				else if ( strcmp("$v_name",tempFormat) == 0 )
-					{
-					strcpy(data->$v_name,tempLine);
-					if ( data->$v_name[0] == '"' )
+					if ( strcmp("$v_name",tempFormat) == 0 )
 						{
-						strcpy(data->$v_symbol,"s");
+						strcpy(data->$v_name,tempLine);
 						}
-
-					printf("name = %s\n",data->$v_name);
-					printf("symbol = %s\n",data->$v_symbol);
-					}
-				else if ( strcmp("$v_type",tempFormat) == 0 )
-					{
-					strcpy(data->$v_type,tempLine);
-					}
-				else if ( strcmp("$v_symbol",tempFormat) == 0 )
-					{
-					strcpy(data->$v_symbol,tempLine);
-					}
-				else if ( strcmp("$value",tempFormat) == 0 )
-					{
-					strcpy(data->$value,tempLine);
-					}
-				else if ( strcmp("$increm",tempFormat) == 0 )
-					{
-					strcpy(data->$increm,tempLine);
-					}
-				else if ( strcmp("$f_pointer",tempFormat) == 0 )
-					{
-					strcpy(data->$f_pointer,tempLine);
-					}
-				else if ( strcmp("$f_path",tempFormat) == 0 )
-					{
-					strcpy(data->$f_path,tempLine);
-					}
-				else if ( strcmp("$f_mode",tempFormat) == 0 )
-					{
-					strcpy(data->$f_mode,tempLine);
-					}
-				else
-					{
-					strcpy(data->$key,tempLine);
-					}
-				}
-			if ( strcasecmp(lineCopied_0,"set") == 0 )
-				{
-				findVar_temp = searchWord(data->$v_name);
-				if ( findVar_temp != NULL )
-					{
-					strcpy(findVariable->name,findVar_temp->name);
-					strcpy(findVariable->type,findVar_temp->type);
-					strcpy(findVariable->symbol,findVar_temp->symbol);
-					}
-				}
-			else if ( strcasecmp(lineCopied_0,"variable") == 0 )
-				{
-				findVariable = searchWord(data->$v_name);
-				if ( findVariable != NULL )
-					{
-					strcpy(findVariable->type,data->$v_type);
-					if ( strcmp(data->$v_type,"int") == 0 )
+					else if ( strcmp("$v_type",tempFormat) == 0 )
 						{
-						strcpy(findVariable->symbol,"%d");
-						}
-					else if ( strcmp(data->$v_type,"double") == 0 )
-						{
-						strcpy(findVariable->symbol,"%lf");
-						}
-					else if ( strcmp(data->$v_type,"char") == 0 )
-						{
-						strcpy(findVariable->symbol,"%c");
-						}
-					else if ( strcmp(data->$v_type,"string") == 0 )
-						{
-						strcpy(findVariable->symbol,"%s");
+						strcpy(data->$v_type,tempLine);
 						}
 					}
 				}
-			else if ( strcasecmp(lineCopied_0,"open") == 0 )
-				{
-				/** Missing **/
-				}			
-			else if ( strcasecmp(lineCopied_0,"write") == 0 )
-				{
-				/** Missing **/
-				}
+			addVariable(data->$v_name,data->$v_type);
 			}
+		else if ( strcasecmp("open",lineCopied_0) == 0 )
+			{
+			while ( (tempFormat = strtok_r(hold_format," ",&hold_format)) && (tempLine = strtok_r(hold_line," ",&hold_line)) )
+				{
+				foundDollar = 0;
+				foundDollar = findDollar(tempFormat);
+				
+				if ( foundDollar == 1 )
+					{
+					if ( strcmp("$f_path",tempFormat) == 0 )
+						{
+						strcpy(data->$f_path,tempLine);
+						}
+					else if ( strcmp("$f_mode",tempFormat) == 0 )
+						{
+						strcpy(data->$f_mode,tempLine);
+						}
+					}
+				}
+			addFile(data->$f_path,data->$f_mode);
+			}
+		else
+			{
+			/* strtok format and line until NULL */
+			while ( (tempFormat = strtok_r(hold_format," ",&hold_format)) && (tempLine = strtok_r(hold_line," ",&hold_line)) )
+				{
+	
+				foundDollar = 0;
+				foundDollar = findDollar(tempFormat);
+
+				/* if we found Dollar, we knew it is a variable */
+				if ( foundDollar == 1 )
+					{
+					/* store each type of data into structure */
+					if ( strcmp("$con",tempFormat) == 0 )
+						{
+						strcpy(data->$con,tempLine);
+						}
+					else if ( strcmp("$v_name",tempFormat) == 0 )
+						{
+						strcpy(data->$v_name,tempLine);
+						if ( data->$v_name[0] == '"' )
+							{
+							strcpy(data->$v_symbol,"s");
+							}
+						else
+							{
+							tempVar = searchWord(data->$v_name);
+							if ( tempVar == NULL )
+								{
+								return -2;
+								}
+							else
+								{
+								if ( strcmp("print",lineCopied_0) == 0 || strcmp("get",lineCopied_0) == 0 || strcmp("read",lineCopied_0) == 0 || strcmp("write",lineCopied_0) == 0 )
+									{
+									strcpy(data->$v_symbol,tempVar->symbol);
+									}
+								}
+							}
+						}
+					else if ( strcmp("$v_type",tempFormat) == 0 )
+						{
+						strcpy(data->$v_type,tempLine);
+						}
+					else if ( strcmp("$v_symbol",tempFormat) == 0 )
+						{
+						strcpy(data->$v_symbol,tempLine);
+						}
+					else if ( strcmp("$value",tempFormat) == 0 )
+						{
+						strcpy(data->$value,tempLine);
+						}
+					else if ( strcmp("$increm",tempFormat) == 0 )
+						{
+						strcpy(data->$increm,tempLine);
+						}
+					else if ( strcmp("$f_pointer",tempFormat) == 0 )
+						{
+						strcpy(data->$f_pointer,tempLine);
+						}
+					else if ( strcmp("$f_path",tempFormat) == 0 )
+						{
+						strcpy(data->$f_path,tempLine);
+						if ( strcmp("open",lineCopied_0) == 0 || strcmp("read",lineCopied_0) == 0 || strcmp("getline",lineCopied_0) == 0 || strcmp("write",lineCopied_0) == 0 || strcmp("close",lineCopied_0) == 0 )
+							{
+							//tempFile = /* Missing */;
+							if ( tempFile == NULL )
+								{
+								return -3;
+								}
+							else
+								{
+								strcpy(data->$f_pointer,tempFile->handle);
+								}
+							}
+			
+						}
+					else if ( strcmp("$f_mode",tempFormat) == 0 )
+						{
+						strcpy(data->$f_mode,tempLine);
+						}
+					else
+						{
+						strcpy(data->$key,tempLine);
+						}
+					}
+				}
+			}			
 		return 1;
 		}
 
