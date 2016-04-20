@@ -24,7 +24,7 @@ globalAccess.o :	globalAccess.c mainStructure.h
 dataUpdate.o :	dataUpdate.c mainStructure.h globalAccess.h
 	gcc -c dataUpdate.c
 
-translator.o :	translator.c mainStructure.h dataUpdate.h
+translator.o :	translator.c mainStructure.h dataUpdate.h globalAccess.h
 	gcc -c translator.c
 
 main.o :	main.c translator.h

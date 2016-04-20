@@ -10,7 +10,7 @@
 #include "mainStructure.h"
 #include "dbAccess.h"
 #include "dataUpdate.h"
-
+#include "globalAccess.h"
 
 /* Function Declaration */
 void writeStdFunction(FILE* pOut);
@@ -18,6 +18,10 @@ void writeIndent(FILE* pOut);
 int processLine(char buffer[],FILE* pOut,int line);
 int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData);
 int writeOut(char arg[4][12],char printSet[64],int count,FILE* pOut);
+
+/* Global Variable */
+static char currentStack[16];
+static int indentCount = 0;
 
 int translator()
 	{
@@ -68,8 +72,8 @@ int translator()
 	writeStdFunction(pOut);
 
 	//push main
-	fprintf(pOut,"int main()\n{\n");
-
+	fprintf(pOut,"int main()\n\t{\n");
+	indentCount++;
 
 	/* Read each line */
 	while(fgets(buffer,sizeof(buffer),pIn) != NULL)
@@ -93,7 +97,9 @@ int translator()
 			}
 		}
 
+	writeIndent(pOut);
 	fprintf(pOut,"}");
+	indentCount--;
 
 	/* Close file */
 	fclose(pIn);
@@ -118,10 +124,9 @@ void writeStdFunction(FILE* pOut)
 
 void writeIndent(FILE* pOut)
 	{
-	int indent; //= countStack()
 	int i;
 
-	for (i = 0; i < indent; i++)
+	for (i = 0; i < indentCount; i++)
 		{
 		fprintf(pOut,"\t");
 		}
@@ -132,12 +137,12 @@ int processLine(char buffer[],FILE* pOut,int line)
 	char key[8];
 	RULE_T* pRule = NULL;
 	char currentStack[64];
-	int target = 1; //To-Do for post key
+	int target;
 	TEMP_T tempData;
 	char arg[4][12];
 	char varSet[64];
 	char printSet[64];
-	int count;
+	int varCount;
 
 	printf("processLine at line %d\n",line);
 
@@ -158,21 +163,37 @@ int processLine(char buffer[],FILE* pOut,int line)
 
 	printf("Rule got: %s\n",pRule->name);
 
-	//strcpy(currentStack,"TO_DO");
-
-	/* Check if end stack found */
-	/*
+	/* Check if end nested found */
 	if (strcmp(buffer,currentStack) == 0)
 		{
-		//--Pop stack
+		/* End nested (Old function) */
 		writeIndent(pOut);
-		target = 1;
+		fprintf(pOut,"}");
+
+		/* Update stack */
+		pop(currentStack);
+		indentCount--;
+
+		printf("Target = Post\n");
+		printf("preVar: %s\n",pRule->preVar);
+		printf("preOut: %s\n",pRule->preOut);
+
+		/* Set data */
+		strcpy(varSet,pRule->postVar);
+		strcpy(printSet,pRule->postOut);
 		}
 	else
 		{
-		target = 2;
+		/* New function */
+		printf("Target = Pre\n");		
+		printf("preVar: %s\n",pRule->preVar);
+		printf("preOut: %s\n",pRule->preOut);
+
+		/* Set data */
+		strcpy(varSet,pRule->preVar);
+		strcpy(printSet,pRule->preOut);
 		}
-	*/
+
 	/* Update temp data */
 	if(dataUpdate(pRule,buffer,&tempData) == 0)
 		{
@@ -182,29 +203,28 @@ int processLine(char buffer[],FILE* pOut,int line)
 
 	printf("Data Update success\n");
 
-	/* Detemine pre/post fot variable/print set */
-	if(target == 1)
-		{
-		printf("Target = Pre\n");
-		printf("preVar: %s\n",pRule->preVar);
-		printf("preOut: %s\n",pRule->preOut);
-
-		strcpy(varSet,pRule->preVar);
-		strcpy(printSet,pRule->preOut);
-		}
-	else
-		{
-		printf("Target = Post\n");
-		strcpy(varSet,pRule->postVar);
-		strcpy(printSet,pRule->postOut);
-		}
 	printf("varSet: %s\n",varSet);
 	printf("printSet: %s\n",printSet);
 
 	/* Prepare Argument */
-	count = prepareArg(arg,varSet,tempData);
-	writeOut(arg,printSet,count,pOut);
+	varCount = prepareArg(arg,varSet,tempData);
+	writeIndent(pOut);
+	writeOut(arg,printSet,varCount,pOut);
 
+
+	/* Check if this key crete new nested */
+	if(strlen(pRule->postKey) > 0)
+		{
+		/* Update stack */
+		push(pRule->postKey);
+		strcpy(currentStack,pRule->postKey);
+		indentCount++;
+
+		/* print bracket */
+		fprintf(pOut, "\n");
+		writeIndent(pOut);
+		fprintf(pOut, "{\n");
+		}
 
 	return 1;
 	}
