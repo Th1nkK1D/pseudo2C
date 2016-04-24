@@ -312,9 +312,12 @@ int dataUpdate (RULE_T* rule,char line[],TEMP_T* data)
 		else
 			{
 			/* strtok format and line until NULL */
-			while ( (tempFormat = strtok_r(hold_format," ",&hold_format)) && (tempLine = strtok_r(hold_line," ",&hold_line)) )
+			tempFormat = strtok_r(hold_format," ",&hold_format);
+			tempLine = strtok_r(hold_line," ",&hold_line);
+			while (tempFormat != NULL && tempLine != NULL)
 				{
-				
+				printf("------tempFormat = %s\n",tempFormat);
+				printf("------tempLine = %s\n",tempLine);
 				foundDollar = 0;
 				foundDollar = findDollar(tempFormat);
 
@@ -339,7 +342,8 @@ int dataUpdate (RULE_T* rule,char line[],TEMP_T* data)
 							tempVar = searchWord(data->$v_name);
 							if ( tempVar == NULL )
 								{
-								return -2;
+								//printf("return*****\n");
+								//return -2;
 								}
 							else
 								{
@@ -361,6 +365,8 @@ int dataUpdate (RULE_T* rule,char line[],TEMP_T* data)
 					else if ( strcmp("$value",tempFormat) == 0 )
 						{
 						strcpy(data->$value,tempLine);
+						printf("-----Templine = %s\n",tempLine);
+						printf("-----Value = %s\n",data->$value);
 						}
 					else if ( strcmp("$increm",tempFormat) == 0 )
 						{
@@ -396,7 +402,11 @@ int dataUpdate (RULE_T* rule,char line[],TEMP_T* data)
 						strcpy(data->$key,tempLine);
 						}
 					}
-				}			
+				tempFormat = strtok_r(NULL," ",&hold_format);
+				tempLine = strtok_r(NULL," ",&hold_line);
+				printf("tempformat2 = %s\n",tempFormat);
+				printf("templine2 = %s\n",tempLine);
+				}	
 				
 			}			
 		return 1;
