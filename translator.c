@@ -19,6 +19,9 @@ int processLine(char buffer[],FILE* pOut,int line);
 int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData);
 int writeOut(char arg[4][12],char printSet[64],int count,FILE* pOut);
 
+/* Static Variable */
+const char stdHeaderFile[] = "stdHeader.in";
+
 /* Global Variable */
 static char currentStack[16];
 static int indentCount = 0;
@@ -73,6 +76,7 @@ int translator()
 		}
 
 	printf("Open output completed\n");
+
 	/* Write standard function */
 	writeStdFunction(pOut);
 
@@ -115,32 +119,6 @@ int translator()
 	printf("Translation Completed!\n");
 
 	return 1;
-	}
-
-/* Write standard include function to file
- *	Argument:	pOut = Output file pointer
- */
-void writeStdFunction(FILE* pOut)
-	{
-	printf("writeStdFunction\n");
-	fprintf(pOut,"#include <stdio.h>\n");
-	fprintf(pOut,"#include <stdlib.h>\n");
-	fprintf(pOut,"#include <string.h>\n");
-	fprintf(pOut,"\n");
-	//To-Do : custom function
-	}
-
-/* Write standard indenting to file
- *	Argument:	pOut = Output file pointer
- */
-void writeIndent(FILE* pOut)
-	{
-	int i;
-
-	for (i = 0; i < indentCount; i++)
-		{
-		fprintf(pOut,"\t");
-		}
 	}
 
 /* Translate a single line of pseudo code
@@ -351,4 +329,42 @@ int writeOut(char arg[4][12],char printSet[64],int count,FILE* pOut)
 	fprintf(pOut, "\n");
 
 	return 1;
+	}
+
+/* Write standard include function to file
+ *	Argument:	pOut = Output file pointer
+ */
+int writeStdFunction(FILE* pOut)
+	{
+	printf("writeStdFunction\n");
+	FILE* pHeader = NULL;
+	char buffer[128];
+
+	/* Open standard header file */
+	pHeader = fopen(stdHeaderFile,"r");
+
+	if(pHeader == NULL)
+		{
+		return 0;
+		}
+
+	while(fgets(buffer,sizeof(buffer),pHeader) != NULL)
+		{
+		fprintf(pOut,"%s\n",buffer );
+		}
+
+	return 1;
+	}
+
+/* Write standard indenting to file
+ *	Argument:	pOut = Output file pointer
+ */
+void writeIndent(FILE* pOut)
+	{
+	int i;
+
+	for (i = 0; i < indentCount; i++)
+		{
+		fprintf(pOut,"\t");
+		}
 	}

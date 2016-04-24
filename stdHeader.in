@@ -1,0 +1,11 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+/* Custom Function : Get data from user or file */
+void getData(void* var,char type[],void* pTarget)
+	{
+	char buffer[256];
+	fgets(buffer,sizeof(buffer),pTarget);
+	sscanf(buffer,type,var);
+	}
