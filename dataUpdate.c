@@ -14,6 +14,114 @@
 #include "mainStructure.h"
 #include "globalAccess.h"
 
+/* function to check that condition is valid
+ * Argument:
+ * - input => string of condition
+ * Return:
+ * - 1 => if condition is ok
+ * - 0 => if condition is not ok 
+ */
+int checkCondition ( char input[] )
+	{
+	int i = 0;
+	char temp_input[512];
+	char* tempCondition;
+	VARIABLE_T* tempVar = NULL;
+	int bQuotes = 0;
+
+	strcpy(temp_input,input);
+
+	tempCondition = strtok(temp_input," ");
+
+	tempVar = searchWord(tempCondition);
+
+	if ( tempVar != NULL )
+		{
+		tempCondition = strtok(NULL," ");
+		if ( strcmp(tempCondition,"==") == 0 || strcmp(tempCondition,"<") == 0 || strcmp(tempCondition,">") == 0 || strcmp(tempCondition,"!=") == 0 || strcmp(tempCondition,"<=") == 0 || strcmp(tempCondition,">=") == 0 )
+			{
+			tempCondition = strtok(NULL," ");
+			tempVar = NULL;
+			tempVar = searchWord(tempCondition);
+			if ( tempVar == NULL )
+				{
+				bQuotes = checkQuotes(tempCondition);
+				if ( bQuotes == 0 )
+					{
+					for (i=0;i<strlen(tempCondition);i++)
+						{
+						if ( isalpha(tempCondition[i]) || isspace(tempCondition[i]) )
+							{
+							return 0;
+							}
+						}
+					}
+				else if ( bQuotes == -1 )
+					{
+					return 0;
+					}
+				}
+			}
+		else
+			{
+			return 0;
+			}
+		}		
+	/* if it's not a variable, it must be a digit or string only */
+	else	
+		{
+		bQuotes = checkQuotes(tempCondition);
+		if ( bQuotes == 0 )
+			{
+			for (i=0;i<strlen(tempCondition);i++)
+				{
+				if ( isalpha(tempCondition[i]) || isspace(tempCondition[i]) )
+					{
+					return 0;
+					}
+				}
+			}
+		else if ( bQuotes == -1 )
+			{
+			return 0;
+			}
+		}
+	return 1;
+	}
+
+/* function to check that this string has quotes (" ") or not.
+ * Argument:
+ * - input => word that want to check
+ * Return:
+ * - 1 => if there are quotes in this string
+ * - 0 => if not
+ * - -1 => if it has one quote or more than two quotes
+ */ 
+int checkQuotes ( char input[] )
+	{
+	int i = 0;
+	int bQuotes = 0;
+	if ( input[0] == '"' && input[strlen(input)-1] '"' )
+		{
+		return 1;
+		}
+	for ( i=0;i<strlen(input);i++ )
+		{
+		if ( input[i] == '"' )
+			{
+			bQuotes++;
+			}
+		}
+	if ( bQuotes == 0 )
+		{
+		return 0;
+		}
+	else
+		{
+		return -1;
+		}
+	}
+
 /* Function to find dollar sign
  * Argument :
  * input => string that we want to look
@@ -96,6 +204,8 @@ int checkFormat (char pre_post_in[], char lineCopied[])
  * line => string of that line.
  * data => stucture for hold all data in line.
  * Return :
+ * -5 => if condition is not valid
+ * -4 => if variable is initialize by a number or a capital letter
  * -3 => file not found
  * -2 => variable is undeclared
  * -1 => if that line or that rule is NULL.
@@ -119,6 +229,11 @@ int dataUpdate (RULE_T* rule,char line[],TEMP_T* data)
 	char* delim = NULL;
 	VARIABLE_T* tempVar = NULL;
 	FILE_T* tempFile = NULL;
+	int bQuotes = 0;
+	char* tempCondition = NULL;
+	char condition[512];
+	int bCondition = 0;
+	char* delim = NULL;
 
 	tempRule = rule;
 
@@ -200,7 +315,7 @@ int dataUpdate (RULE_T* rule,char line[],TEMP_T* data)
 			/* strtok format and line until NULL */
 			while ( (tempFormat = strtok_r(hold_format," ",&hold_format)) && (tempLine = strtok_r(hold_line," ",&hold_line)) )
 				{
-	
+				
 				foundDollar = 0;
 				foundDollar = findDollar(tempFormat);
 
@@ -215,7 +330,8 @@ int dataUpdate (RULE_T* rule,char line[],TEMP_T* data)
 					else if ( strcmp("$v_name",tempFormat) == 0 )
 						{
 						strcpy(data->$v_name,tempLine);
-						if ( data->$v_name[0] == '"' )
+						bQuotes = checkQuotes(data->$v_name);
+						if ( bQuotes == 1 )
 							{
 							strcpy(data->$v_symbol,"s");
 							}
@@ -281,7 +397,8 @@ int dataUpdate (RULE_T* rule,char line[],TEMP_T* data)
 						strcpy(data->$key,tempLine);
 						}
 					}
-				}
+				}			
+				
 			}			
 		return 1;
 		}
