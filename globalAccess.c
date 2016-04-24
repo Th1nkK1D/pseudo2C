@@ -222,15 +222,15 @@ void addVariable(char in_word[],char in_type[])
 
 		if(strcmp(in_type,"int") == 0)
 			{
-			strcpy(in_symbol,"%d");
+			strcpy(in_symbol,"%%d");
 			}
 		else if(strcmp(in_type,"char") == 0)
 			{
-			strcpy(in_symbol,"%c");
+			strcpy(in_symbol,"%%c");
 			}
 		else if(strcmp(in_type,"string") == 0)
 			{
-			strcpy(in_symbol,"%s");
+			strcpy(in_symbol,"%%s");
 			}
 		in_variable = (VARIABLE_T*) calloc(1,sizeof(VARIABLE_T));
         if(in_variable == NULL)
