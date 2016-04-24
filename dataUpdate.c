@@ -101,7 +101,7 @@ int checkQuotes ( char input[] )
 	{
 	int i = 0;
 	int bQuotes = 0;
-	if ( input[0] == '"' && input[strlen(input)-1] '"' )
+	if ( (input[0] == '"') && (input[strlen(input)-1] == '"') )
 		{
 		return 1;
 		}
@@ -226,7 +226,6 @@ int dataUpdate (RULE_T* rule,char line[],TEMP_T* data)
 	char* hold_line = NULL;
 	int foundDollar = 0;
 	int bFormat = 0;
-	char* delim = NULL;
 	VARIABLE_T* tempVar = NULL;
 	FILE_T* tempFile = NULL;
 	int bQuotes = 0;
