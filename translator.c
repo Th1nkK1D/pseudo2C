@@ -28,8 +28,10 @@ static int indentCount = 0;
 
 /* Translator from Pseudocode to C
  *	Return:	1 = Success
- *			0 = Error opening input/output file
+ *			0 = Opening input/output file failed
  *			-1 = Preparing database failed
+ *			-2 = Write standard function failed
+ 			-3 = Invalid systax or rule
  */
 int translator()
 	{
@@ -44,7 +46,7 @@ int translator()
 	if(prepareDB() != 1)
 		{
 		printf("Error preparing rule database\n");
-		return -1;
+		return 0;
 		}
 
 	/* Prepare input file name */
@@ -57,7 +59,7 @@ int translator()
 	if(pIn == NULL)
 		{
 		printf("Can't open pseudo code file: \"%s\"\n",inName);
-		return 0;
+		return -1;
 		}
 
 	/* Prepare output file name */
@@ -72,15 +74,19 @@ int translator()
 	if(pOut == NULL)
 		{
 		printf("Can't create C file: \"%s\"\n",outName);
-		return 0;
+		return -1;
 		}
 
 	printf("Open output completed\n");
 
 	/* Write standard function */
-	writeStdFunction(pOut);
+	if(writeStdFunction(pOut) == 0)
+		{
+		printf("Error: Writing standard header failed\n");
+		return -2;
+		}
 
-	//push main
+	/* Open main function */
 	fprintf(pOut,"int main()\n\t{\n");
 	indentCount++;
 
@@ -102,10 +108,16 @@ int translator()
 				buffer[strlen(buffer)-1] = '\0';
 				}
 
-			processLine(buffer,pOut,line);
+			/* Process the line */
+			if(processLine(buffer,pOut,line) != 1)
+				{
+				return -3;
+				}
 			}
 		}
 
+
+	/* Close main function */
 	writeIndent(pOut);
 	fprintf(pOut,"}");
 	indentCount--;
@@ -125,9 +137,10 @@ int translator()
  *	Argument:	buffer = Output file pointer
  *				pOut = Output file pointer
  *				line = number of input file current line
- *	Return:	-1 = Key not found
- *			0 = Data update error
- *			1 = Success	
+ *	Return:	1 = Success	
+ *			0 = Key not found
+ *			-1 = Data update error, invalid systax
+ *			-2 = Invalid rule argument
  */
 int processLine(char buffer[],FILE* pOut,int line)
 	{
@@ -141,9 +154,9 @@ int processLine(char buffer[],FILE* pOut,int line)
 	char printSet[64];
 	int varCount;
 
-	printf("processLine at line %d\n",line);
+	printf("\nprocessLine at line %d\n",line);
 
-	/* Key = first word */
+	/* Get rule of key from first word */
 	sscanf(buffer,"%s",key);
 
 	printf("Key read: %s\n",key);
@@ -155,7 +168,7 @@ int processLine(char buffer[],FILE* pOut,int line)
 		printf("Error: Key not found at line %d\n",line);
 		printf(">>> %s\n",buffer);
 
-		return -1;
+		return 0;
 		}
 
 	printf("Rule got: %s\n",pRule->name);
@@ -163,9 +176,9 @@ int processLine(char buffer[],FILE* pOut,int line)
 	/* Check if end nested found */
 	if (strcmp(buffer,currentStack) == 0)
 		{
-		/* End nested (Old function) */
+		/* End nested (close function) */
 		writeIndent(pOut);
-		fprintf(pOut,"}");
+		fprintf(pOut,"}\n");
 
 		/* Update stack */
 		pop(currentStack);
@@ -183,8 +196,8 @@ int processLine(char buffer[],FILE* pOut,int line)
 		{
 		/* New function */
 		printf("Target = Pre\n");		
-		printf("preVar: %s\n",pRule->preVar);
-		printf("preOut: %s\n",pRule->preOut);
+		printf("postVar: %s\n",pRule->preVar);
+		printf("postOut: %s\n",pRule->preOut);
 
 		/* Set data */
 		strcpy(varSet,pRule->preVar);
@@ -194,8 +207,9 @@ int processLine(char buffer[],FILE* pOut,int line)
 	/* Update temp data */
 	if(dataUpdate(pRule,buffer,&tempData) == 0)
 		{
-		printf("dataUpdate Error");
-		return 0;
+		printf("Error: Invalid Syntax at line %d\n",line);
+		printf(">>> %s\n",buffer);
+		return -1;
 		}
 
 	printf("Data Update success\n");
@@ -206,14 +220,18 @@ int processLine(char buffer[],FILE* pOut,int line)
 	/* Prepare Argument */
 	varCount = prepareArg(arg,varSet,tempData);
 	writeIndent(pOut);
-	writeOut(arg,printSet,varCount,pOut);
 
+	if(varCount < 0 || writeOut(arg,printSet,varCount,pOut) == 0)
+		{
+		printf("Error: Invalid argument rule for \"%s\"\n",pRule->key);
+		return -2;
+		}
 
 	/* Check if this key crete new nested */
 	if(strlen(pRule->postKey) > 0)
 		{
 		/* Update stack */
-		push(pRule->postKey);
+		push(currentStack);
 		strcpy(currentStack,pRule->postKey);
 		indentCount++;
 
@@ -333,6 +351,7 @@ int writeOut(char arg[4][12],char printSet[64],int count,FILE* pOut)
 
 /* Write standard include function to file
  *	Argument:	pOut = Output file pointer
+ *	Return: 1 if success, 0 if file open failed
  */
 int writeStdFunction(FILE* pOut)
 	{

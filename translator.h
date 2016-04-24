@@ -5,7 +5,9 @@
 
 /* Translator from Pseudocode to C
  *	Return:	1 = Success
- *			0 = Error opening input/output file
+ *			0 = Opening input/output file failed
  *			-1 = Preparing database failed
+ *			-2 = Write standard function failed
+ 			-3 = Invalid systax or rule
  */
 int translator();
