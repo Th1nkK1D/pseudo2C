@@ -335,7 +335,7 @@ int dataUpdate (RULE_T* rule,char line[],TEMP_T* data)
 						bQuotes = checkQuotes(data->$v_name);
 						if ( bQuotes == 1 )
 							{
-							strcpy(data->$v_symbol,"s");
+							strcpy(data->$v_symbol,"%s");
 							}
 						else
 							{
