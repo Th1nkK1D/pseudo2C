@@ -111,13 +111,14 @@ int translator()
 				}
 
 			/* Process the line */
-			if(processLine(buffer,pOut,line) != 1)
-				{
-				return -3;
-				}
+			processLine(buffer,pOut,line);
+
+			printf("out of processLine\n");
 			}
 		}
 
+
+	printf("Finished read all the lines\n");
 
 	/* Close main function */
 	writeIndent(pOut);
@@ -223,11 +224,15 @@ int processLine(char buffer[],FILE* pOut,int line)
 	varCount = prepareArg(arg,varSet,tempData);
 	writeIndent(pOut);
 
+	printf("pass Indent\n");
+
 	if(varCount < 0 || writeOut(arg,printSet,varCount,pOut) == 0)
 		{
 		printf("Error: Invalid argument rule for \"%s\"\n",pRule->key);
 		return -2;
 		}
+
+	printf("pass writeOut\n");
 
 	/* Check if this key crete new nested */
 	if(strlen(pRule->postKey) > 0)
@@ -243,6 +248,7 @@ int processLine(char buffer[],FILE* pOut,int line)
 		fprintf(pOut, "{\n");
 		}
 
+	printf("Finish this line\n");
 	return 1;
 	}
 

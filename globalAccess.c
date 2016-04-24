@@ -186,11 +186,9 @@ int pop()
 /*This function for insert the people in the trees*/
 void insertVariable(VARIABLE_T* pRoot, VARIABLE_T* pNewNode)
     {
-    if (strcmp(pNewNode->name, pRoot->name) == 0)
+    if (pRoot == NULL)
         {
-        free(pNewNode->name);
-        free(pNewNode->type);
-        free(pNewNode->symbol);
+        pRoot = pNewNode;
         }
 	else if (strcmp(pNewNode->name, pRoot->name) < 0)
         {
@@ -218,11 +216,9 @@ void insertVariable(VARIABLE_T* pRoot, VARIABLE_T* pNewNode)
 /*this function for add the name of variable,type of variable and symbol*/
 void addVariable(char in_word[],char in_type[])
 	{
-	char input[32];
 	char in_symbol;
 	VARIABLE_T* in_variable = NULL;
-	while(strcmp(input,"DONE") != 0)
-		{
+
 
 		if(strcmp(in_type,"int") == 0)
 			{
@@ -247,14 +243,7 @@ void addVariable(char in_word[],char in_type[])
  			strcpy(in_variable->name,in_word);
  			strcpy(in_variable->type,in_type);
  			strcpy(in_variable->symbol,&in_symbol);
- 			if(pRoot == NULL)
- 				{
- 				pRoot = in_variable;
- 				}
- 			else
- 				{
- 				insertVariable(pRoot,in_variable);
- 				}
+
+			insertVariable(pRoot,in_variable);
  			}
-		}
 	}
