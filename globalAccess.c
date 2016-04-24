@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "mainStructure.h"
 
-
+static FILE_T* pFile = NULL;
 static VARIABLE_T* pRoot = NULL;
 static NEST_T * head = NULL;
 static int i = 1;
@@ -33,11 +33,72 @@ VARIABLE_T * findWord(VARIABLE_T* pCurrent,char name[])
 /*this function for search the word*/
 VARIABLE_T * searchWord(char name[])
 	{
-	VARIABLE_T* person = NULL;
-	person = findWord(pRoot,name);
-	return person;
+	VARIABLE_T* word = NULL;
+	word = findWord(pRoot,name);
+	return word;
 	}
-int addFile(char nameFile[32],char type[6])
+
+FILE_T * findFile(FILE_T* pCurrent,char name[])
+    {
+    FILE_T* foundWord = NULL;
+    if(pCurrent != NULL)
+        {
+        if(strcmp(name,pCurrent->handle) == 0)
+            {
+            foundWord = pCurrent;
+            }
+        else if(strcmp(pCurrent->handle,name) > 0)
+            {
+            foundWord = findFile(pCurrent->pleft,name);
+            }
+        else
+            {
+            foundWord = findFile(pCurrent->pright,name);
+            }
+        }
+    return foundWord;
+    }
+
+FILE_T * searchFile(char name[])
+    {
+    FILE_T* nameFile = NULL;
+    nameFile = findFile(pFile,name);
+    return nameFile;
+    }
+
+void insertFile(FILE_T* pRoot, FILE_T* pNewNode)
+    {
+    if (strcmp(pNewNode->handle, pRoot->handle) == 0)
+        {
+        free(pNewNode->handle);
+        free(pNewNode->path);
+        free(pNewNode->mode);
+        }
+    else if (strcmp(pNewNode->handle, pRoot->handle) < 0)
+        {
+        if (pRoot->pleft == NULL)
+            {
+            pRoot->pleft = pNewNode;
+            }
+        else
+            {
+            insertFile(pRoot->pleft,pNewNode);
+            }
+        }
+    else
+        {
+        if (pRoot->pright == NULL)
+            {
+            pRoot->pright = pNewNode;
+            }
+        else
+            {
+            insertFile(pRoot->pright,pNewNode);
+            }
+        }
+    }
+
+void addFile(char nameFile[32],char type[6])
     {
     FILE_T* inStruct = NULL;
     char name[32];
@@ -53,7 +114,15 @@ int addFile(char nameFile[32],char type[6])
         {
         strcpy(inStruct->handle,name);
         strcpy(inStruct->path,nameFile);
-        strcpy(inStruct->mode);
+        strcpy(inStruct->mode,type);
+        if(pFile == NULL)
+            {
+            pFile = inStruct;
+            }
+        else
+            {
+            insertFile(pFile,inStruct);
+            }
         }
     }
 

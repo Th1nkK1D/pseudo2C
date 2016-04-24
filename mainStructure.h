@@ -56,6 +56,8 @@ typedef struct _file
 	char handle[16];
 	char path[32];
 	char mode[4];
+	struct _file *pleft;
+	struct _file *pright;
 	struct _file *pNext;
 	} FILE_T;
 

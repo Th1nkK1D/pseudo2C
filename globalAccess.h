@@ -3,8 +3,16 @@
 */
 VARIABLE_T * searchWord(char name[]);
 
+FILE_T * searchFile(char name[]);
+
 /*this function for free the tree*/
-void freeTree();
+void freeVariableTree();
+
+void freeFileTree();
+
+void insertFile(FILE_T* pRoot, FILE_T* pNewNode);
+
+void addFile(char nameFile[32],char type[6]);
 
  /*this function for push a data item onto the stack
   *return 1 if successful,0 if we have an overflow 
