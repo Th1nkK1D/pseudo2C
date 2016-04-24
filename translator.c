@@ -13,7 +13,7 @@
 #include "globalAccess.h"
 
 /* Function Declaration */
-void writeStdFunction(FILE* pOut);
+int writeStdFunction(FILE* pOut);
 void writeIndent(FILE* pOut);
 int processLine(char buffer[],FILE* pOut,int line);
 int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData);
@@ -87,7 +87,9 @@ int translator()
 		}
 
 	/* Open main function */
-	fprintf(pOut,"int main()\n\t{\n");
+	fprintf(pOut,"/* Main function */\n");
+	fprintf(pOut,"int main()\n");
+	fprintf(pOut,"\t{\n");
 	indentCount++;
 
 	/* Read each line */
@@ -369,8 +371,10 @@ int writeStdFunction(FILE* pOut)
 
 	while(fgets(buffer,sizeof(buffer),pHeader) != NULL)
 		{
-		fprintf(pOut,"%s\n",buffer );
+		fprintf(pOut,"%s",buffer);
 		}
+
+	fprintf(pOut,"\n\n");
 
 	return 1;
 	}
