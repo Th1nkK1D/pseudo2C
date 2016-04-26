@@ -32,11 +32,11 @@ VARIABLE_T * findWord(VARIABLE_T* pCurrent,char name[])
 
 /*this function for search the word*/
 VARIABLE_T * searchWord(char name[])
-	{
-	VARIABLE_T* word = NULL;
-	word = findWord(pRoot,name);
-	return word;
-	}
+    {
+    VARIABLE_T* word = NULL;
+    word = findWord(pRoot,name);
+    return word;
+    }
 
 FILE_T * findFile(FILE_T* pCurrent,char name[])
     {
@@ -147,41 +147,41 @@ void freeTree()
   *return 1 if successful,0 if we have an overflow 
   */
 int push(char data[])
-	{
-	int check = 1;
-	NEST_T *newItem = (NEST_T *)calloc(1,sizeof(NEST_T));
-	if (newItem == NULL)
-		{
-		check = 0;
-		}
-	else
-		{
+    {
+    int check = 1;
+    NEST_T *newItem = (NEST_T *)calloc(1,sizeof(NEST_T));
+    if (newItem == NULL)
+        {
+        check = 0;
+        }
+    else
+        {
         newItem->pNext = head;
         strcpy(newItem->postIn,data);
-       	head = newItem;
-		}
-	return check;
+        head = newItem;
+        }
+    return check;
 }
 
 /* Removes and returns the top item on the stack.
  * Returns 0 if the queue is empty.
  */
 int pop()
-	{
+    {
     NEST_T * top = head;
     char * data = NULL;
     if (top != NULL)
-       	{
-       	data = top->postIn;
-       	head = top->pNext;
-       	free(top);
-       	return 1;
-   		}
-   	else
-   		{
-   		return 0;
-   		}
-	}
+        {
+        data = top->postIn;
+        head = top->pNext;
+        free(top);
+        return 1;
+        }
+    else
+        {
+        return 0;
+        }
+    }
 
 /*This function for insert the people in the trees*/
 void insertVariable(VARIABLE_T* pRoot, VARIABLE_T* pNewNode)
@@ -190,7 +190,7 @@ void insertVariable(VARIABLE_T* pRoot, VARIABLE_T* pNewNode)
         {
         pRoot = pNewNode;
         }
-	else if (strcmp(pNewNode->name, pRoot->name) < 0)
+    else if (strcmp(pNewNode->name, pRoot->name) < 0)
         {
         if (pRoot->leftChild == NULL)
             {
@@ -208,42 +208,61 @@ void insertVariable(VARIABLE_T* pRoot, VARIABLE_T* pNewNode)
             pRoot->rightChild = pNewNode;
             }
         else
-        	{
+            {
             insertVariable(pRoot->rightChild,pNewNode);
             }
         }
     }
 /*this function for add the name of variable,type of variable and symbol*/
 void addVariable(char in_word[],char in_type[])
-	{
-	char in_symbol[4];
-	VARIABLE_T* in_variable = NULL;
+    {
+    char in_symbol;
+    VARIABLE_T* in_variable = NULL;
 
 
-		if(strcmp(in_type,"int") == 0)
-			{
-			strcpy(in_symbol,"%%d");
-			}
-		else if(strcmp(in_type,"char") == 0)
-			{
-			strcpy(in_symbol,"%%c");
-			}
-		else if(strcmp(in_type,"string") == 0)
-			{
-			strcpy(in_symbol,"%%s");
-			}
-		in_variable = (VARIABLE_T*) calloc(1,sizeof(VARIABLE_T));
+        if(strcmp(in_type,"int") == 0)
+            {
+            in_symbol = 'd';
+            }
+        else if(strcmp(in_type,"char") == 0)
+            {
+            in_symbol = 'c';
+            }
+        else if(strcmp(in_type,"string") == 0)
+            {
+            in_symbol = 's';
+            }
+        in_variable = (VARIABLE_T*) calloc(1,sizeof(VARIABLE_T));
         if(in_variable == NULL)
-			{
-			printf("ERROR, cannot allocate.");
-			exit(0);
- 			}
- 		else
- 			{
- 			strcpy(in_variable->name,in_word);
- 			strcpy(in_variable->type,in_type);
- 			strcpy(in_variable->symbol,in_symbol);
+            {
+            printf("ERROR, cannot allocate.");
+            exit(0);
+            }
+        else
+            {
+            strcpy(in_variable->name,in_word);
+            strcpy(in_variable->type,in_type);
+            strcpy(in_variable->symbol,&in_symbol);
 
-			insertVariable(pRoot,in_variable);
- 			}
-	}
+            insertVariable(pRoot,in_variable);
+            }
+    }
+    
+int main()
+    {
+    int i = 0;
+    char input[32];
+    char nVariable[32];
+    char tVariable[32];
+    while(i<10)
+        {
+        printf("Enter the name of variable :");
+        fgets(input,sizeof(input),stdin);
+        sscanf(input,"%s",nVariable);
+        printf("Enter the type of variable :");
+        fgets(input,sizeof(input),stdin);
+        sscanf(input,"%s",tVariable);
+        addVariable(nVariable,tVariable);
+        i++;
+        }
+    }
