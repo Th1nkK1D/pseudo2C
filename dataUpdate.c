@@ -1,7 +1,7 @@
 /* 
  * dataUpdate.c
  * 
- * Use for updateing temporary data.
+ * Use for updating temporary data.
  *
  * Created by Siriwimon Suksukhon (Poo), ID 3436
  * - Team We Must Survived -
