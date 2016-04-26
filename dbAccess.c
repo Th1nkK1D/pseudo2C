@@ -80,10 +80,11 @@ int prepareDB()
 		extractProperty(rulesArray[i]->postIn,NULL);
 		extractProperty(rulesArray[i]->postOut,NULL);
 		extractProperty(rulesArray[i]->postVar,NULL);
-		extractProperty(rulesArray[i]->fChild,NULL);
+		extractProperty(rulesArray[i]->varType,NULL);
+		extractProperty(rulesArray[i]->fParent,NULL);
 		extractProperty(rulesArray[i]->description,NULL);
 
-		printf("name: %s\n",rulesArray[i]->name);
+		printf("\nname: %s\n",rulesArray[i]->name);
 		printf("key: %s\n",rulesArray[i]->key);
 		printf("preIn: %s\n",rulesArray[i]->preIn);
 		printf("preOut: %s\n",rulesArray[i]->preOut);
@@ -92,7 +93,8 @@ int prepareDB()
 		printf("postIn: %s\n",rulesArray[i]->postIn);
 		printf("postOut: %s\n",rulesArray[i]->postOut);
 		printf("postVar: %s\n",rulesArray[i]->postVar);
-		printf("fChild: %s\n",rulesArray[i]->fChild);
+		printf("varType: %s\n",rulesArray[i]->varType);
+		printf("fParent: %s\n",rulesArray[i]->fParent);
 		printf("description: %s\n",rulesArray[i]->description);
 
 		i++;
