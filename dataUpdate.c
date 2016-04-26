@@ -23,70 +23,52 @@
  */
 int checkCondition ( char input[] )
 	{
+	char* delim;
+	char tempData[512];
 	int i = 0;
-	char temp_input[512];
-	char* tempCondition;
-	VARIABLE_T* tempVar = NULL;
-	int bQuotes = 0;
 
-	strcpy(temp_input,input);
+	strcpy(tempData,input);
+	
+	delim = strtok(tempData," ");
 
-	tempCondition = strtok(temp_input," ");
-
-	tempVar = searchWord(tempCondition);
-
-	if ( tempVar != NULL )
+	while ( delim != NULL )
 		{
-		tempCondition = strtok(NULL," ");
-		if ( strcmp(tempCondition,"==") == 0 || strcmp(tempCondition,"<") == 0 || strcmp(tempCondition,">") == 0 || strcmp(tempCondition,"!=") == 0 || strcmp(tempCondition,"<=") == 0 || strcmp(tempCondition,">=") == 0 )
+		for(i=0;i<strlen(delim);i++)
 			{
-			tempCondition = strtok(NULL," ");
-			tempVar = NULL;
-			tempVar = searchWord(tempCondition);
-			if ( tempVar == NULL )
+			if ( isdigit(delim[i]) )
 				{
-				bQuotes = checkQuotes(tempCondition);
-				if ( bQuotes == 0 )
-					{
-					for (i=0;i<strlen(tempCondition);i++)
-						{
-						if ( isalpha(tempCondition[i]) || isspace(tempCondition[i]) )
-							{
-							return 0;
-							}
-						}
-					}
-				else if ( bQuotes == -1 )
-					{
-					return 0;
-					}
+				return 0;
 				}
 			}
-		else
+		delim = strtok(NULL," ");		
+		
+		if ( strcmp(delim,">") != 0 && strcmp(delim,"<") != 0 && strcmp(delim,"==") != 0 && strcmp(delim,"!=") != 0 && strcmp(delim,">=") != 0 && strcmp(delim,"<=") != 0 )
 			{
 			return 0;
 			}
-		}		
-	/* if it's not a variable, it must be a digit or string only */
-	else	
-		{
-		bQuotes = checkQuotes(tempCondition);
-		if ( bQuotes == 0 )
+		delim = strtok(NULL," ");	
+		for(i=0;i<strlen(delim);i++)
 			{
-			for (i=0;i<strlen(tempCondition);i++)
+			if ( isalpha(delim[i]) )
 				{
-				if ( isalpha(tempCondition[i]) || isspace(tempCondition[i]) )
-					{
-					return 0;
-					}
+				return 0;
+				}
+			else if ( isspace(delim[i]) )
+				{
+				return 0;
 				}
 			}
-		else if ( bQuotes == -1 )
+		delim = strtok(NULL," ");
+
+		if ( delim != NULL )
 			{
-			return 0;
-			}
+			if ( strcmp(delim,"||") != 0 && strcmp(delim,"&&") != 0 )
+				{
+				return 0;
+				}
+			}	
+		delim = strtok(NULL," ");
 		}
-	return 1;
 	}
 
 /* function to check that this string has quotes (" ") or not.
