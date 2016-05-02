@@ -93,8 +93,6 @@ int translator()
 	/* Read each line */
 	while(fgets(buffer,sizeof(buffer),pIn) != NULL)
 		{
-		printf("Buffer read: %s\n",buffer);
-
 		line++;
 
 		if(buffer[0] == '\n')
@@ -110,8 +108,6 @@ int translator()
 
 			/* Process the line */
 			processLine(buffer,pOut,line,currentStack,&indentCount);
-
-			printf("out of processLine\n");
 			}
 		}
 

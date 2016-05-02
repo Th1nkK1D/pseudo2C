@@ -83,7 +83,7 @@ int prepareDB()
 		extractProperty(rulesArray[i]->varType,NULL);
 		extractProperty(rulesArray[i]->fParent,NULL);
 		extractProperty(rulesArray[i]->description,NULL);
-
+/*
 		printf("\nname: %s\n",rulesArray[i]->name);
 		printf("key: %s\n",rulesArray[i]->key);
 		printf("preIn: %s\n",rulesArray[i]->preIn);
@@ -96,7 +96,7 @@ int prepareDB()
 		printf("varType: %s\n",rulesArray[i]->varType);
 		printf("fParent: %s\n",rulesArray[i]->fParent);
 		printf("description: %s\n",rulesArray[i]->description);
-
+*/
 		i++;
 		}
 
@@ -133,7 +133,6 @@ RULE_T* getRule(char target,char keyword[])
 		/* Search by key */
 		while(i < rulesCount)
 			{
-			printf("%s\n",rulesArray[i]->key);
 			if(strcmp(rulesArray[i]->key,keyword) == 0)
 				{
 				return rulesArray[i];
