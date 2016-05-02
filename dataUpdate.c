@@ -313,8 +313,14 @@ int checkFormat (char style[], char input[])
 	int format_space = 0;
 	int line_space = 0;
 
+	printf("string is ""%s""\n",input);
+	printf("style is ""%s""\n",style);
+
 	strcpy(lineCopied,input);
 	strcpy(pre_post_in,style);
+
+	printf("LINE is%s\n",lineCopied);
+	printf("FORMAT is %s\n",pre_post_in);
 
 	temp_format = pre_post_in;
 	temp_line = lineCopied;
@@ -337,6 +343,9 @@ int checkFormat (char style[], char input[])
 
 	if ( format_space != line_space )
 		{
+		printf("Not equal space\n");
+		printf("space format = %d\n",format_space);
+		printf("space line = %d\n",line_space);
 		return 0;
 		}
 
@@ -349,16 +358,20 @@ int checkFormat (char style[], char input[])
 			{
 			if ( strcasecmp(format,line) != 0 )
 				{
+				printf("FORMAT == %s\n",format);
+				printf("LINE == %s\n",line);
+				printf("format error\n");
 				return 0;
 				}
 			}	
 		}
+	printf("FORMAT COMPLETE\n");
 	return 1;
 	}	
 
 int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 	{
-	//RULE_T* tempRule = NULL;			/* store temporary of rule */
+	RULE_T* tempRule = NULL;			/* store temporary of rule */
 	char command[16];				/* store the first string as a command */
 	char line[512];					/* store temporary of line */
 	//char lineCopied_1[512];			/* store line for format checking */
@@ -382,19 +395,24 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 	int foundDollar = 0;
 	int i = 0;
 
-	if ( rule->preIn == NULL )
-		{
-		strcpy(pre_post_in,rule->postIn);
-		}
-	else
-		{
-		strcpy(pre_post_in,rule->preIn);
-		}
-	
+	printf("first line is \"%s\"\n",input);
+
+	tempRule = rule;
 	strcpy(command,input);
 	delim = strpbrk(command," ");
 	*delim = '\0';
 	strcpy(line,delim+1);
+
+	if ( tempRule->preIn == NULL )
+		{
+		strcpy(pre_post_in,tempRule->postIn);
+		}
+	else
+		{
+		strcpy(pre_post_in,tempRule->preIn);
+		}
+
+	printf("LINE isss ""%s""\n",line);
 
 	bFormat = checkFormat(pre_post_in,line);
 
@@ -522,7 +540,9 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 				else if ( strcmp("$v_name",tempFormat) == 0 )
 					{
 					bName = 0;
-					bName = checkName(tempLine,command);
+					//bName = checkName(tempLine,command);
+
+					bName = 1;
 
 					if ( bName != 1 )
 						{
@@ -538,7 +558,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 						}
 					else
 						{
-						strcpy(data->$v_symbol,tempVar->symbol);
+						strcpy(data->$v_symbol,"%s");
 						}				
 					}
 				else if ( strcmp("$value",tempFormat) == 0 )
