@@ -2,6 +2,8 @@
 #include <string.h>
 #include <ctype.h>
 #include <stdlib.h>
+#include "mainStructure.h"
+#include "globalAccess.h"
 
 /* Function to find dollar sign
  * Argument :
@@ -111,7 +113,7 @@ int checkCondition ( char input[] )
 		/* if it's a variable, we can catch its type suddenly */
 		else
 			{
-			strcpy(type1,findVar->$type);
+			strcpy(type1,findVar->type);
 			}
 		
 		/* checking the middle token */
@@ -201,7 +203,7 @@ int checkCondition ( char input[] )
 		/* if it's a variable, we can catch its type suddenly */
 		else
 			{
-			strcpy(type2,findVar->$type);
+			strcpy(type2,findVar->type);
 			}
 
 		/* if type of the two data in condition is not the same, return 0 */
@@ -301,15 +303,21 @@ int checkName ( char tempLine[] , char command[] )
 int checkFormat (char style[], char input[])
 	{
 	int i = 0;
-	char lineCopied[512] = strcpy(input);
+	char lineCopied[512];
 	char *format;
 	char *line;
-	char pre_post_in[512] = strcpy(style);
-	char *temp_format = pre_post_in;
-	char *temp_line = lineCopied;
+	char pre_post_in[512];
+	char *temp_format = NULL;
+	char *temp_line = NULL;
 	int checkDollar = 0;
 	int format_space = 0;
 	int line_space = 0;
+
+	strcpy(lineCopied,input);
+	strcpy(pre_post_in,style);
+
+	temp_format = pre_post_in;
+	temp_line = lineCopied;
 
 	for(i=0;i<strlen(temp_format);i++)
 		{
@@ -371,6 +379,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 	//char condition[512];
 	int bCondition = 0;				/* boolean to check condition */
 	char* delim = NULL;
+	int foundDollar = 0;
 	int i = 0;
 
 	if ( rule->preIn == NULL )
