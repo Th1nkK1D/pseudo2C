@@ -18,7 +18,7 @@ typedef struct
  	char postOut[64];
  	char postVar[32];
  	char varType[2];
- 	char fParent[16];
+ 	char fChild[16];
  	char description[128];
  	} RULE_T;
 
