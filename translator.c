@@ -14,17 +14,13 @@
 
 /* Function Declaration */
 int writeStdFunction(FILE* pOut);
-void writeIndent(FILE* pOut);
-int processLine(char buffer[],FILE* pOut,int line);
+void writeIndent(FILE* pOut,int indentCount);
+int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* indentCount);
 int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData);
 int writeOut(char arg[4][12],char printSet[64],int count,FILE* pOut);
 
 /* Static Variable */
 const char stdHeaderFile[] = "stdHeader.in";
-
-/* Global Variable */
-static char currentStack[16];
-static int indentCount = 0;
 
 /* Translator from Pseudocode to C
  *	Return:	1 = Success
@@ -41,6 +37,8 @@ int translator()
 	char inName[32];
 	char outName[32];
 	int line = 0;
+	char currentStack[16];
+	int indentCount = 0;
 
 	/* Prepare rule file */
 	if(prepareDB() != 1)
@@ -111,7 +109,7 @@ int translator()
 				}
 
 			/* Process the line */
-			processLine(buffer,pOut,line);
+			processLine(buffer,pOut,line,currentStack,&indentCount);
 
 			printf("out of processLine\n");
 			}
@@ -121,7 +119,7 @@ int translator()
 	printf("Finished read all the lines\n");
 
 	/* Close main function */
-	writeIndent(pOut);
+	writeIndent(pOut,indentCount);
 	fprintf(pOut,"}");
 	indentCount--;
 
@@ -145,11 +143,10 @@ int translator()
  *			-1 = Data update error, invalid systax
  *			-2 = Invalid rule argument
  */
-int processLine(char buffer[],FILE* pOut,int line)
+int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* indentCount)
 	{
 	char key[8];
 	RULE_T* pRule = NULL;
-	char currentStack[64];
 	int target;
 	TEMP_T tempData;
 	char arg[4][12];
@@ -180,12 +177,12 @@ int processLine(char buffer[],FILE* pOut,int line)
 	if (strcmp(buffer,currentStack) == 0)
 		{
 		/* End nested (close function) */
-		writeIndent(pOut);
+		writeIndent(pOut,*indentCount);
 		fprintf(pOut,"}\n");
 
 		/* Update stack */
 		pop(currentStack);
-		indentCount--;
+		*indentCount = *indentCount-1;
 
 		printf("Target = Post\n");
 		printf("preVar: %s\n",pRule->preVar);
@@ -222,7 +219,7 @@ int processLine(char buffer[],FILE* pOut,int line)
 
 	/* Prepare Argument */
 	varCount = prepareArg(arg,varSet,tempData);
-	writeIndent(pOut);
+	writeIndent(pOut,*indentCount);
 
 	printf("pass Indent\n");
 
@@ -244,7 +241,7 @@ int processLine(char buffer[],FILE* pOut,int line)
 
 		/* print bracket */
 		fprintf(pOut, "\n");
-		writeIndent(pOut);
+		writeIndent(pOut,*indentCount);
 		fprintf(pOut, "{\n");
 		}
 
@@ -388,7 +385,7 @@ int writeStdFunction(FILE* pOut)
 /* Write standard indenting to file
  *	Argument:	pOut = Output file pointer
  */
-void writeIndent(FILE* pOut)
+void writeIndent(FILE* pOut,int indentCount)
 	{
 	int i;
 

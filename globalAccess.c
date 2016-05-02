@@ -247,7 +247,7 @@ void addVariable(char in_word[],char in_type[])
             insertVariable(pRoot,in_variable);
             }
     }
-    
+/*    
 int main()
     {
     int i = 0;
@@ -266,3 +266,4 @@ int main()
         i++;
         }
     }
+*/
