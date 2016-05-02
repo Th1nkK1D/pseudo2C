@@ -253,7 +253,8 @@ int checkName ( char tempLine[] , char command[] , char varType[] )
 		}
 	else
 		{
-		strcpy(type,tempVar->type[0]);
+		sprintf(type,"%c",tempVar->type[0]);
+		//strcpy(type,tempVar->type[0]);
 
 		if ( strstr(varType,type) == NULL )
 			{
