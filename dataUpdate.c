@@ -324,8 +324,13 @@ int checkFormat (char style[], char input[])
 	int line_space = 0;
 
 
+	
+
 	strcpy(lineCopied,input);
 	strcpy(pre_post_in,style);
+
+	printf("0LINE is %s\n",lineCopied);
+	printf("0FORMAT is %s\n",pre_post_in);
 
 
 	temp_format = pre_post_in;
@@ -394,8 +399,6 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 	int foundDollar = 0;
 	int i = 0;
 
-	printf("first line is \"%s\"\n",input);
-
 	tempRule = rule;
 	strcpy(command,input);
 	delim = strpbrk(command," ");
@@ -411,9 +414,12 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 		strcpy(pre_post_in,tempRule->postIn);
 		}
 
-	printf("LINE isss ""%s""\n",line);
-
 	bFormat = checkFormat(pre_post_in,line);
+
+	if ( strcasecmp(command,"if") == 0 )
+		{
+		bFormat = 1;
+		}
 
 	if ( bFormat != 1 )
 		{
