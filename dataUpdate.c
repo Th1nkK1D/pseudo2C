@@ -253,7 +253,7 @@ int checkName ( char tempLine[] , char command[] , char varType[] )
 		}
 	else
 		{
-		type = tempVar->type[0];
+		strcpy(type,tempVar->type[0]);
 
 		if ( strstr(varType,type) == NULL )
 			{
@@ -401,13 +401,13 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 	*delim = '\0';
 	strcpy(line,delim+1);
 
-	if ( tempRule->preIn == NULL )
+	if ( tempRule->preIn != NULL )
 		{
-		strcpy(pre_post_in,tempRule->postIn);
+		strcpy(pre_post_in,tempRule->preIn);
 		}
 	else
 		{
-		strcpy(pre_post_in,tempRule->preIn);
+		strcpy(pre_post_in,tempRule->postIn);
 		}
 
 	printf("LINE isss ""%s""\n",line);
