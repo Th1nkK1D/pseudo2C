@@ -230,9 +230,11 @@ int checkCondition ( char input[] )
 	}
 
 
-int checkName ( char tempLine[] , char command[] )
+int checkName ( char tempLine[] , char command[] , char varType[] )
 	{
 	VARIABLE_T* tempVar = NULL;
+	int i = 0;
+	char* type = NULL;
 
 	tempVar = searchWord(tempLine);
 
@@ -251,7 +253,14 @@ int checkName ( char tempLine[] , char command[] )
 		}
 	else
 		{
-		if ( strcasecmp(command,"for") == 0 )
+		type = tempVar->type[0];
+
+		if ( strstr(varType,type) == NULL )
+			{
+			return 0;
+			}
+		
+		/*if ( strcasecmp(command,"for") == 0 )
 			{
 			if ( strcmp(tempVar->type,"char") == 0 )
 				{
@@ -287,7 +296,7 @@ int checkName ( char tempLine[] , char command[] )
 				printf("Error - variable type of GETLINE now support [ string ]\n");
 				return 0;
 				}
-			}	
+			}*/	
 		}
 	return 1;		
 	}
@@ -313,14 +322,10 @@ int checkFormat (char style[], char input[])
 	int format_space = 0;
 	int line_space = 0;
 
-	printf("string is ""%s""\n",input);
-	printf("style is ""%s""\n",style);
 
 	strcpy(lineCopied,input);
 	strcpy(pre_post_in,style);
 
-	printf("LINE is%s\n",lineCopied);
-	printf("FORMAT is %s\n",pre_post_in);
 
 	temp_format = pre_post_in;
 	temp_line = lineCopied;
@@ -343,9 +348,6 @@ int checkFormat (char style[], char input[])
 
 	if ( format_space != line_space )
 		{
-		printf("Not equal space\n");
-		printf("space format = %d\n",format_space);
-		printf("space line = %d\n",line_space);
 		return 0;
 		}
 
@@ -358,25 +360,21 @@ int checkFormat (char style[], char input[])
 			{
 			if ( strcasecmp(format,line) != 0 )
 				{
-				printf("FORMAT == %s\n",format);
-				printf("LINE == %s\n",line);
-				printf("format error\n");
 				return 0;
 				}
 			}	
 		}
-	printf("FORMAT COMPLETE\n");
 	return 1;
 	}	
 
 int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 	{
 	RULE_T* tempRule = NULL;			/* store temporary of rule */
-	char command[16];				/* store the first string as a command */
+	char command[256];				/* store the first string as a command */
 	char line[512];					/* store temporary of line */
 	//char lineCopied_1[512];			/* store line for format checking */
 	//char lineCopied_2[512];			/* store line for saving in temporary structure */
-	char pre_post_in[64];				/* store temporary of prein/postin */
+	char pre_post_in[256];				/* store temporary of prein/postin */
 	char* tempFormat;				/* hold each token of prein/postin */
 	char* tempLine;					/* hold each token of line */
 	char* hold_format = NULL;			/* pointer to prein/postin */
@@ -540,7 +538,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 				else if ( strcmp("$v_name",tempFormat) == 0 )
 					{
 					bName = 0;
-					//bName = checkName(tempLine,command);
+					//bName = checkName(tempLine,command,tempRule->$varType);
 
 					bName = 1;
 
@@ -558,24 +556,68 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 						}
 					else
 						{
-						strcpy(data->$v_symbol,"%s");
+						strcpy(data->$v_type,tempVar->type);
+						if ( strcmp(data->$v_type,"int") == 0 )
+							{
+							strcpy(data->$v_symbol,"%d");
+							}
+						else if ( strcmp(data->$v_type,"char") == 0 )
+							{
+							strcpy(data->$v_symbol,"%c");
+							}
+						else if ( strcmp(data->$v_type,"double") == 0 )
+							{
+							strcpy(data->$v_symbol,"%lf");
+							}
+						else
+							{
+							strcpy(data->$v_symbol,"%s");
+							}
 						}				
 					}
 				else if ( strcmp("$value",tempFormat) == 0 )
 					{
-					if ( strcasecmp(command,"for") == 0 )
+					
+					tempVar = searchWord(tempLine);
+
+					if ( tempVar == NULL )
+						{
+						if ( strcmp(data->$v_type,"int") == 0 || strcmp(data->$v_type,"double") )
+							{
+							for (i=0;i<strlen(tempLine);i++)
+								{
+								if ( isalpha(tempLine[i]) || isspace(tempLine[i]) )
+									{
+									printf("Error - this data must be digit\n");
+									return 0;
+									}
+								}
+							}
+						else if ( strcmp(data->$v_type,"char") == 0 )
+							{
+							if ( strlen(tempLine) != 1 )
+								{
+								printf("Error - this data must be one character\n");
+								return 0;
+								}
+							}
+						}
+					else
+						{
+						if ( strcmp(tempVar->type,data->$v_type) != 0 )
+							{
+							printf("Error - type of value is invalid\n");
+							return 0;
+							}			
+					
+					/*if ( strcasecmp(command,"for") == 0 )
 						{
 						for (i=0;i<strlen(tempLine);i++)
 							{
-							if ( isalpha(tempLine[i]) )
+							if ( isalpha(tempLine[i]) || isspace(tempLine[i]) )
 								{
 								printf("Error - value of FOR loop now support digit\n");
 								return 0;
-								}
-							else if ( isspace(tempLine[i]) )
-								{
-								return 0;
-								printf("Error - value of FOR loop now support digit\n");
 								}
 							}
 						}
@@ -593,18 +635,14 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 							{
 							for (i=0;i<strlen(tempLine);i++)
 								{
-								if ( isalpha(tempLine[i]) )
-									{
-									printf("Error - this value must be integer or double\n");
-									return 0;
-									}
-								else if ( isspace(tempLine[i]) )
+								if ( isalpha(tempLine[i]) || isspace(tempLine[i]) )
 									{
 									printf("Error - this value must be integer or double\n");
 									return 0;
 									}
 								}
 							}
+						}*/
 						}
 					strcpy(data->$value,tempLine);							
 					}
