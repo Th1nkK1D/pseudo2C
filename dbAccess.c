@@ -133,7 +133,7 @@ RULE_T* getRule(char target,char keyword[])
 		/* Search by key */
 		while(i < rulesCount)
 			{
-			printf("%d > %s\n",i,rulesArray[i]->key);
+			//printf("%d > %s\n",i,rulesArray[i]->key);
 			if(strcmp(rulesArray[i]->key,keyword) == 0)
 				{
 				return rulesArray[i];

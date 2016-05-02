@@ -107,7 +107,11 @@ int translator()
 				}
 
 			/* Process the line */
-			processLine(buffer,pOut,line,currentStack,&indentCount);
+			if(processLine(buffer,pOut,line,currentStack,&indentCount) != 1)
+				{
+				printf("Translation abort\n");
+				return -3;
+				}
 			}
 		}
 
@@ -168,6 +172,8 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		}
 
 	printf("Rule got: %s\n",pRule->name);
+
+	printf("Current stack = %s\n",currentStack);
 
 	/* Check if end nested found */
 	if (strcmp(buffer,currentStack) == 0)
@@ -230,10 +236,13 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 	/* Check if this key crete new nested */
 	if(strlen(pRule->postKey) > 0)
 		{
+		printf("*This one create new stack\n");
 		/* Update stack */
 		push(currentStack);
 		strcpy(currentStack,pRule->postKey);
 		indentCount++;
+
+		printf("currentStack = %s\n",currentStack);
 
 		/* print bracket */
 		fprintf(pOut, "\n");
