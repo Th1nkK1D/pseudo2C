@@ -34,7 +34,7 @@ void getHelp()
 		{
 		help[i] = (char*) calloc(16,sizeof(char));
 		}
-	getAllRuleName(help);
+	getAllRuleName(help);/**/
 	for(i=0;i<count;i++)
 		{
 		printf("%s.\n",help[i]);
@@ -52,12 +52,12 @@ void getHelp()
 		if(command != NULL)
 			{
 			printf("%s : %s\n",command->name,command->description);
-			printf("%s %s",command->key,command->preIn);
-			if(strlen(postKey) != 0)
+			printf("%s %s\n",command->key,command->preIn);
+			if(strlen(command->postKey) != 0)
 				{
-				printf("	//statement");
+				printf("	//statement\n");
 				}
-			printf("%s %s",command->postKey,command->postIn);
+			printf("%s %s\n",command->postKey,command->postIn);
 			}	
 		}
 	freeDB();
