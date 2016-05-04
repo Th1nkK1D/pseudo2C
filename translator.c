@@ -152,28 +152,28 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 
 	printf("\nprocessLine at line %d\n",line);
 
-	/* Get rule of key from first word */
 	sscanf(buffer,"%s",key);
 
 	printf("Key read: %s\n",key);
-
-	pRule = getRule('k',key);
-
-	if(pRule == NULL)
-		{
-		printf("Error: Key not found at line %d\n",line);
-		printf(">>> %s\n",buffer);
-
-		return 0;
-		}
-
-	printf("Rule got: %s\n",pRule->name);
 
 	printf("Current stack = %s\n",currentStack);
 
 	/* Check if end nested found */
 	if (strcmp(buffer,currentStack) == 0)
 		{
+		/* Get rule by key  */
+		pRule = getRule('e',key);
+
+		if(pRule == NULL)
+			{
+			printf("Error: postKey not found at line %d\n",line);
+			printf(">>> %s\n",buffer);
+
+			return 0;
+			}
+
+		printf("Rule got: %s\n",pRule->name);
+
 		/* End nested (close function) */
 		writeIndent(pOut,*indentCount);
 		fprintf(pOut,"}\n");
@@ -192,6 +192,19 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		}
 	else
 		{
+		/* Get ruleby end key */
+		pRule = getRule('k',key);
+
+		if(pRule == NULL)
+			{
+			printf("Error: Key not found at line %d\n",line);
+			printf(">>> %s\n",buffer);
+
+			return 0;
+			}
+
+		printf("Rule got: %s\n",pRule->name);
+
 		/* New function */
 		printf("Target = Pre\n");		
 		printf("postVar: %s\n",pRule->preVar);
