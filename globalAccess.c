@@ -36,7 +36,7 @@ FILE_T * searchFile(char name[])
     word = fHead;
     while(word != NULL)
         {
-        if(strcmp(name,word->name) == 0)
+        if(strcmp(name,word->handle) == 0)
             {
             return word;
             }
