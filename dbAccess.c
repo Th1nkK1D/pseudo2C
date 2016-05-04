@@ -186,7 +186,6 @@ int getAllRuleName(char** nameList)
 	for(i = 0; i < rulesCount; i++)
 		{
 		strcpy(nameList[i],rulesArray[i]->name);
-		printf("%s\n",nameList[i]);
 		}
 
 	return i+1;
