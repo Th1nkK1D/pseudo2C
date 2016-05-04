@@ -132,7 +132,7 @@ RULE_T* getRule(char target,char keyword[])
 		while(i < rulesCount)
 			{
 			//printf("%d > %s\n",i,rulesArray[i]->key);
-			if(strcasecmp(rulesArray[i]->key,keyword) == 0)
+			if(strcasecmp(rulesArray[i]->key,keyword) == 0 || strcasecmp(rulesArray[i]->postKey,keyword) == 0)
 				{
 				return rulesArray[i];
 				}

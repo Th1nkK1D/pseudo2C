@@ -27,11 +27,15 @@ dataUpdate.o :	dataUpdate.c mainStructure.h globalAccess.h
 translator.o :	translator.c mainStructure.h dataUpdate.h globalAccess.h
 	gcc -c translator.c
 
+help.o :	dbAccess.c mainStructure.h
+	gcc -c help.c
+
+
 main.o :	main.c translator.h
 	gcc -c main.c
 
-Pseudo2C$(EXECEXT) : main.o dbAccess.o globalAccess.o dataUpdate.o translator.o
-	gcc -o Pseudo2C$(EXECEXT) main.o dbAccess.o globalAccess.o dataUpdate.o translator.o
+Pseudo2C$(EXECEXT) : main.o dbAccess.o globalAccess.o dataUpdate.o translator.o help.o
+	gcc -o Pseudo2C$(EXECEXT) main.o dbAccess.o globalAccess.o dataUpdate.o translator.o help.o
 
 clean : 
 	-rm *.o
