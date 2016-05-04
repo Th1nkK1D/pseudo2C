@@ -177,6 +177,7 @@ int checkCondition ( char input[] , char con[])
 		if ( strcmp(delim,">") != 0 && strcmp(delim,"<") != 0 && strcmp(delim,"==") != 0 && strcmp(delim,"!=") != 0 && strcmp(delim,">=") != 0 && strcmp(delim,"<=") != 0 )
 			{
 			printf("POINT 72\n");
+			printf("delim = %s\n",delim);
 			return 0;
 			}
 
@@ -476,7 +477,7 @@ int checkName ( char tempLine[] , char command[] , char varType[] )
  * 1 => if it is in correct format
  * 0 => if it's not
  */
-int checkFormat (char style[], char input[])
+int checkFormat (char style[], char input[], char command[])
 	{
 	int i = 0;
 	char lineCopied[512];
@@ -510,9 +511,15 @@ int checkFormat (char style[], char input[])
 			line_space++;
 			}
 		}
-
-	if ( format_space != line_space )
+	if ( strcmp(temp_format,"$con") == 0 )
 		{
+		return 1;
+		}
+	
+
+	if ( format_space != line_space && strcasecmp(command,"for") != 0 )
+		{
+		printf("POINT 91\n");
 		return 0;
 		}
 
@@ -525,9 +532,14 @@ int checkFormat (char style[], char input[])
 			{
 			if ( strcasecmp(format,line) != 0 )
 				{
+				printf("POINT 92\n");
 				return 0;
 				}
-			}	
+			}
+		if ( strcmp(temp_format,"$con") == 0 )
+			{
+			return 1;
+			}
 		}
 	return 1;
 	}	
@@ -552,6 +564,17 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 	char* delim = NULL;
 	int i = 0;
 
+	memset(data->$con,0,sizeof(data->$con));
+	memset(data->$v_name,0,sizeof(data->$v_name));
+	memset(data->$v_type,0,sizeof(data->$v_type));
+	memset(data->$v_symbol,0,sizeof(data->$v_symbol));
+	memset(data->$value,0,sizeof(data->$value));
+	memset(data->$increm,0,sizeof(data->$increm));
+	memset(data->$f_pointer,0,sizeof(data->$f_pointer));
+	memset(data->$f_path,0,sizeof(data->$f_path));
+	memset(data->$f_mode,0,sizeof(data->$f_mode));
+	memset(data->$key,0,sizeof(data->$key));
+
 	printf("POINT 1\n");
 
 	tempRule = rule;
@@ -566,7 +589,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 		}
 	*delim = '\0';
 	strcpy(line,delim+1);
-	strcpy(lineCondition,line);
+	//strcpy(lineCondition,line);
 	printf("POINT 3\n");
 
 	if ( strlen(tempRule->preIn) != 0 )
@@ -580,13 +603,9 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 		strcpy(pre_post_in,tempRule->postIn);
 		}
 
-	bFormat = checkFormat(pre_post_in,line);
-
-	if ( strcasecmp(command,"if") == 0 || strcasecmp(command,"do") == 0 || strcasecmp(command,"while") == 0)
-		{
-		printf("POINT 6\n");
-		bFormat = 1;
-		}
+	bFormat = checkFormat(pre_post_in,line,command);
+	printf("pre_post_in = %s\n",pre_post_in);
+	printf("line = %s\n",line);
 
 	if ( bFormat != 1 )
 		{
@@ -606,7 +625,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 		while ( (tempFormat = strtok_r(hold_format," ",&hold_format)) && (tempLine = strtok_r(hold_line," ",&hold_line)) )
 			{
 			foundDollar = 0;
-			foundDollar = findDollar(tempFormat);
+			foundDollar = findDollar(tempFormat);	
 
 			printf("POINT 10\n");
 			if ( foundDollar == 1 )
@@ -707,13 +726,20 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 				}
 			}
 		printf("POINT 22\n");
-		addFile(data->$f_path,data->$f_mode);
+		addFile(data->$f_path,data->$f_mode,data->$f_pointer);
 		}
 
 	else
 		{
 		printf("POINT 23\n");
-		while ( (tempFormat = strtok_r(hold_format," ",&hold_format)) && (tempLine = strtok_r(hold_line," ",&hold_line)) )
+		tempFormat = strtok_r(hold_format," ",&hold_format);
+		if ( strcmp(tempFormat,"$con") != 0 )
+			{
+			printf("POINT 23.5\n");
+			tempLine = strtok_r(hold_line," ",&hold_line);
+			}
+		
+		while ( tempFormat != NULL )
 			{
 			foundDollar = 0;
 			foundDollar = findDollar(tempFormat);
@@ -724,6 +750,26 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 				if ( strcmp("$con",tempFormat) == 0 )
 					{
 					printf("POINT 25\n");
+					printf("holdline == %s\n",hold_line);
+					tempLine = strtok_r(NULL," ",&hold_line);
+					printf("tempLINE == %s\n",tempLine);
+
+					memset(lineCondition,0,sizeof(lineCondition));
+					
+					while ( tempLine != NULL )
+						{
+						printf("tempLine = %s\n",tempLine);
+						strcat(lineCondition,tempLine);
+						
+						tempLine = strtok_r(NULL," ",&hold_line);
+						if ( tempLine != NULL )
+							{
+							strcat(lineCondition," ");
+							}
+						}
+
+					printf("lineCondition = %s\n",lineCondition);
+					
 					bCondition = 0;
 					bCondition = checkCondition(lineCondition,data->$con);
 
@@ -778,7 +824,9 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 							strcpy(data->$v_symbol,"%s");
 							}
 						printf("POINT 31\n");
-						}				
+						}
+					strcat(data->$increm,data->$v_name);
+					strcat(data->$increm,"++");			
 					}
 				else if ( strcmp("$value",tempFormat) == 0 )
 					{
@@ -901,6 +949,15 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 					}
 				}
 			printf("POINT 41\n");
+			tempFormat = strtok_r(NULL," ",&hold_format);
+			printf("tempFormat is %s\n",tempFormat);
+			if ( tempFormat != NULL )
+				{
+				if ( strcmp(tempFormat,"$con") != 0 )
+					{
+					tempLine = strtok_r(NULL," ",&hold_line);
+					}
+				}
 			}
 		printf("POINT 42\n");			
 		}
