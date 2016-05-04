@@ -37,7 +37,7 @@ int checkCondition ( char input[] , char con[])
 	char* delim;
 	char tempData[512];
 	int i = 0;
-	char tempCondition[512];
+	char tempCon[512];
 	char leftToken[16];
 	char sign[16];
 	char rightToken[16];
@@ -45,6 +45,11 @@ int checkCondition ( char input[] , char con[])
 	VARIABLE_T* findVar = NULL;
 	char type1[16];
 	char type2[16];
+
+	memset(tempCon,0,sizeof(tempCon));
+
+
+	printf("temp con is %s\n",tempCon);
 
 	printf("POINT 55\n");
 
@@ -67,6 +72,8 @@ int checkCondition ( char input[] , char con[])
 		/* checking first token */
 		findVar = NULL;
 		findVar = searchWord(delim);
+
+		printf("temp con is %s\n",tempCon);
 
 		printf("POINT 59\n");
 
@@ -193,12 +200,15 @@ int checkCondition ( char input[] , char con[])
 		findVar = searchWord(delim);
 
 		printf("POINT 77\n");
+		printf("temp con is %s\n",tempCon);
 
 		/* if it's not a variable, we will find what type it is */
 		if ( findVar == NULL )
 			{
+			printf("delim = %s\n",delim);
 			printf("variable not found\n");
 			printf("POINT 78\n");
+			printf("temp con is %s\n",tempCon);
 			/* if it doesn't have two quotes (initial and terminal) then we know it's not a string or char */
 			if ( delim[0] != '"' || delim[strlen(delim)-1] != '"' )
 				{
@@ -281,13 +291,14 @@ int checkCondition ( char input[] , char con[])
 			printf("POINT 82\n");
 			strcpy(type2,findVar->type);
 			}
-
+		printf("temp con is %s\n",tempCon);
 		/* if type of the two data in condition is not the same, return 0 */
 		if ( strcmp(type1,type2) != 0 )
 			{
 			printf("POINT 83\n");
 			return 0;
 			}
+		printf("temp con is %s\n",tempCon);
 
 		strcpy(rightToken,delim);
 
@@ -295,24 +306,39 @@ int checkCondition ( char input[] , char con[])
 
 		if ( strcmp(type1,"string") == 0 )
 			{
+			printf("temp con is %s\n",tempCon);
 			printf("POINT 85\n");
-			strcat(tempCondition,"strcmp(");
-			strcat(tempCondition,leftToken);
-			strcat(tempCondition,",");
-			strcat(tempCondition,rightToken);
-			strcat(tempCondition,") ");
-			strcat(tempCondition,sign);
-			strcat(tempCondition," 0");
+			strcat(tempCon,"strcmp(");
+			printf("temp con is %s\n",tempCon);
+			strcat(tempCon,leftToken);
+			printf("temp con is %s\n",tempCon);
+			strcat(tempCon,",");
+			printf("temp con is %s\n",tempCon);
+			strcat(tempCon,rightToken);
+			printf("temp con is %s\n",tempCon);
+			strcat(tempCon,") ");
+			printf("temp con is %s\n",tempCon);
+			strcat(tempCon,sign);
+			printf("temp con is %s\n",tempCon);
+			strcat(tempCon," 0");
+			printf("temp con is %s\n",tempCon);
 			}
 		else
 			{
+			printf("temp con is %s\n",tempCon);
 			printf("POINT 86\n");
-			strcat(tempCondition,leftToken);
-			strcat(tempCondition," ");
-			strcat(tempCondition,sign);
-			strcat(tempCondition," ");
-			strcat(tempCondition,rightToken);
-			}			
+			strcat(tempCon,leftToken);
+			printf("temp con is %s\n",tempCon);
+			strcat(tempCon," ");
+			printf("temp con is %s\n",tempCon);
+			strcat(tempCon,sign);
+			printf("temp con is %s\n",tempCon);
+			strcat(tempCon," ");
+			printf("temp con is %s\n",tempCon);
+			strcat(tempCon,rightToken);
+			printf("temp con is %s\n",tempCon);
+			}	
+		printf("temp con is %s\n",tempCon);		
 
 		printf("POINT 87\n");
 
@@ -322,6 +348,7 @@ int checkCondition ( char input[] , char con[])
 
 		if ( delim != NULL )
 			{
+			printf("temp con is %s\n",tempCon);
 
 			printf("POINT 88\n");
 			if ( strcmp(delim,"||") != 0 && strcmp(delim,"&&") != 0 )
@@ -331,24 +358,25 @@ int checkCondition ( char input[] , char con[])
 			else
 				{
 				printf("POINT 89\n");
-				strcat(tempCondition," ");
+				strcat(tempCon," ");
 				printf("POINT 89.1\n");
 				printf("delim is %s\n",delim);
-				printf("tempCondition is %s\n",tempCondition);
-				strcat(tempCondition,delim);
+				printf("tempCondition is %s\n",tempCon);
+				strcat(tempCon,delim);
 				printf("POINT 89.2\n");
-				strcat(tempCondition," ");
+				strcat(tempCon," ");
 				}
 			}
 
 
-		
+		printf("temp con is %s\n",tempCon);
 		printf("POINT 89.5\n");
 		delim = NULL;	
 		delim = strtok(NULL," ");
 		}
 	printf("POINT 90\n");
-	strcpy(con,tempCondition);
+	strcpy(con,tempCon);
+	printf(" C O N = %s\n",con);
 	return 1;
 	}
 
@@ -695,13 +723,15 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 					printf("POINT 25\n");
 					bCondition = 0;
 					bCondition = checkCondition(lineCondition,data->$con);
+
+					printf("DATA CON = %s\n",data->$con);
 					
 					if ( bCondition != 1 )
 						{
 						printf("Error - condition is invalid\n");
 						return 0;
 						}
-					strcpy(data->$con,tempLine);
+
 					printf("POINT 26\n");
 					}
 				else if ( strcmp("$v_name",tempFormat) == 0 )
