@@ -3,15 +3,18 @@
 */
 VARIABLE_T * searchWord(char name[]);
 
+/*this function for search the file
+ *return NULL if file does not exist.
+*/
 FILE_T * searchFile(char name[]);
 
-/*this function for free the tree*/
-void freeVariableTree();
+/*this function for free the linked list of variable*/
+void freeVariable();
 
-void freeFileTree();
+/*this function for free the linked list of file's name*/
+void freeFile();
 
-void insertFile(FILE_T* pRoot, FILE_T* pNewNode);
-
+/*This function for add the file's name,file's path and file's mode*/
 void addFile(char nameFile[32],char type[6]);
 
  /*this function for push a data item onto the stack
@@ -23,9 +26,6 @@ int push(char data[]);
  * Returns 0 if the queue is empty.
  */
 int * pop(char postIn[]);
-
-/*This function for insert the people in the trees*/
-void insertVariable(VARIABLE_T* pRoot, VARIABLE_T* pNewNode);
 
 /*this function for add the name of variable,type of variable and symbol*/
 void addVariable(char in_word[],char in_type[]);

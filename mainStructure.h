@@ -27,7 +27,7 @@ typedef struct
  * Each type will be handle differently. */
 typedef struct 	
 	{
- 	char $con[64];
+ 	char $con[128];
  	char $v_name[16];
 	char $v_type[64];
 	char $v_symbol[4];
@@ -46,8 +46,7 @@ typedef struct _variable
 	char name[16];
 	char type[8];
 	char symbol[64];
-	struct _variable *leftChild;
-	struct _variable *rightChild;
+	struct _variable *pNext;
 	} VARIABLE_T;
 
 /* 4. File handle Linked-List (globalData Module)
@@ -57,8 +56,6 @@ typedef struct _file
 	char handle[16];
 	char path[32];
 	char mode[4];
-	struct _file *pleft;
-	struct _file *pright;
 	struct _file *pNext;
 	} FILE_T;
 
