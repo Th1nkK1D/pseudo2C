@@ -35,7 +35,7 @@ int translator()
 	char inName[32];
 	char outName[32];
 	int line = 0;
-	char currentStack[16];
+	char currentStack[16] = "main";
 	int indentCount = 0;
 
 	printf("Translator started\n");
@@ -247,8 +247,8 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		{
 		printf("*This one create new stack\n");
 		/* Update stack */
-		push(currentStack);
 		strcpy(currentStack,pRule->postKey);
+		push(currentStack);
 		indentCount++;
 
 		printf("currentStack = %s\n",currentStack);
@@ -342,6 +342,10 @@ int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData)
  */
 int writeOut(char arg[4][12],char printSet[64],int count,FILE* pOut)
 	{
+	if(count == 0)
+		{
+		fprintf(pOut,"%s",printSet);
+		}
 	if(count == 1)
 		{
 		fprintf(pOut,printSet,arg[0]);
