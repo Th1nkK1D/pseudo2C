@@ -15,6 +15,7 @@
 #include <ctype.h>
 #include "mainStructure.h"
 #include "translator.h"
+#include "help.h"
 
 /* Function to check that user choose option 0,1,2,3 only
  * Argument:
@@ -94,13 +95,13 @@ int main ()
 
 		else if ( option == 2 )
 			{
+			printf("Entering to translator\n");
 			translator();
 			}
 	
 		else if ( option == 3 )
 			{
-			/* ... Get help function ... */
-			printf("To be implement soon\n");
+			getHelp();
 			}
 		else
 			{
