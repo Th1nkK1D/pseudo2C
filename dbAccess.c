@@ -28,9 +28,11 @@ void extractProperty(char* target,char* buffer);
  */
 int prepareDB()
 	{
-	char buffer[128];
+	char buffer[512];
 	int i = 0;
 	char* token;
+
+	printf("repareDB started\n");
 
 	/* Open rules file */
 	pFile = fopen(rulesFile,"r");
@@ -81,7 +83,6 @@ int prepareDB()
 		extractProperty(rulesArray[i]->fChild,NULL);
 		extractProperty(rulesArray[i]->description,NULL);
 
-		/*
 		printf("i = %d\n",i);
 		printf("\nname: %s\n",rulesArray[i]->name);
 		printf("key: %s\n",rulesArray[i]->key);
@@ -95,8 +96,7 @@ int prepareDB()
 		printf("varType: %s\n",rulesArray[i]->varType);
 		printf("fChild: %s\n",rulesArray[i]->fChild);
 		printf("description: %s\n",rulesArray[i]->description);
-		*/
-
+		
 		i++;
 		}
 

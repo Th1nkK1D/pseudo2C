@@ -37,6 +37,8 @@ int translator()
 	char currentStack[16];
 	int indentCount = 0;
 
+	printf("Translator started\n");
+
 	/* Prepare rule file */
 	if(prepareDB() != 1)
 		{
