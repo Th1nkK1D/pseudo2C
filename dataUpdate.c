@@ -48,7 +48,6 @@ int checkCondition ( char input[] , char con[])
 
 	memset(tempCon,0,sizeof(tempCon));
 
-
 	printf("temp con is %s\n",tempCon);
 
 	printf("POINT 55\n");
@@ -608,7 +607,6 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 			{
 			foundDollar = 0;
 			foundDollar = findDollar(tempFormat);
-			
 
 			printf("POINT 10\n");
 			if ( foundDollar == 1 )
@@ -664,6 +662,11 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 			}
 		printf("POINT 15\n");
 		addVariable(data->$v_name,data->$v_type);
+		if ( strcmp(data->$v_type,"string") == 0 )
+			{
+			strcpy(data->$v_type,"char");
+			strcat(data->$v_name,"[256]");
+			}
 		}
 
 	else if ( strcasecmp("open",command) == 0 )
