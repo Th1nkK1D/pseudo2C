@@ -215,7 +215,7 @@ void addVariable(char in_word[],char in_type[])
         insertVariable(in_variable);
         }
     }
-
+/*
 int main()
     {
     FILE_T* found = NULL;
@@ -250,3 +250,4 @@ int main()
             }
         }
     }
+*/
