@@ -102,6 +102,7 @@ int translator()
 		else
 			{
 			cleanBuffer(buffer);
+			printf("clean buffer = %s\n",buffer);
 			/* Process the line */
 			if(processLine(buffer,pOut,line,currentStack,&indentCount) != 1)
 				{
@@ -143,7 +144,7 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 	{
 	char key[8];
 	RULE_T* pRule = NULL;
-	int target;
+	char target;
 	TEMP_T tempData;
 	char arg[4][12];
 	char varSet[64];
@@ -161,8 +162,9 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 	/* Check if end nested found */
 	if (strcmp(buffer,currentStack) == 0)
 		{
-		/* Get rule by key  */
-		pRule = getRule('e',key);
+		/* Get rule by end key */
+		target = 'e';
+		pRule = getRule(target,key);
 
 		if(pRule == NULL)
 			{
@@ -192,8 +194,9 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		}
 	else
 		{
-		/* Get ruleby end key */
-		pRule = getRule('k',key);
+		/* Get rule by key */
+		target = 'k';
+		pRule = getRule(target,key);
 
 		if(pRule == NULL)
 			{
@@ -243,7 +246,7 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 	printf("pass writeOut\n");
 
 	/* Check if this key crete new nested */
-	if(strlen(pRule->postKey) > 0)
+	if(target == 'k' && strlen(pRule->postKey) > 0)
 		{
 		printf("*This one create new stack\n");
 		/* Update stack */
@@ -432,5 +435,5 @@ void cleanBuffer(char buffer[])
 		i++;
 		}
 
-	buffer = &buffer[i];
+	sprintf(buffer,"%s",buffer+i);
 	}

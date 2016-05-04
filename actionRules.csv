@@ -1,5 +1,5 @@
 15
-If|IF|$con|if %s|$con|ENDIF|-|-|-|idcs|else|Doing an action if the statement is true.
+If|IF|$con|if(%s)|$con|ENDIF|-|-|-|idcs|else|Doing an action if the statement is true.
 Else|ELSE|$key|else|-|-|-|-|-|-|-|Doing an action if statement inside IF is not true.
 Print|PRINT|$v_name|printf("%s\n",%s);|$v_symbol,$v_name|-|-|-|-|idcs|-|Print text or variable on the console.
 Do While|DO|-|do|-|WHILE|$con|while(%s);|$con|idcs|-|Do an action once then keep doing it while the condition is true.
