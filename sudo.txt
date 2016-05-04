@@ -1,0 +1,9 @@
+PRINT "Hello"
+VARIABLE count is int
+VARIABLE name is string
+PRINT count
+WHILE count < 0 || count > 10 && count == 1
+SET count to 26
+GET name
+IF count < 0 && count != 5
+ENDIF
