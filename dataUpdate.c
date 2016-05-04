@@ -87,53 +87,55 @@ int checkCondition ( char input[] , char con[])
 					{
 					return 0;
 					}
-				/* if it doesn't have any quote, we absolutely know that it must be an int or double */ 
+				/* if it doesn't have any quote, we absolutely know that it must be an int or double or char */ 
 				else
 					{
-					printf("POINT 62\n");
-					/* if it still has any alphabet, space return 0 */
-					for (i=0;i<strlen(delim);i++)
+					if ( delim[0] == '\'' && delim[strlen(delim)-1] == '\'' )
 						{
-						if ( isalpha(delim[i]) )
-							{
-							return 0;
-							}
-						else if ( isspace(delim[i]) )
-							{
-							return 0;
-							}
-						/* if we found dot, we suddenly know it is a double */
-						else if ( delim[i] == '.' )
-							{
-							strcpy(type1,"double");
-							}
+						strcpy(type1,"char");
 						}
-					printf("POINT 63\n");
-					/* if it's nothing until now, it's an int */
-					if ( type1 == NULL )
+					else if ( delim[0] != '\'' && delim[strlen(delim)-1] == '\'' )
 						{
-						printf("POINT 64\n");
-						strcpy(type1,"int");
+						return 0;
+						}
+					else if ( delim[0] == '\'' && delim[strlen(delim)-1] != '\'' )
+						{
+						return 0;
+						}
+					else
+						{
+						printf("POINT 62\n");
+						/* if it still has any alphabet or space then return 0 */
+						for (i=0;i<strlen(delim);i++)
+							{
+							if ( isalpha(delim[i]) )
+								{
+								return 0;
+								}
+							else if ( isspace(delim[i]) )
+								{
+								return 0;
+								}
+							/* if we found dot, we suddenly know it is a double */
+							else if ( delim[i] == '.' )
+								{
+								strcpy(type1,"double");
+								}
+							}
+						printf("POINT 63\n");
+						/* if it's nothing until now, it's an int */
+						if ( strcmp(type1,"double") != 0 )
+							{
+							printf("POINT 64\n");
+							strcpy(type1,"int");
+							}
 						}
 					}
-				
 				}
-			/* if it has two quotes, we need to check that it is a char or string */
+			/* if it has two quotes, we completely know that it's a string */
 			else
 				{
-				printf("POINT 65\n");
-				/* if it has one character between two quotes, we know it is a char */
-				if ( strlen(delim) == 3 )
-					{
-					printf("POINT 66\n");
-					strcpy(type1,"char");
-					}
-				/* if not, it is a string */
-				else
-					{
-					printf("POINT 67\n");
-					strcpy(type1,"string");
-					}
+				strcpy(type1,"string");
 				}
 			}
 		/* if it's a variable, we can catch its type suddenly */
@@ -216,49 +218,57 @@ int checkCondition ( char input[] , char con[])
 				else
 					{
 					printf("POINT aa\n");
-					/* if it still has any alphabet, space return 0 */
-					for (i=0;i<strlen(delim);i++)
+
+					if ( delim[0] == '\'' && delim[strlen(delim)-1] == '\'' )
 						{
-						if ( isalpha(delim[i]) )
-							{
-							printf("POINT 79.3\n");
-							return 0;
-							}
-						else if ( isspace(delim[i]) )
-							{
-							printf("POINT 79.4\n");
-							return 0;
-							}
-						/* if we found dot, we suddenly know it is a double */
-						else if ( delim[i] == '.' )
-							{
-							strcpy(type2,"double");
-							}
+						strcpy(type2,"char");
 						}
-					/* if it's nothing until now, it's an int */
-					if ( strcmp(type2,"double") != 0 )
+					else if ( delim[0] != '\'' && delim[strlen(delim)-1] == '\'' )
 						{
-						printf("POINT 79.5\n");
-						strcpy(type2,"int");
+						return 0;
+						}
+					else if ( delim[0] == '\'' && delim[strlen(delim)-1] != '\'' )
+						{
+						return 0;
+						}
+					else
+						{
+
+						/* if it still has any alphabet, space return 0 */
+						for (i=0;i<strlen(delim);i++)
+							{
+							if ( isalpha(delim[i]) )
+								{
+								printf("POINT 79.3\n");
+								return 0;
+								}
+							else if ( isspace(delim[i]) )
+								{
+								printf("POINT 79.4\n");
+								return 0;
+								}
+							/* if we found dot, we suddenly know it is a double */
+							else if ( delim[i] == '.' )
+								{
+								strcpy(type2,"double");
+								}
+							}
+						/* if it's nothing until now, it's an int */
+						if ( strcmp(type2,"double") != 0 )
+							{
+							printf("POINT 79.5\n");
+							strcpy(type2,"int");
+							}
 						}
 					}
 				printf("POINT 79.6\n");
 				printf("type2 is %s\n",type2);
 				}
-			/* if it has two quotes, we need to check that it is a char or string */
+			/* if it has two quotes, we completely know that it's a string */
 			else
 				{
 				printf("POINT 80\n");
-				/* if it has one character between two quotes, we know it is a char */
-				if ( strlen(delim) == 3 )
-					{
-					strcpy(type2,"char");
-					}
-				/* if not, it is a string */
-				else
-					{
-					strcpy(type2,"string");
-					}
+				strcpy(type2,"string");
 				}
 			printf("POINT 81\n");
 			printf("type2 is %s\n",type2);
@@ -520,7 +530,13 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 	tempRule = rule;
 	strcpy(command,input);
 	printf("POINT 2\n");
+	printf("command is %s\n",command);
+	
 	delim = strpbrk(command," ");
+	if ( delim == NULL )
+		{
+		return 1;
+		}
 	*delim = '\0';
 	strcpy(line,delim+1);
 	strcpy(lineCondition,line);
