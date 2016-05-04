@@ -215,3 +215,39 @@ void addVariable(char in_word[],char in_type[])
         insertVariable(in_variable);
         }
     }
+/*
+int main()
+    {
+    VARIABLE_T* found = NULL;
+    char input[32];
+    char nVariable[32];
+    char type[5];
+    int i=0;
+    while(i<3)
+        {
+        printf("enter variable : ");
+        fgets(input,sizeof(input),stdin);
+        sscanf(input,"%s",nVariable);
+        printf("enter type : ");
+        fgets(input,sizeof(input),stdin);
+        sscanf(input,"%s",type);
+        addVariable(nVariable,type);
+        i++;
+        }
+    while(1)
+        {
+        printf("input name of variable :");
+        fgets(input,sizeof(input),stdin);
+        sscanf(input,"%s",input);
+        found = searchWord(input);
+        if(found == NULL)
+            {
+            printf("can not found varialbe\n");
+            }
+        else
+            {
+            printf("found variable\n");
+            }
+        }
+    }
+*/
