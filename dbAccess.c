@@ -32,8 +32,6 @@ int prepareDB()
 	int i = 0;
 	char* token;
 
-	printf("repareDB started\n");
-
 	/* Open rules file */
 	pFile = fopen(rulesFile,"r");
 
@@ -82,7 +80,7 @@ int prepareDB()
 		extractProperty(rulesArray[i]->varType,NULL);
 		extractProperty(rulesArray[i]->fChild,NULL);
 		extractProperty(rulesArray[i]->description,NULL);
-
+		/*
 		printf("i = %d\n",i);
 		printf("\nname: %s\n",rulesArray[i]->name);
 		printf("key: %s\n",rulesArray[i]->key);
@@ -96,7 +94,7 @@ int prepareDB()
 		printf("varType: %s\n",rulesArray[i]->varType);
 		printf("fChild: %s\n",rulesArray[i]->fChild);
 		printf("description: %s\n",rulesArray[i]->description);
-		
+		*/
 		i++;
 		}
 
@@ -134,19 +132,19 @@ RULE_T* getRule(char target,char keyword[])
 		while(i < rulesCount)
 			{
 			//printf("%d > %s\n",i,rulesArray[i]->key);
-			if(strcmp(rulesArray[i]->key,keyword) == 0)
+			if(strcasecmp(rulesArray[i]->key,keyword) == 0)
 				{
 				return rulesArray[i];
 				}
 			i++;
 			}
 		}
-	else
+	else if(target == 'n')
 		{
 		/* Search by name */
 		while(i < rulesCount)
 			{
-			if(strcmp(rulesArray[i]->name,keyword) == 0)
+			if(strcasecmp(rulesArray[i]->name,keyword) == 0)
 				{
 				return rulesArray[i];
 				}

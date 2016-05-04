@@ -18,6 +18,7 @@ void writeIndent(FILE* pOut,int indentCount);
 int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* indentCount);
 int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData);
 int writeOut(char arg[4][12],char printSet[64],int count,FILE* pOut);
+void cleanBuffer(char buffer[]);
 
 /* Static Variable */
 const char stdHeaderFile[] = "stdHeader.in";
@@ -100,11 +101,7 @@ int translator()
 			}
 		else
 			{
-			if(buffer[strlen(buffer)-1] == '\n')
-				{
-				buffer[strlen(buffer)-1] = '\0';
-				}
-
+			cleanBuffer(buffer);
 			/* Process the line */
 			if(processLine(buffer,pOut,line,currentStack,&indentCount) != 1)
 				{
@@ -397,4 +394,26 @@ void writeIndent(FILE* pOut,int indentCount)
 		{
 		fprintf(pOut,"\t");
 		}
+	}
+
+/* Clean-up the buffer 
+ *	Argument:	buffer = Buffer to clean up
+ */
+void cleanBuffer(char buffer[])
+	{
+	int i = 0;
+
+	/* Clean \n */
+	if(buffer[strlen(buffer)-1] == '\n')
+		{
+		buffer[strlen(buffer)-1] = '\0';
+		}
+
+	/* Clean \t */
+	while(buffer[i] == '\t')
+		{
+		i++;
+		}
+
+	buffer = &buffer[i];
 	}
