@@ -1,7 +1,6 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include <ctype.h>
 #include "mainStructure.h"
 
 static VARIABLE_T* pHead = NULL;
@@ -31,7 +30,7 @@ VARIABLE_T * searchWord(char name[])
     }
 
 /*this function for search the files*/
-FILE_T * searchWord(char name[])
+FILE_T * searchFile(char name[])
     {
     FILE_T* word = NULL;
     word = fHead;
