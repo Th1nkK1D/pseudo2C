@@ -1,36 +1,43 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-int getHelp()
+#include "mainStructure.h"
+#include "dbAccess.h"
+
+void getHelp()
 	{
-	char input[32];
-	char command[32];
-	printf("1.if or else\n2.printf\n3.do while\n4.while\n5.for loop\n");
-	printf("ENTER COMMAND : ");
-	fgets(input,sizeof(input),stdin);
-	sscanf(input,"%s",command);
-	if(strcmp(command,"if"||"else") == 0)
+	char** help;
+	int i=0;
+	int count;
+	int check;
+	printf("1\n");
+	prepareDB();
+	printf("2\n");
+	count = countRule();
+	printf("3\n");
+	printf("%d\n",count);
+	help = (char**) calloc(count,sizeof(char*));
+	for(i=0;i<count;i++)
 		{
-		/*printf description of the command*/
+		help[i] = (char*) calloc(16,sizeof(char));
 		}
-	else if(strcmp(command,"printf") == 0)
+
+	sprintf(help[0],"testtest");
+	printf("%s\n",help[0]);
+
+	check = getAllRuleName(help);
+	printf("%d\n",check);
+	printf("4\n");
+	for(i=0;i<count;i++)
 		{
-		/*printf description of the command*/
+		printf("%s.\n",help[i]);
 		}
-	else if(strcmp(command,"dowhile") == 0)
-		{
-		/*printf description of the command*/
-		}
-	else if(strcmp(command,"while") == 0)
-		{
-		/*printf description of the command*/
-		}
-	else if(strcmp(command,"for") == 0)
-		{
-		/*printf description of the command*/
-		}
-	else 
-		{
-		printf("ERROR");
-		}
+	printf("5\n");
+	}
+
+int main()
+	{
+	printf("HELLO\n");
+	getHelp();
+	return 0;
 	}

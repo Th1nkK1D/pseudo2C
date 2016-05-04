@@ -33,7 +33,7 @@ int countRule();
  * Argument:	nameList = array to store each rule name
  * Return: total rule name that added to array
  */
-int getAllRuleName(char nameList[][16]);
+int getAllRuleName(char** nameList);
 
 /* Free the rules database
  */

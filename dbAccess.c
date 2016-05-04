@@ -169,13 +169,14 @@ int countRule()
  * Argument:	nameList = array to store each rule name
  * Return: total rule name that added to array
  */
-int getAllRuleName(char nameList[][16])
+int getAllRuleName(char** nameList)
 	{
 	int i;
 
 	for(i = 0; i < rulesCount; i++)
 		{
 		strcpy(nameList[i],rulesArray[i]->name);
+		printf("%s\n",nameList[i]);
 		}
 
 	return i+1;
