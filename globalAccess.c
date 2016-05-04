@@ -36,7 +36,7 @@ FILE_T * searchFile(char name[])
     word = fHead;
     while(word != NULL)
         {
-        if(strcmp(name,word->handle) == 0)
+        if(strcmp(name,word->path) == 0)
             {
             return word;
             }
@@ -215,23 +215,23 @@ void addVariable(char in_word[],char in_type[])
         insertVariable(in_variable);
         }
     }
-/*
+
 int main()
     {
-    VARIABLE_T* found = NULL;
+    FILE_T* found = NULL;
     char input[32];
     char nVariable[32];
     char type[5];
     int i=0;
     while(i<3)
         {
-        printf("enter variable : ");
+        printf("enter file name : ");
         fgets(input,sizeof(input),stdin);
         sscanf(input,"%s",nVariable);
         printf("enter type : ");
         fgets(input,sizeof(input),stdin);
         sscanf(input,"%s",type);
-        addVariable(nVariable,type);
+        addFile(nVariable,type);
         i++;
         }
     while(1)
@@ -239,7 +239,7 @@ int main()
         printf("input name of variable :");
         fgets(input,sizeof(input),stdin);
         sscanf(input,"%s",input);
-        found = searchWord(input);
+        found = searchFile(input);
         if(found == NULL)
             {
             printf("can not found varialbe\n");
@@ -250,4 +250,3 @@ int main()
             }
         }
     }
-*/
