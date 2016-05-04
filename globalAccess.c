@@ -138,7 +138,7 @@ void insertFile(FILE_T* pNewNode)
         }
     }
 
-void addFile(char nameFile[32],char type[6])
+void addFile(char nameFile[32],char type[6],char pointer[])
     {
     FILE_T* inStruct = NULL;
     char name[32];
@@ -155,6 +155,7 @@ void addFile(char nameFile[32],char type[6])
         strcpy(inStruct->handle,name);
         strcpy(inStruct->path,nameFile);
         strcpy(inStruct->mode,type);
+        strcpy(pointer,name);
         insertFile(inStruct);
         }
     }
@@ -222,6 +223,7 @@ int main()
     char input[32];
     char nVariable[32];
     char type[5];
+    char frees[32];
     int i=0;
     while(i<3)
         {
@@ -231,7 +233,8 @@ int main()
         printf("enter type : ");
         fgets(input,sizeof(input),stdin);
         sscanf(input,"%s",type);
-        addFile(nVariable,type);
+        addFile(nVariable,type,frees);
+        printf("%s\n",frees);
         i++;
         }
     while(1)
