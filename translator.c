@@ -346,7 +346,7 @@ int writeOut(char arg[4][12],char printSet[64],int count,FILE* pOut)
 		{
 		fprintf(pOut,"%s",printSet);
 		}
-	if(count == 1)
+	else if(count == 1)
 		{
 		fprintf(pOut,printSet,arg[0]);
 		}
