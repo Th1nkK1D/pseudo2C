@@ -32,11 +32,15 @@ int findDollar (char input[])
  * - 1 => if condition is ok
  * - 0 => if condition is not ok 
  */
-int checkCondition ( char input[] )
+int checkCondition ( char input[] , char con[])
 	{
 	char* delim;
 	char tempData[512];
 	int i = 0;
+	char tempCondition[128];
+	char leftToken[16];
+	char sign[16];
+	char rightToken[16];
 
 	VARIABLE_T* findVar = NULL;
 	char *type1 = NULL;
@@ -115,6 +119,8 @@ int checkCondition ( char input[] )
 			{
 			strcpy(type1,findVar->type);
 			}
+
+		strcpy(leftToken,delim);
 		
 		/* checking the middle token */
 		delim = NULL;
@@ -130,6 +136,8 @@ int checkCondition ( char input[] )
 			{
 			return 0;
 			}
+
+		strcpy(sign,delim);
 
 		/* checking third token, same as the first token */
 		delim = NULL;
@@ -212,6 +220,27 @@ int checkCondition ( char input[] )
 			return 0;
 			}
 
+		strcpy(rightToken,delim);
+
+		if ( strcmp(type1,"string") == 0 )
+			{
+			strcat(tempCondition,"strcmp(");
+			strcat(tempCondition,leftToken);
+			strcat(tempCondition,",");
+			strcat(tempCondition,rightToken);
+			strcat(tempCondition,") ");
+			strcat(tempCondition,sign);
+			strcat(tempCondition," 0");
+			}
+		else
+			{
+			strcat(tempCondition,leftToken);
+			strcat(tempCondition," ");
+			strcat(tempCondition,sign);
+			strcat(tempCondition," ");
+			strcat(tempCondition,rightToken);
+			}			
+
 		/* pop the next token, it must be && or || */
 		delim = NULL;
 		delim = strtok(NULL," ");
@@ -223,9 +252,15 @@ int checkCondition ( char input[] )
 				return 0;
 				}
 			}
+
+		strcat(tempCondition," ");
+		strcat(tempCondition,delim);
+		strcat(tempCondition," ");
+		
 		delim = NULL;	
 		delim = strtok(NULL," ");
 		}
+	strcpy(con,tempCondition);
 	return 1;
 	}
 
@@ -533,7 +568,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 				if ( strcmp("$con",tempFormat) == 0 )
 					{
 					bCondition = 0;
-					bCondition = checkCondition(tempLine);
+					bCondition = checkCondition(tempLine,data->$con);
 					
 					if ( bCondition != 1 )
 						{
