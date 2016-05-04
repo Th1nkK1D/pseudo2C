@@ -15,7 +15,7 @@ void freeVariable();
 void freeFile();
 
 /*This function for add the file's name,file's path and file's mode*/
-void addFile(char nameFile[32],char type[6],char pointer[])
+void addFile(char nameFile[32],char type[6],char pointer[]);
 
  /*this function for push a data item onto the stack
   *return 1 if successful,0 if we have an overflow 
