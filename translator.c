@@ -24,10 +24,7 @@ const char stdHeaderFile[] = "stdHeader.in";
 
 /* Translator from Pseudocode to C
  *	Return:	1 = Success
- *			0 = Opening input/output file failed
- *			-1 = Preparing database failed
- *			-2 = Write standard function failed
- 			-3 = Invalid systax or rule
+ *			0 = Failed
  */
 int translator()
 	{
@@ -57,7 +54,7 @@ int translator()
 	if(pIn == NULL)
 		{
 		printf("Can't open pseudo code file: \"%s\"\n",inName);
-		return -1;
+		return 0;
 		}
 
 	/* Prepare output file name */
@@ -72,7 +69,7 @@ int translator()
 	if(pOut == NULL)
 		{
 		printf("Can't create C file: \"%s\"\n",outName);
-		return -1;
+		return 0;
 		}
 
 	printf("Open output completed\n");
@@ -81,7 +78,7 @@ int translator()
 	if(writeStdFunction(pOut) == 0)
 		{
 		printf("Error: Writing standard header failed\n");
-		return -2;
+		return 0;
 		}
 
 	/* Open main function */
@@ -110,7 +107,7 @@ int translator()
 			if(processLine(buffer,pOut,line,currentStack,&indentCount) != 1)
 				{
 				printf("Translation abort\n");
-				return -3;
+				return 0;
 				}
 			}
 		}
