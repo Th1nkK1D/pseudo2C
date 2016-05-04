@@ -1,12 +1,20 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include "mainStructure.h"
+#include "linkedListUtil.h"
 
 static FILE_T* pFile = NULL;
 static VARIABLE_T* pRoot = NULL;
 static NEST_T * head = NULL;
 static int i = 1;
+
+int getDictIndex(char* word)
+    {
+    char c = tolower(word[0]);
+    return (c-'a');
+    }
 
 /*this function for find the word that user enter*/
 VARIABLE_T * findWord(VARIABLE_T* pCurrent,char name[])
@@ -184,70 +192,61 @@ int pop()
     }
 
 /*This function for insert the people in the trees*/
-void insertVariable(VARIABLE_T* pRoot, VARIABLE_T* pNewNode)
+void insertVariable(LIST_HANDLE root[], VARIABLE_T* pNewNode)
     {
-    if (pRoot == NULL)
+    VARIABLE_T* Entry = NULL;
+    LIST_HANDLE pList = NULL;
+    int i = 0;
+    Entry = (VARIABLE_T*) calloc(1,sizeof(VARIABLE_T));
+    if (Entry == NULL)
         {
-        pRoot = pNewNode;
+        printf("Cannot allocated files\n");
+        exit(0);
         }
-    else if (strcmp(pNewNode->name, pRoot->name) < 0)
+    strcpy(Entry->name,pNewNode->name);
+    strcpy(Entry->type,pNewNode->type);
+    strcpy(Entry->symbol,pNewNode->symbol);
+    i = getDictIndex(Entry->name);
+    if(root[i] == NULL)
         {
-        if (pRoot->leftChild == NULL)
-            {
-            pRoot->leftChild = pNewNode;
-            }
-        else
-            {
-            insertVariable(pRoot->leftChild,pNewNode);
-            }
+        root[i] = newList();
         }
-    else
-        {
-        if (pRoot->rightChild == NULL)
-            {
-            pRoot->rightChild = pNewNode;
-            }
-        else
-            {
-            insertVariable(pRoot->rightChild,pNewNode);
-            }
-        }
+    pList = root[i];
+    listInsertEnd(pList,Entry);
     }
 /*this function for add the name of variable,type of variable and symbol*/
 void addVariable(char in_word[],char in_type[])
     {
     char in_symbol;
     VARIABLE_T* in_variable = NULL;
-
-
-        if(strcmp(in_type,"int") == 0)
-            {
-            in_symbol = 'd';
-            }
-        else if(strcmp(in_type,"char") == 0)
-            {
-            in_symbol = 'c';
-            }
-        else if(strcmp(in_type,"string") == 0)
-            {
-            in_symbol = 's';
-            }
-        in_variable = (VARIABLE_T*) calloc(1,sizeof(VARIABLE_T));
-        if(in_variable == NULL)
-            {
-            printf("ERROR, cannot allocate.");
-            exit(0);
-            }
-        else
-            {
-            strcpy(in_variable->name,in_word);
-            strcpy(in_variable->type,in_type);
-            strcpy(in_variable->symbol,&in_symbol);
-
-            insertVariable(pRoot,in_variable);
-            }
+    LIST_HANDLE list[512];
+    if(strcmp(in_type,"int") == 0)
+        {
+        in_symbol = 'd';
+        }
+    else if(strcmp(in_type,"char") == 0)
+        {
+        in_symbol = 'c';
+        }
+    else if(strcmp(in_type,"string") == 0)
+        {
+        in_symbol = 's';
+        }
+    in_variable = (VARIABLE_T*) calloc(1,sizeof(VARIABLE_T));
+    if(in_variable == NULL)
+        {
+        printf("ERROR, cannot allocate.");
+        exit(0);
+        }
+    else
+        {
+        strcpy(in_variable->name,in_word);
+        strcpy(in_variable->type,in_type);
+        strcpy(in_variable->symbol,&in_symbol);
+        insertVariable(list,in_variable);
+        }
     }
-/*    
+
 int main()
     {
     int i = 0;
@@ -266,4 +265,3 @@ int main()
         i++;
         }
     }
-*/
