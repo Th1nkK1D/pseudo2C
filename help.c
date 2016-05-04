@@ -51,7 +51,13 @@ void getHelp()
 		command = getRule('n',input);
 		if(command != NULL)
 			{
-			printf("%s : %s\n\n",command->name,command->description);
+			printf("%s : %s\n",command->name,command->description);
+			printf("%s %s",command->key,command->preIn);
+			if(strlen(postKey) != 0)
+				{
+				printf("	//statement");
+				}
+			printf("%s %s",command->postKey,command->postIn);
 			}	
 		}
 	freeDB();
