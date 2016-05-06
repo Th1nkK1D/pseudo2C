@@ -695,17 +695,16 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 							}
 						else if ( strcasecmp(command,"close") == 0 )
 							{
-							printf("POINT 1\n");
-							printf("fpointer = %s\n",tempFile->handle);
 							strcpy(data->$f_mode,tempFile->mode);
 							strcpy(data->$f_pointer,tempFile->handle);
-							printf("datapointer = %s\n",data->$f_pointer);
 							deleteFile(tempLine);
-							printf("POINT 3\n");
 							}
 						}
-					strcpy(data->$f_path,tempLine);
-					strcpy(data->$f_pointer,tempFile->handle);
+					if ( strcasecmp(command,"close") != 0 )
+						{
+						strcpy(data->$f_path,tempLine);
+						strcpy(data->$f_pointer,tempFile->handle);
+						}
 					}
 				}
 			tempFormat = strtok_r(NULL," ",&hold_format);
