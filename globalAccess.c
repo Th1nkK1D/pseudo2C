@@ -68,7 +68,6 @@ void deleteFile(char fileName[])
                     {
                     free(found);
                     fTail = pFound;
-                    return 1;
                     }
                 else
                     {
