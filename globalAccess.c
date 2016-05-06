@@ -48,7 +48,7 @@ FILE_T * searchFile(char name[])
     return NULL;
     }
 
-int deleteFile(char fileName[])
+void deleteFile(char fileName[])
     {  
     FILE_T* found = NULL;
     FILE_T* pFound = NULL;
@@ -59,7 +59,6 @@ int deleteFile(char fileName[])
             {
             fHead = found->pNext;
             free(found);
-            return 1;
             }
         else
             {
@@ -75,7 +74,6 @@ int deleteFile(char fileName[])
                     {
                     pFound->pNext = found->pNext;
                     free(found);
-                    return 1;
                     }
                 }
             else
@@ -85,7 +83,6 @@ int deleteFile(char fileName[])
                 }
             }
         }
-    return 0;
     }
 void freeVariable()
     {

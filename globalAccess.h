@@ -8,7 +8,7 @@ VARIABLE_T * searchWord(char name[]);
 */
 FILE_T * searchFile(char name[]);
 
-int deleteFile(char fileName[]);
+void deleteFile(char fileName[]);
 
 /*this function for free the linked list of variable*/
 void freeVariable();
