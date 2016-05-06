@@ -150,7 +150,8 @@ int translator()
  */
 int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* indentCount)
 	{
-	char key[8];
+	char key[16];
+	char keyChild[16];
 	RULE_T* pRule = NULL;
 	char target;
 	TEMP_T tempData;
@@ -162,7 +163,8 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 
 	printf("\nprocessLine at line %d\n",line);
 
-	sscanf(buffer,"%s",key);
+	/* Scan line for key and childKey */
+	sscanf(buffer,"%s %s",key,keyChild);
 
 	printf("Key read: %s\n",key);
 
@@ -230,6 +232,29 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 			printf(">>> %s --> %s?\n",buffer,key);
 
 			return 0;
+			}
+			
+		/* Check for child function */
+		if(strcmp(keyChild,pRule->fChild) == 0)
+			{
+			/* Print current Key */
+			fprintf(pOut,"%s ",key);
+			
+			/* Shift key and buffer */
+			strcpy(key,keyChild);
+			strcpy(buffer,buffer + strlen(key) + 1);
+			
+			/* Get rule from new key */
+			pRule = getRule(target,key);
+
+			if(pRule == NULL)
+				{
+				printf("Error: Key not found at line %d\n",line);
+				printf(">>> %s --> %s?\n",buffer,key);
+	
+				return 0;
+				}
+			
 			}
 
 		printf("Rule got: %s\n",pRule->name);
@@ -464,4 +489,5 @@ void cleanBuffer(char buffer[])
 		}
 
 	sprintf(buffer,"%s",buffer+i);
+	printf("inClean buffer = %s\n",buffer);
 	}
