@@ -25,7 +25,7 @@ int push(char data[]);
 /* Removes and returns the top item on the stack.
  * Returns 0 if the queue is empty.
  */
-int * pop(char postIn[]);
+int pop(char postIn[]);
 
 /*this function for add the name of variable,type of variable and symbol*/
 void addVariable(char in_word[],char in_type[]);

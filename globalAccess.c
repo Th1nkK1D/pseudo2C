@@ -97,12 +97,13 @@ int push(char data[])
 /* Removes and returns the top item on the stack.
  * Returns 0 if the queue is empty.
  */
-int pop()
+int pop(char postIn[])
     {
     NEST_T * top = head;
     char * data = NULL;
     if (top != NULL)
         {
+        strcpy(postIn,top->postIn); 
         data = top->postIn;
         head = top->pNext;
         free(top);
@@ -224,7 +225,12 @@ int main()
     char nVariable[32];
     char type[5];
     char frees[32];
+    char pCheck[32];
     int i=0;
+    int a;
+    int b;
+    int c;
+    int d;
     while(i<3)
         {
         printf("enter file name : ");
@@ -233,24 +239,17 @@ int main()
         printf("enter type : ");
         fgets(input,sizeof(input),stdin);
         sscanf(input,"%s",type);
-        addFile(nVariable,type,frees);
-        printf("%s\n",frees);
+        push(nVariable);
         i++;
         }
-    while(1)
-        {
-        printf("input name of variable :");
-        fgets(input,sizeof(input),stdin);
-        sscanf(input,"%s",input);
-        found = searchFile(input);
-        if(found == NULL)
-            {
-            printf("can not found varialbe\n");
-            }
-        else
-            {
-            printf("found variable\n");
-            }
-        }
+    a = pop(pCheck);
+    printf("%s\n",pCheck);
+    b = pop(pCheck);
+    printf("%s\n",pCheck);
+    c = pop(pCheck);
+    printf("%s\n",pCheck);
+    d = pop(pCheck);
+    printf("%s\n",pCheck);
+    printf("%d\n%d\n%d\n%d\n",a,b,c,d);
     }
 */
