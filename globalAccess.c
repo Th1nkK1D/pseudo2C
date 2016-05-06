@@ -57,6 +57,7 @@ void deleteFile(char fileName[])
         {
         if(strcmp(fileName,fHead->path) == 0)
             {
+            printf("ERROR head file\n");
             fHead = found->pNext;
             free(found);
             }
@@ -66,17 +67,20 @@ void deleteFile(char fileName[])
                 {
                 if(found == fTail)
                     {
+                    printf("ERROR tail file\n");
                     free(found);
                     fTail = pFound;
                     }
                 else
                     {
+                    printf("ERROR file\n");
                     pFound->pNext = found->pNext;
                     free(found);
                     }
                 }
             else
                 {
+                printf("ERROR next file\n");
                 pFound = found;
                 found = found->pNext;
                 }
