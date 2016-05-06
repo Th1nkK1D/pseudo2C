@@ -157,12 +157,13 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 
 	printf("Key read: %s\n",key);
 
-	printf("Current stack = %s\n",currentStack);
+	printf("Current stack = %s Indent = %d\n",currentStack,*indentCount);
 
 	/* Check if end nested found */
 	if (strcmp(buffer,currentStack) == 0)
 		{
 		/* Get rule by end key */
+		printf("*stack matched\n");
 		target = 'e';
 		pRule = getRule(target,key);
 
@@ -179,10 +180,13 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		/* End nested (close function) */
 		writeIndent(pOut,*indentCount);
 		fprintf(pOut,"}\n");
-
-		/* Update stack */
-		pop(currentStack);
+		
+		/* Update Stack */
 		*indentCount = *indentCount-1;
+		pop(currentStack);
+		printf("**newStack = %s newIndent = %d\n",currentStack,*indentCount);
+		
+		
 
 		printf("Target = Post\n");
 		printf("preVar: %s\n",pRule->preVar);
@@ -250,14 +254,13 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		{
 		printf("*This one create new stack\n");
 		/* Update stack */
-		strcpy(currentStack,pRule->postKey);
 		push(currentStack);
-		indentCount++;
+		strcpy(currentStack,pRule->postKey);
+		*indentCount = *indentCount+1;
 
-		printf("currentStack = %s\n",currentStack);
+		printf("**newStack = %s newIndent = %d\n",currentStack,*indentCount);
 
 		/* print bracket */
-		fprintf(pOut, "\n");
 		writeIndent(pOut,*indentCount);
 		fprintf(pOut, "{\n");
 		}

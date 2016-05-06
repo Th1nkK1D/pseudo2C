@@ -7,3 +7,4 @@ SET count to 26
 GET name
 IF count < 0 && count != 5
 ENDIF
+ENDWHILE
