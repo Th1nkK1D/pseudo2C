@@ -48,6 +48,45 @@ FILE_T * searchFile(char name[])
     return NULL;
     }
 
+int deleteFile(char fileName[])
+    {  
+    FILE_T* found = NULL;
+    FILE_T* pFound = NULL;
+    found = fHead;
+    while(found != NULL)
+        {
+        if(strcmp(fileName,fHead->path) == 0)
+            {
+            fHead = found->pNext;
+            free(found);
+            return 1;
+            }
+        else
+            {
+            if(strcmp(fileName,found->path) == 0)
+                {
+                if(found == fTail)
+                    {
+                    free(found);
+                    fTail = pFound;
+                    return 1;
+                    }
+                else
+                    {
+                    pFound->pNext = found->pNext;
+                    free(found);
+                    return 1;
+                    }
+                }
+            else
+                {
+                pFound = found;
+                found = found->pNext;
+                }
+            }
+        }
+    return 0;
+    }
 void freeVariable()
     {
     VARIABLE_T* pEntry = NULL;
