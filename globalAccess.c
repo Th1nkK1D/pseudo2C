@@ -60,6 +60,7 @@ void deleteFile(char fileName[])
             printf("ERROR head file\n");
             fHead = found->pNext;
             free(found);
+            break;
             }
         else
             {
@@ -70,12 +71,14 @@ void deleteFile(char fileName[])
                     printf("ERROR tail file\n");
                     free(found);
                     fTail = pFound;
+                    break;
                     }
                 else
                     {
                     printf("ERROR file\n");
                     pFound->pNext = found->pNext;
                     free(found);
+                    break;
                     }
                 }
             else
