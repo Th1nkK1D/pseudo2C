@@ -29,7 +29,8 @@ const char stdHeaderFile[] = "stdHeader.in";
  */
 int translator()
 	{
-	FILE* pIn = NULL;
+	/* Variable Declaration */
+	FILE* pIn = NULL; 
 	FILE* pOut = NULL;
 	char buffer[256];
 	char inName[32];
@@ -80,7 +81,7 @@ int translator()
 	/* Write standard function */
 	if(writeStdFunction(pOut) == 0)
 		{
-		printf("Error: Writing standard header failed\n");
+		printf("Error: Writing standard header and function failed\n");
 		return 0;
 		}
 
@@ -114,6 +115,13 @@ int translator()
 
 
 	printf("Finished read all the lines\n");
+
+	/* Check if all stack was end */
+	if(strcmp(currentStack,"main") != 0)
+		{
+		printf("Error: Missing END sign at line %d\n",line);
+		printf(">>> -> %s\n",currentStack);
+		}
 
 	/* Close main function */
 	writeIndent(pOut,indentCount);
@@ -149,6 +157,7 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 	char arg[4][12];
 	char varSet[64];
 	char printSet[64];
+	char inSet[64];
 	int varCount;
 
 	printf("\nprocessLine at line %d\n",line);
@@ -160,41 +169,54 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 	printf("Current stack = %s Indent = %d\n",currentStack,*indentCount);
 
 	/* Check if end nested found */
-	if (strcmp(buffer,currentStack) == 0)
+	if (strncmp(buffer,"END",3) == 0)
 		{
-		/* Get rule by end key */
-		printf("*stack matched\n");
-		target = 'e';
-		pRule = getRule(target,key);
-
-		if(pRule == NULL)
+		/* Check if postKey match with currentStack */
+		if(strcmp(buffer,currentStack) == 0)
 			{
-			printf("Error: postKey not found at line %d\n",line);
-			printf(">>> %s\n",buffer);
-
+			/* Get rule by end key */
+			printf("*stack matched\n");
+			target = 'e';
+			pRule = getRule(target,key);
+	
+			if(pRule == NULL)
+				{
+				printf("Error: postKey not found at line %d\n",line);
+				printf(">>> %s\n --> %s?",buffer,key);
+	
+				return 0;
+				}
+	
+			printf("Rule got: %s\n",pRule->name);
+	
+			/* End nested (close function) */
+			writeIndent(pOut,*indentCount);
+			fprintf(pOut,"}");
+			
+			/* Update Stack */
+			*indentCount = *indentCount-1;
+			pop(currentStack);
+			printf("**newStack = %s newIndent = %d\n",currentStack,*indentCount);
+			
+			
+	
+			printf("Target = Post\n");
+			printf("preVar: %s\n",pRule->preVar);
+			printf("preOut: %s\n",pRule->preOut);
+	
+			/* Set data */
+			strcpy(inSet,pRule->postIn);
+			strcpy(varSet,pRule->postVar);
+			strcpy(printSet,pRule->postOut);
+			}
+		else
+			{
+			/* postKey doesn't match with currentStack */
+			printf("Error: Invalid postKey at line %d\n",line);
+			printf(">>> %s\n --> %s?",buffer,currentStack);
+			
 			return 0;
 			}
-
-		printf("Rule got: %s\n",pRule->name);
-
-		/* End nested (close function) */
-		writeIndent(pOut,*indentCount);
-		fprintf(pOut,"}\n");
-		
-		/* Update Stack */
-		*indentCount = *indentCount-1;
-		pop(currentStack);
-		printf("**newStack = %s newIndent = %d\n",currentStack,*indentCount);
-		
-		
-
-		printf("Target = Post\n");
-		printf("preVar: %s\n",pRule->preVar);
-		printf("preOut: %s\n",pRule->preOut);
-
-		/* Set data */
-		strcpy(varSet,pRule->postVar);
-		strcpy(printSet,pRule->postOut);
 		}
 	else
 		{
@@ -205,7 +227,7 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		if(pRule == NULL)
 			{
 			printf("Error: Key not found at line %d\n",line);
-			printf(">>> %s\n",buffer);
+			printf(">>> %s --> %s?\n",buffer,key);
 
 			return 0;
 			}
@@ -218,6 +240,7 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		printf("postOut: %s\n",pRule->preOut);
 
 		/* Set data */
+		strcpy(inSet,pRule->preIn);
 		strcpy(varSet,pRule->preVar);
 		strcpy(printSet,pRule->preOut);
 		}
@@ -226,7 +249,7 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 	if(dataUpdate(pRule,buffer,&tempData) == 0)
 		{
 		printf("Error: Invalid Syntax at line %d\n",line);
-		printf(">>> %s\n",buffer);
+		printf(">>> %s\n --> %s",buffer,inSet);
 		return -1;
 		}
 
@@ -243,7 +266,8 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 
 	if(varCount < 0 || writeOut(arg,printSet,varCount,pOut) == 0)
 		{
-		printf("Error: Invalid argument rule for \"%s\"\n",pRule->key);
+		printf("Error: Invalid argument rule for \"%s\" at line %d\n",key,line);
+		printf(">>> %s\n --> %s",buffer,varSet);
 		return -2;
 		}
 
@@ -336,6 +360,7 @@ int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData)
 		}
 
 	printf("count arg = %d\n",i);
+
 	return i;
 	}
 
