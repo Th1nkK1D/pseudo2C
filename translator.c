@@ -19,6 +19,7 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData);
 int writeOut(char arg[4][12],char printSet[64],int count,FILE* pOut);
 void cleanBuffer(char buffer[]);
+void compileRun(char cName[]);
 
 /* Static Variable */
 const char stdHeaderFile[] = "stdHeader.in";
@@ -135,7 +136,10 @@ int translator()
 	freeDB();
 
 	printf("Translation Completed!\n");
-
+	
+	/* If user want to compile and run */
+	compileRun(outName);
+	
 	return 1;
 	}
 
@@ -484,4 +488,52 @@ void cleanBuffer(char buffer[])
 	sprintf(buffer,"%s",buffer+i);
 	printf("Count tab = %d\n",i);
 	printf("inClean buffer = %s\n",buffer);
+	}
+
+/* Compile and run the translated C code if user want 
+ *	Argument:	cName = Name of C file
+ */
+void compileRun(char cName[])
+	{
+	/* Variable Declaration */
+	char buffer[64];	/* Input buffer */
+	char action[12];	/* User action */
+	char exeName[24];	/* Execute file name */
+	char command[64];	/* System command */
+
+	/* Get compile decision */
+	printf("Do you want to compile %s now? (Y/N) : ",cName);
+	fgets(buffer,sizeof(buffer),stdin);
+	sscanf(buffer,"%s",action);
+	
+	if(strcasecmp("Y",action) == 0)
+		{
+		/* Get execute file name f*/
+		printf("Please enter exucute file name : ");
+		fgets(buffer,sizeof(buffer),stdin);
+		sscanf(buffer,"%s",exeName);
+		
+		/* Set command */
+		sprintf(command,"gcc -o %s %s",exeName,cName);
+		
+		/* Run command */
+		system(command);
+		
+		/* Get run decision */
+		printf("Compiling completed!\n");
+		printf("Do you want to run %s now? (Y/N) : ",exeName);
+		fgets(buffer,sizeof(buffer),stdin);
+		sscanf(buffer,"%s",action);
+		
+		if(strcasecmp("Y",action) == 0)
+			{
+			printf("Starting %s\n\n",exeName);
+			
+			/* Set command */
+			sprintf(command,"./%s",exeName);
+			
+			/* Run command */
+			system(command);
+			}
+		}
 	}
