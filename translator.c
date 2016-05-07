@@ -18,7 +18,8 @@ void writeIndent(FILE* pOut,int indentCount);
 int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* indentCount);
 int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData);
 int writeOut(char arg[4][12],char printSet[64],int count,FILE* pOut);
-void cleanBuffer(char buffer[]);
+void cleanBuffer(char buffer[],int length);
+int checkComment(int commentStatus,char buffer[],int length);
 void compileRun(char cName[]);
 
 /* Static Variable */
@@ -39,6 +40,7 @@ int translator()
 	int line = 0;					/* Line counter */
 	char currentStack[16] = "main";	/* Current nested stack */
 	int indentCount = 0;			/* Indent Counter*/
+	int commentStatus = 0;			/* Status of comment */
 
 	printf("Translator started\n");
 
@@ -111,13 +113,26 @@ int translator()
 		else
 			{
 			/* Cleaning buffer */
-			cleanBuffer(buffer);
-			/* Process the line */
-			if(processLine(buffer,pOut,line,currentStack,&indentCount) != 1)
+			cleanBuffer(buffer,strlen(buffer));
+
+			/* Check if it is a comment line */			
+			commentStatus = checkComment(commentStatus,buffer,strlen(buffer));
+
+			if(commentStatus > 0)
 				{
-				/* Process line failed */
-				printf("Translation abort\n");
-				return 0;
+				/* Comment found print the comment */
+				writeIndent(pOut,indentCount);
+				fprintf(pOut,"%s\n",buffer);
+				}
+			else
+				{
+				/* Process the line */
+				if(processLine(buffer,pOut,line,currentStack,&indentCount) != 1)
+					{
+					/* Process line failed */
+					printf("Translation aborted\n");
+					return 0;
+					}
 				}
 			}
 		}
@@ -125,8 +140,10 @@ int translator()
 	/* Check if all stack was end */
 	if(strcmp(currentStack,"main") != 0)
 		{
-		printf("Error: Missing END sign at line %d\n",line);
+		printf("Error: postKey not found at line %d\n",line);
 		printf(">>> -> %s\n",currentStack);
+		
+		return 0;
 		}
 
 	/* Close main function */
@@ -198,7 +215,7 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 			if(pRule == NULL)
 				{
 				printf("Error: postKey not found at line %d\n",line);
-				printf(">>> %s\n --> %s?",buffer,key);
+				printf(">>> %s --> %s?\n",buffer,key);
 	
 				return 0;
 				}
@@ -226,7 +243,7 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 			{
 			/* postKey doesn't match with currentStack */
 			printf("Error: Invalid postKey at line %d\n",line);
-			printf(">>> %s\n --> %s?",buffer,currentStack);
+			printf(">>> %s --> %s?",buffer,currentStack);
 			
 			return 0;
 			}
@@ -282,7 +299,7 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 	if(dataUpdate(pRule,buffer,&tempData) == 0)
 		{
 		printf("Error: Invalid Syntax at line %d\n",line);
-		printf(">>> %s\n --> %s",buffer,inSet);
+		printf(">>>%s %s --> %s\n",key,buffer,inSet);
 		return -1;
 		}
 
@@ -297,7 +314,7 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 	if(varCount < 0 || writeOut(arg,printSet,varCount,pOut) == 0)
 		{
 		printf("Error: Invalid argument rule for \"%s\" at line %d\n",key,line);
-		printf(">>> %s\n --> %s",buffer,varSet);
+		printf(">>> %s --> %s\n",buffer,varSet);
 		return -2;
 		}
 
@@ -477,23 +494,75 @@ void writeIndent(FILE* pOut,int indentCount)
 /* Clean-up the buffer 
  *	Argument:	buffer = Buffer to clean up
  */
-void cleanBuffer(char buffer[])
+void cleanBuffer(char buffer[],int length)
 	{
-	int i = 0;	/* Counter */
+	int i = 0;	/* Pre buffer counter */
+	int j = 0;	/* Post buffer counter */
 
-	/* Clean \n */
-	if(buffer[strlen(buffer)-1] == '\n')
-		{
-		buffer[strlen(buffer)-1] = '\0';
-		}
-
-	/* Clean pre tab and space */
+	/* Count pre tab and space */
 	while(buffer[i] == '\t' || buffer[i] == ' ')
 		{
 		i++;
 		}
+		
+	/* Count post \n, tab and space */
+	while(buffer[length-j-1] == '\n' || buffer[length-j-1] == '\t' || buffer[length-j-1] == ' ')
+		{
+		j++;
+		}
+		
+	/* Set new string end point */
+	buffer[length-j] = '\0';
 
 	sprintf(buffer,"%s",buffer+i);
+	}
+
+/* Check if this line is a comment
+ *	Argument:	commentStatus = current status like return value
+ *				buffer = input line to check
+ *				length = length of input line
+ *	Return:	0 = Not a comment line
+ *			1 = A single-line comment
+ *			2 = A pending muti-line comment
+ */
+int checkComment(int commentStatus,char buffer[],int length)
+	{
+	if(commentStatus == 2)
+		{
+		/* Comment is pending */
+		if(buffer[length-2] == '*' && buffer[length-1] == '/')
+			{
+			return 1;	/* Multi line comment end point found */
+			}
+		else
+			{
+			return 2;	/* Comment still pending */
+			}
+		}
+	else
+		/* No comment pending */
+		{
+		if(strncmp(buffer,"//",2) == 0)
+			{
+			return 1;	/* Single line comment found */	
+			}
+		else if(strncmp(buffer,"/*",2) == 0)
+			{
+			/* Multi line comment start point found */
+			if(buffer[length-2] == '*' && buffer[length-1] == '/')
+				{
+				return 1;	/* Multi line comment end point found */	
+				}
+			else
+				{
+				return 2;	/* Comment still pending */
+				}
+			}
+		else
+			{
+			return 0;	/* No comment found */
+			}	
+		}
 	}
 
 /* Compile and run the translated C code if user want 
