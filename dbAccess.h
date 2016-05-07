@@ -18,7 +18,7 @@ int prepareDB();
 void extractProperty(char* target,char* buffer);
 
 /* Get rule structure pointer from keyword
- *	Argument:	target = Search by 'k' (key) or 'n' name
+ *	Argument:	target = Search by 'k' (key), 'e' (postKey) or 'n' name
  *				keyword = Keyword to search
  *	Return:	Matched RULE_T structure pointer if keyword found, NULL if not
  */

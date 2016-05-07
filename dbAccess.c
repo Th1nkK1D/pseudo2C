@@ -13,9 +13,9 @@
 const char rulesFile[] = "actionRules.csv";
 
 /* Global Static Variable */
-static FILE* pFile = NULL;
-static RULE_T** rulesArray = NULL;
-static int rulesCount;
+static FILE* pFile = NULL;			/* DB file pointer */
+static RULE_T** rulesArray = NULL;	/* Array that store all rules */
+static int rulesCount;				/* Number of rules */
 
 /* Private function declaration */
 void extractProperty(char* target,char* buffer);
@@ -28,9 +28,9 @@ void extractProperty(char* target,char* buffer);
  */
 int prepareDB()
 	{
-	char buffer[512];
-	int i = 0;
-	char* token;
+	/* Variable declaration */
+	char buffer[512];	/* Read buffer */
+	int i = 0;			/* counter */
 
 	/* Open rules file */
 	pFile = fopen(rulesFile,"r");
@@ -107,31 +107,33 @@ int prepareDB()
  */
 void extractProperty(char* target,char* buffer)
 	{
-	char* token;
+	char* token; /* Strtok token */
 
+	/* Saparate rule property */
 	token = strtok(buffer,"|");
 
 	if(token[0] != '-')
 		{
+		/* If got the property, copy out */
 		strcpy(target,token);
 		}
 	}
 
 /* Get rule structure pointer from keyword
- *	Argument:	target = Name of property to search
+ *	Argument:	target = Search by 'k' (key), 'e' (postKey) or 'n' name
  *				keyword = Keyword to search
  *	Return:	Matched RULE_T structure pointer if keyword found, NULL if not
  */
 RULE_T* getRule(char target,char keyword[])
 	{
-	int i = 0;
+	int i = 0;	/* Counter */
 
+	/* Check target search mode */
 	if(target == 'k')
 		{
 		/* Search by key */
 		while(i < rulesCount)
 			{
-			//printf("%d > %s\n",i,rulesArray[i]->key);
 			if(strcasecmp(rulesArray[i]->key,keyword) == 0)
 				{
 				return rulesArray[i];
@@ -181,8 +183,9 @@ int countRule()
  */
 int getAllRuleName(char** nameList)
 	{
-	int i;
+	int i;	/* Counter */
 
+	/* Copy all rule name to the array */
 	for(i = 0; i < rulesCount; i++)
 		{
 		strcpy(nameList[i],rulesArray[i]->name);
@@ -195,8 +198,9 @@ int getAllRuleName(char** nameList)
  */
 void freeDB()
 	{
-	int i;
+	int i;	/* Counter */
 
+	/* Free all rules in the array */
 	for(i = 0; i < rulesCount; i++)
 		{
 		free(rulesArray[i]);
