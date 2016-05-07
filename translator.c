@@ -30,14 +30,14 @@ const char stdHeaderFile[] = "stdHeader.in";
 int translator()
 	{
 	/* Variable Declaration */
-	FILE* pIn = NULL; 
-	FILE* pOut = NULL;
-	char buffer[256];
-	char inName[32];
-	char outName[32];
-	int line = 0;
-	char currentStack[16] = "main";
-	int indentCount = 0;
+	FILE* pIn = NULL;				/* Input pseudo file Pointer */
+	FILE* pOut = NULL;				/* Output C file Pointer */
+	char buffer[256];				/* Input buffer */
+	char inName[32]; 				/* Input file name */
+	char outName[32];				/* Output file name */
+	int line = 0;					/* Line counter */
+	char currentStack[16] = "main";	/* Current nested stack */
+	int indentCount = 0;			/* Indent Counter*/
 
 	printf("Translator started\n");
 
@@ -48,11 +48,12 @@ int translator()
 		return 0;
 		}
 
-	/* Prepare input file name */
+	/* Get input file name */
 	printf("Input pseudocode file name : ");
 	fgets(buffer,sizeof(buffer),stdin);
 	sscanf(buffer,"%s",inName);
 
+	/* Open input file */
 	pIn = fopen(inName,"r");
 
 	if(pIn == NULL)
@@ -61,13 +62,12 @@ int translator()
 		return 0;
 		}
 
-	/* Prepare output file name */
+	/* Get output file name */
 	printf("Output C file name : ");
 	fgets(buffer,sizeof(buffer),stdin);
 	sscanf(buffer,"%s",outName);
 
-	printf("Open input completed\n");
-
+	/* Open output file */
 	pOut = fopen(outName,"w");
 
 	if(pOut == NULL)
@@ -75,8 +75,6 @@ int translator()
 		printf("Can't create C file: \"%s\"\n",outName);
 		return 0;
 		}
-
-	printf("Open output completed\n");
 
 	/* Write standard function */
 	if(writeStdFunction(pOut) == 0)
@@ -98,23 +96,22 @@ int translator()
 
 		if(buffer[0] == '\n')
 			{
+			/* Print blank line if blank line found */
 			fprintf(pOut,"\n");
 			}
 		else
 			{
+			/* Cleaning buffer */
 			cleanBuffer(buffer);
-			printf("clean buffer = %s\n",buffer);
 			/* Process the line */
 			if(processLine(buffer,pOut,line,currentStack,&indentCount) != 1)
 				{
+				/* Process line failed */
 				printf("Translation abort\n");
 				return 0;
 				}
 			}
 		}
-
-
-	printf("Finished read all the lines\n");
 
 	/* Check if all stack was end */
 	if(strcmp(currentStack,"main") != 0)
@@ -132,6 +129,9 @@ int translator()
 	fclose(pIn);
 	fclose(pOut);
 
+	/* Free all the data structure */
+	freeVariable();
+	freeFile();
 	freeDB();
 
 	printf("Translation Completed!\n");
@@ -150,16 +150,16 @@ int translator()
  */
 int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* indentCount)
 	{
-	char key[16];
-	char keyChild[16];
-	RULE_T* pRule = NULL;
-	char target;
-	TEMP_T tempData;
-	char arg[4][12];
-	char varSet[64];
-	char printSet[64];
-	char inSet[64];
-	int varCount;
+	char key[16];			/* Key read */
+	char keyChild[16];		/* Possible child key read */
+	RULE_T* pRule = NULL;	/* Rule data of the key read */
+	char target;			/* getKey target mode */
+	TEMP_T tempData;		/* Temporary data for traslation */
+	char inSet[64];			/* Expected pseudo for key read */
+	char varSet[64];		/* Set of variable to print */
+	char printSet[64];		/* Output c pattern to print */
+	int varCount;			/* Number of argument to print  */
+	char arg[4][12];		/* Array of argument value to print */
 
 	printf("\nprocessLine at line %d\n",line);
 
@@ -168,7 +168,7 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 
 	printf("Key read: %s\n",key);
 
-	printf("Current stack = %s Indent = %d\n",currentStack,*indentCount);
+	printf("Current stack = %s, Indent = %d\n",currentStack,*indentCount);
 	
 	writeIndent(pOut,*indentCount);
 
@@ -199,15 +199,13 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 			/* Update Stack */
 			*indentCount = *indentCount-1;
 			pop(currentStack);
+			
 			printf("**newStack = %s newIndent = %d\n",currentStack,*indentCount);
-			
-			
-	
 			printf("Target = Post\n");
 			printf("preVar: %s\n",pRule->preVar);
 			printf("preOut: %s\n",pRule->preOut);
 	
-			/* Set data */
+			/* Set data from rule */
 			strcpy(inSet,pRule->postIn);
 			strcpy(varSet,pRule->postVar);
 			strcpy(printSet,pRule->postOut);
@@ -255,17 +253,14 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 	
 				return 0;
 				}
-			
 			}
 
 		printf("Rule got: %s\n",pRule->name);
-
-		/* New function */
 		printf("Target = Pre\n");		
 		printf("postVar: %s\n",pRule->preVar);
 		printf("postOut: %s\n",pRule->preOut);
 
-		/* Set data */
+		/* Set data from rule */
 		strcpy(inSet,pRule->preIn);
 		strcpy(varSet,pRule->preVar);
 		strcpy(printSet,pRule->preOut);
@@ -280,23 +275,19 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		}
 
 	printf("Data Update success\n");
-
 	printf("varSet: %s\n",varSet);
 	printf("printSet: %s\n",printSet);
 
 	/* Prepare Argument */
 	varCount = prepareArg(arg,varSet,tempData);
 
-	printf("pass Indent\n");
-
+	/* Write to the C file */
 	if(varCount < 0 || writeOut(arg,printSet,varCount,pOut) == 0)
 		{
 		printf("Error: Invalid argument rule for \"%s\" at line %d\n",key,line);
 		printf(">>> %s\n --> %s",buffer,varSet);
 		return -2;
 		}
-
-	printf("pass writeOut\n");
 
 	/* Check if this key crete new nested */
 	if(target == 'k' && strlen(pRule->postKey) > 0)
@@ -309,7 +300,7 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 
 		printf("**newStack = %s newIndent = %d\n",currentStack,*indentCount);
 
-		/* print bracket */
+		/* print open bracket */
 		writeIndent(pOut,*indentCount);
 		fprintf(pOut, "{\n");
 		}
@@ -326,8 +317,8 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
  */
 int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData)
 	{
-	int i = 0;
-	char* var = NULL;
+	int i = 0;			/* Argument counter */
+	char* var = NULL;	/* Variable token */
 
 	printf("prepareArg\n");
 	printf("varSet: %s\n",varSet);
@@ -434,9 +425,10 @@ int writeOut(char arg[4][12],char printSet[64],int count,FILE* pOut)
  */
 int writeStdFunction(FILE* pOut)
 	{
+	FILE* pHeader = NULL;	/* Header file pointer */
+	char buffer[128];		/* Read buffer */
+
 	printf("writeStdFunction\n");
-	FILE* pHeader = NULL;
-	char buffer[128];
 
 	/* Open standard header file */
 	pHeader = fopen(stdHeaderFile,"r");
@@ -446,6 +438,7 @@ int writeStdFunction(FILE* pOut)
 		return 0;
 		}
 
+	/* Print each line from header file */
 	while(fgets(buffer,sizeof(buffer),pHeader) != NULL)
 		{
 		fprintf(pOut,"%s",buffer);
