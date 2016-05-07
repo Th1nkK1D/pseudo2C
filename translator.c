@@ -50,30 +50,38 @@ int translator()
 		}
 
 	/* Get input file name */
-	printf("Input pseudocode file name : ");
-	fgets(buffer,sizeof(buffer),stdin);
-	sscanf(buffer,"%s",inName);
+	do
+		{
+		printf("Input pseudocode file name : ");
+		fgets(buffer,sizeof(buffer),stdin);
+		sscanf(buffer,"%s",inName);
+		}
+	while(strlen(inName) == 0);
 
 	/* Open input file */
 	pIn = fopen(inName,"r");
 
 	if(pIn == NULL)
 		{
-		printf("Can't open pseudo code file: \"%s\"\n",inName);
+		printf("Error: Can't open pseudo code file: \"%s\"\n",inName);
 		return 0;
 		}
 
 	/* Get output file name */
-	printf("Output C file name : ");
-	fgets(buffer,sizeof(buffer),stdin);
-	sscanf(buffer,"%s",outName);
+	do
+		{
+		printf("Output C file name : ");
+		fgets(buffer,sizeof(buffer),stdin);
+		sscanf(buffer,"%s",outName);
+		}
+	while(strlen(outName) == 0);
 
 	/* Open output file */
 	pOut = fopen(outName,"w");
 
 	if(pOut == NULL)
 		{
-		printf("Can't create C file: \"%s\"\n",outName);
+		printf("Error: Can't create C file: \"%s\"\n",outName);
 		return 0;
 		}
 
@@ -458,7 +466,7 @@ int writeStdFunction(FILE* pOut)
  */
 void writeIndent(FILE* pOut,int indentCount)
 	{
-	int i;
+	int i;	/* Counter */
 
 	for (i = 0; i < indentCount; i++)
 		{
@@ -471,7 +479,7 @@ void writeIndent(FILE* pOut,int indentCount)
  */
 void cleanBuffer(char buffer[])
 	{
-	int i = 0;
+	int i = 0;	/* Counter */
 
 	/* Clean \n */
 	if(buffer[strlen(buffer)-1] == '\n')
@@ -486,8 +494,6 @@ void cleanBuffer(char buffer[])
 		}
 
 	sprintf(buffer,"%s",buffer+i);
-	printf("Count tab = %d\n",i);
-	printf("inClean buffer = %s\n",buffer);
 	}
 
 /* Compile and run the translated C code if user want 
@@ -502,16 +508,20 @@ void compileRun(char cName[])
 	char command[64];	/* System command */
 
 	/* Get compile decision */
-	printf("Do you want to compile %s now? (Y/N) : ",cName);
+	printf("Do you want to compile %s now? (Y) : ",cName);
 	fgets(buffer,sizeof(buffer),stdin);
 	sscanf(buffer,"%s",action);
 	
 	if(strcasecmp("Y",action) == 0)
 		{
 		/* Get execute file name f*/
-		printf("Please enter exucute file name : ");
-		fgets(buffer,sizeof(buffer),stdin);
-		sscanf(buffer,"%s",exeName);
+		do
+			{
+			printf("Please enter exucute file name : ");
+			fgets(buffer,sizeof(buffer),stdin);
+			sscanf(buffer,"%s",exeName);
+			}
+		while(strlen(exeName) == 0);
 		
 		/* Set command */
 		sprintf(command,"gcc -o %s %s",exeName,cName);
@@ -521,7 +531,7 @@ void compileRun(char cName[])
 		
 		/* Get run decision */
 		printf("Compiling completed!\n");
-		printf("Do you want to run %s now? (Y/N) : ",exeName);
+		printf("Do you want to run %s now? (Y) : ",exeName);
 		fgets(buffer,sizeof(buffer),stdin);
 		sscanf(buffer,"%s",action);
 		
