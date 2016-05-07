@@ -169,6 +169,8 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 	printf("Key read: %s\n",key);
 
 	printf("Current stack = %s Indent = %d\n",currentStack,*indentCount);
+	
+	writeIndent(pOut,*indentCount);
 
 	/* Check if end nested found */
 	if (strncmp(buffer,"END",3) == 0)
@@ -192,7 +194,6 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 			printf("Rule got: %s\n",pRule->name);
 	
 			/* End nested (close function) */
-			writeIndent(pOut,*indentCount);
 			fprintf(pOut,"}");
 			
 			/* Update Stack */
@@ -238,11 +239,11 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		if(strcmp(keyChild,pRule->fChild) == 0)
 			{
 			/* Print current Key */
-			fprintf(pOut,"%s ",key);
+			fprintf(pOut,"%s ",pRule->preOut);
 			
 			/* Shift key and buffer */
-			strcpy(key,keyChild);
 			strcpy(buffer,buffer + strlen(key) + 1);
+			strcpy(key,keyChild);
 			
 			/* Get rule from new key */
 			pRule = getRule(target,key);
@@ -285,7 +286,6 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 
 	/* Prepare Argument */
 	varCount = prepareArg(arg,varSet,tempData);
-	writeIndent(pOut,*indentCount);
 
 	printf("pass Indent\n");
 
@@ -482,12 +482,13 @@ void cleanBuffer(char buffer[])
 		buffer[strlen(buffer)-1] = '\0';
 		}
 
-	/* Clean \t */
-	while(buffer[i] == '\t')
+	/* Clean pre tab and space */
+	while(buffer[i] == '\t' || buffer[i] == ' ')
 		{
 		i++;
 		}
 
 	sprintf(buffer,"%s",buffer+i);
+	printf("Count tab = %d\n",i);
 	printf("inClean buffer = %s\n",buffer);
 	}
