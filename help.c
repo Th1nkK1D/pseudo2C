@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "mainStructure.h"
 #include "dbAccess.h"
 
@@ -11,7 +12,9 @@ void getHelp()
 	int i=0;
 	int count;
 	int check;
+	int num;
 	char input[32];
+	char pCheck[32];
 	check = prepareDB();
 	if(check == 0)
 		{
@@ -35,33 +38,97 @@ void getHelp()
 		help[i] = (char*) calloc(16,sizeof(char));
 		}
 	getAllRuleName(help);
-	for(i=0;i<count;i++)
-		{
-		printf("%s.\n",help[i]);
-		}
+	clearScr();
 	while(strcasecmp(input,"DONE") != 0)
 		{
-		printf("Please select command(type 'DONE' if you want to exit) : ");
+		memset(input,'\0',sizeof(input));
+		printf("********************************************************************************\n");
+		printf("*                                   Help Menu                                  *\n");
+		printf("********************************************************************************\n");
+		for(i=0;i<count;i++)
+			{
+			printf("%d.)%s.\n",i+1,help[i]);
+			}
+		printf("********************************************************************************\n");
+		printf("Please select command(type '0' if you want to exit) : ");
 		fgets(input,sizeof(input),stdin);
 		sscanf(input,"%s",input);
-		if(strcasecmp(input,"DONE") == 0)
+		if(strlen(input) == 0)
+			{
+			clearScr();
+			printf("ERROR,plase enter the number between 1-15.\n");
+			printf("Please press any key to continue : ");
+			fgets(pCheck,sizeof(pCheck),stdin);
+			sscanf(pCheck,"%s",pCheck);
+			clearScr();
+			}
+		for(i=0;i<strlen(input);i++)
+			{
+			if(!isdigit(input[i]))
+				{
+				strcpy(input,"error");
+				break;
+				}
+			else
+				{
+				sscanf(input,"%d",&num);
+				}	
+			}
+		if(strcmp(input,"error") == 0)
+			{
+			clearScr();
+			printf("ERROR,plase enter the number between 1-15.\n");
+			printf("Please press any key to continue : ");
+			fgets(pCheck,sizeof(pCheck),stdin);
+			sscanf(pCheck,"%s",pCheck);
+			clearScr();
+			}
+		else if(num == 0)
 			{
 			break;
 			}
-		command = getRule('n',input);
-		if(command != NULL)
+		else if(num>0 && num <= 15)
 			{
-			printf("<><><><><><><><><><><><><><><><><><>\n");
-			printf("%s : %s\n",command->name,command->description);
-			printf("%s %s\n",command->key,command->preIn);
-			if(strlen(command->postKey) != 0)
+			sscanf(input,"%d",&num);
+			command = getRule('n',help[num-1]);
+			if(command == NULL)
 				{
-				printf("	//statement\n");
+				printf("Please press any key to continue : ");
+				fgets(input,sizeof(input),stdin);
+				sscanf(input,"%s",pCheck);
 				}
-			printf("%s %s\n",command->postKey,command->postIn);			
-			printf("<><><><><><><><><><><><><><><><><><>\n");
-
-			}	
+			clearScr();
+			if(command != NULL)
+				{
+				printf("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
+				printf("                              ***********************                  \n");
+				printf("                              *  %11s        *\n",command->name);
+				printf("                              ***********************                  \n");
+				printf("    - %s",command->description);
+				printf("--------------------------------------------------------------------------------\n");
+				printf("    Example of %s.\n\n",command->name);
+				printf("	%s %s\n",command->key,command->preIn);
+				if(strlen(command->postKey) != 0)
+					{
+					printf("	   //statement\n");
+					}
+				printf("	%s %s\n",command->postKey,command->postIn);			
+				printf("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
+				printf("Please press any key to continue : ");
+				fgets(pCheck,sizeof(pCheck),stdin);
+				sscanf(pCheck,"%s",pCheck);
+				clearScr();
+				}
+			}
+		else
+			{
+			clearScr();
+			printf("ERROR,plase enter the number between 1-15.\n");
+			printf("Please press any key to continue : ");
+			fgets(pCheck,sizeof(pCheck),stdin);
+			sscanf(pCheck,"%s",pCheck);
+			clearScr();
+			}
 		}
 	freeDB();
 	}

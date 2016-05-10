@@ -90,6 +90,7 @@ void deleteFile(char fileName[])
             }
         }
     }
+
 void freeVariable()
     {
     VARIABLE_T* pEntry = NULL;
