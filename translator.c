@@ -58,7 +58,7 @@ int translator()
 		fgets(buffer,sizeof(buffer),stdin);
 		sscanf(buffer,"%s",inName);
 		}
-	while(strlen(inName) == 0);
+	while(buffer[0] == '\n');
 
 	/* Open input file */
 	pIn = fopen(inName,"r");
@@ -76,7 +76,7 @@ int translator()
 		fgets(buffer,sizeof(buffer),stdin);
 		sscanf(buffer,"%s",outName);
 		}
-	while(strlen(outName) == 0);
+	while(buffer[0] == '\n');
 
 	/* Open output file */
 	pOut = fopen(outName,"w");
@@ -577,7 +577,7 @@ void compileRun(char cName[])
 	char command[64];	/* System command */
 
 	/* Get compile decision */
-	printf("Do you want to compile %s now? (Y) : ",cName);
+	printf("Do you want to compile %s now? (gcc is required) (Y) : ",cName);
 	fgets(buffer,sizeof(buffer),stdin);
 	sscanf(buffer,"%s",action);
 	
@@ -590,7 +590,7 @@ void compileRun(char cName[])
 			fgets(buffer,sizeof(buffer),stdin);
 			sscanf(buffer,"%s",exeName);
 			}
-		while(strlen(exeName) == 0);
+		while(buffer[0] == '\n');
 		
 		/* Set command */
 		sprintf(command,"gcc -o %s %s",exeName,cName);
