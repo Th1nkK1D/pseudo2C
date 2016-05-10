@@ -1,10 +1,16 @@
-PRINT "Hello"
+PRINT "Hell o ... ppp"
 VARIABLE count is int
 VARIABLE name is string
+OPEN new.txt to read
+READ name from new.txt
 PRINT count
-WHILE count < 0 || count > 10 && count == 1
-SET count to 26
+WHILE "lo ok ki na poo enddd" == "ei ei"
+SET count to 26HE
 GET name
-IF count < 0 && count != 5
+IF name == "poo ooo"
 ENDIF
 ENDWHILE
+CLOSE new.txt
+
+PRINT "Hello Test"
+VARIABLE var1 is 
