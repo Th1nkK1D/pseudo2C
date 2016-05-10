@@ -5,6 +5,7 @@
  * This program is used for converting simple psedocode into C language.
  *
  * Created by Siriwimon Suksukhon (Poo), ID 3436
+ * Edited by Withee Poositasai (Lookkid), ID 3429
  * - Team We Must Survived -
  * 17 April 2016
  */
@@ -67,8 +68,8 @@ int main ()
 			clearScr();
 
 			printf("--------------------------------------------------------------------------------\n");
-			printf("                   ____                      __      ___   ______\n");
-			printf("                  / __ \\________  __  ______/ /___  |__ \\ / ____/\n");
+			printf("                   ____                      __     ___   ______\n");
+			printf("                  / __ \\________  __  ______/ /___ |__ \\ / ____/\n");
 			printf("                 / /_/ / ___/ _ \\/ / / / __  / __ \\__/ // /     \n");
 			printf("                / ____(__  )  __/ /_/ / /_/ / /_/ / __// /___   \n");
 			printf("               /_/   /____/\\___/\\__,_/\\__,_/\\____/____/\\____/   \n");
@@ -104,8 +105,12 @@ int main ()
 
 		else if ( option == 2 )
 			{
-			printf("Entering to translator\n");
-			translator();
+			/* Call Translator Module */
+			if(translator() == 0)
+				{
+				printf("\nPress any key to continue...");
+				getchar();
+				}
 			}
 	
 		else if ( option == 3 )
