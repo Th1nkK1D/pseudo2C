@@ -1,0 +1,26 @@
+
+================================================================================
+                                PseudoCode Rules                                
+================================================================================
+
+Basic Rules
+-------------
+1. Can only translate 1 Psedocode file with exactly 1 main function at a time.
+2. Only supported command can be used (Can see the support command list in get 
+   help)
+
+Syntax Rule
+-------------
+1. In conditional statement, operator must be use like standard C.
+2. Comment can be use like standard C.
+3. Indenting is optional, but will be generated automatically in C file.
+4. Empthy line will be remained in C file.
+
+Variable Rules
+----------------
+1. All used variable must be declare before use (same as opening file).
+2. Current support type is "int", "double", "char", "string" that must be 
+   defined in declaration.
+3. String will have size of 512.
+4. To assign string value, "" is needed. And "" can't be used more inside.
+5. Array and Structure is not supported.
