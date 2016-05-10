@@ -59,18 +59,27 @@ int main ()
 	int option = 0;				/* Get option that user want */
 	int bExit = 0;				/* Boolean to check that user want to exit program */
 
-	printf("\n--- MAIN MENU ---\n");
-	printf("0 - Exit\n");
-	printf("1 - Pseudocode's rule\n");
-	printf("2 - Compile pseudocode to C file\n");
-	printf("3 - Get help\n\n");
-
-
 	while ( bExit == 0 )
 		{
 		bChoice = 0;
 		while ( bChoice == 0 )
 			{
+			clearScr();
+
+			printf("********************************************************************************\n");
+			printf("                   ____                      __      ___   ______\n");
+			printf("                  / __ \\________  __  ______/ /___  |__ \\ / ____/\n");
+			printf("                 / /_/ / ___/ _ \\/ / / / __  / __ \\__/ // /     \n");
+			printf("                / ____(__  )  __/ /_/ / /_/ / /_/ / __// /___   \n");
+			printf("               /_/   /____/\\___/\\__,_/\\__,_/\\____/____/\\____/   \n");
+			printf("\n");
+			printf("************************** Pseudocode to C Translator **************************\n");
+			                                                 
+			printf("\n--- MAIN MENU ---\n");
+			printf("1 - Pseudocode's rule\n");
+			printf("2 - Translate pseudocode to C file\n");
+			printf("3 - Get help\n");
+			printf("0 - Exit\n\n");
 
 			printf("Which option? ");
 			fgets(input,sizeof(input),stdin);

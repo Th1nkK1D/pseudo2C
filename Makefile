@@ -30,12 +30,14 @@ translator.o :	translator.c mainStructure.h dataUpdate.h globalAccess.h
 help.o :	dbAccess.c mainStructure.h
 	gcc -c help.c
 
+clearScr.o : clearScr.c
+	gcc -c clearScr.c -D$(PLATFORM)
 
 main.o :	main.c translator.h
 	gcc -c main.c
 
-Pseudo2C$(EXECEXT) : main.o dbAccess.o globalAccess.o dataUpdate.o translator.o help.o
-	gcc -o Pseudo2C$(EXECEXT) main.o dbAccess.o globalAccess.o dataUpdate.o translator.o help.o
+Pseudo2C$(EXECEXT) : main.o dbAccess.o globalAccess.o dataUpdate.o translator.o help.o clearScr.o
+	gcc -o Pseudo2C$(EXECEXT) main.o dbAccess.o globalAccess.o dataUpdate.o translator.o help.o clearScr.o
 
 clean : 
 	-rm *.o

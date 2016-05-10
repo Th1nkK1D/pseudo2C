@@ -66,3 +66,6 @@ typedef struct _nest
 	char postIn[16];
 	struct _nest *pNext;
 	} NEST_T;
+
+/* Clear acreen function */
+void clearScr();
