@@ -1,7 +1,7 @@
 /* Main data structure - Pseudo2C Project
  * 
  * Withee Poositasai (Lookkid) 58070503429
- * Team We Must Survived */
+ * Team We Must Survive */
 
 /* 1. Rules Database (dbAccess Module)
  * Array of structure which each structure contain rules of function. 
@@ -23,7 +23,7 @@ typedef struct
  	char description[128];	/* Description of function showing in help menu. */
  	} RULE_T;
 
-/* 2. Temporary Data (tempData Module)
+/* 2. Temporary Data (dataUpdate Module)
  * Structure that handle the data related to “Keyword” in function rules.
  *These data will be retrieve from input pseudo code, check and updated related data, and then use to write output file along the valid C syntax. 
  */
@@ -40,7 +40,7 @@ typedef struct
 	char $f_mode[8];		/* File open mode (“r” = read, “w” = write) (Related to f_pointer) */
 	} TEMP_T;
 
-/* 3. Variable Sorted-Tree (globalData Module)
+/* 3. Variable Sorted-Tree (globalAccess Module)
 	Linked-list that contain a variable that user declared. */
 typedef struct _variable
 	{
@@ -50,7 +50,7 @@ typedef struct _variable
 	struct _variable *pNext;	/* Pointer to next item */
 	} VARIABLE_T;
 
-/* 4. File handle Linked-List (globalData Module)
+/* 4. File handle Linked-List (globalAccess Module)
 	Linked-list that contain a data of file that user open. */
 typedef struct _file
 	{
@@ -60,7 +60,7 @@ typedef struct _file
 	struct _file *pNext;	/* Pointer to next item */
 	} FILE_T;
 
-/* 5. Nested function stack (globalData Module)
+/* 5. Nested function stack (globalAccess Module)
 	Stack linked-list of postIn when the function are nested. */
 typedef struct _nest
 	{
@@ -68,5 +68,6 @@ typedef struct _nest
 	struct _nest *pNext;	/* Pointer to next item in stack */
 	} NEST_T;
 
-/* Clear screen function */
+/* Clear screen function 
+ * Depend on system that run makefile */
 void clearScr();

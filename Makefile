@@ -1,5 +1,6 @@
 # Makefile for Pseudo2C Project
-# We Must Survired Team
+# We Must Survive Team
+# Withee Poositasai (Lookkid) 58070503429
 
 ifeq ($(OSTYPE),WINDOWS)
 	EXECEXT =.exe

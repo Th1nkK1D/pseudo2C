@@ -15,6 +15,7 @@ Syntax Rule
 2. Comment can be use like standard C.
 3. Indenting is optional, but will be generated automatically in C file.
 4. Empthy line will be remained in C file.
+5. Don't type Semi-colon.
 
 Variable Rules
 ----------------

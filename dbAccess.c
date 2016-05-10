@@ -1,7 +1,7 @@
 /* DB Accessing Module - Pseudo2C Project
  * 
  * Withee Poositasai (Lookkid) 58070503429
- * Team We Must Survived */
+ * Team We Must Survive */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -80,21 +80,7 @@ int prepareDB()
 		extractProperty(rulesArray[i]->varType,NULL);
 		extractProperty(rulesArray[i]->fChild,NULL);
 		extractProperty(rulesArray[i]->description,NULL);
-		/*
-		printf("i = %d\n",i);
-		printf("\nname: %s\n",rulesArray[i]->name);
-		printf("key: %s\n",rulesArray[i]->key);
-		printf("preIn: %s\n",rulesArray[i]->preIn);
-		printf("preOut: %s\n",rulesArray[i]->preOut);
-		printf("preVar: %s\n",rulesArray[i]->preVar);
-		printf("preVar: %s\n",rulesArray[i]->postKey);
-		printf("postIn: %s\n",rulesArray[i]->postIn);
-		printf("postOut: %s\n",rulesArray[i]->postOut);
-		printf("postVar: %s\n",rulesArray[i]->postVar);
-		printf("varType: %s\n",rulesArray[i]->varType);
-		printf("fChild: %s\n",rulesArray[i]->fChild);
-		printf("description: %s\n",rulesArray[i]->description);
-		*/
+
 		i++;
 		}
 
