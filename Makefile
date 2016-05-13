@@ -16,6 +16,9 @@ EXECUTABLES= Pseudo2C$(EXECEXT)
 
 all : $(EXECUTABLES)
 
+ReadRule.o :	ReadRule.c mainStructure.h
+	gcc -c ReadRule.c
+
 dbAccess.o :	dbAccess.c mainStructure.h
 	gcc -c dbAccess.c
 
@@ -40,8 +43,8 @@ checkMath.o :	checkMath.c mainStructure.h globalAccess.h
 main.o :	main.c translator.h
 	gcc -c main.c
 
-Pseudo2C$(EXECEXT) : main.o dbAccess.o globalAccess.o dataUpdate.o translator.o help.o clearScr.o checkMath.o
-	gcc -o Pseudo2C$(EXECEXT) main.o dbAccess.o globalAccess.o dataUpdate.o translator.o help.o clearScr.o checkMath.o
+Pseudo2C$(EXECEXT) : main.o ReadRule.o dbAccess.o globalAccess.o dataUpdate.o translator.o help.o clearScr.o checkMath.o
+	gcc -o Pseudo2C$(EXECEXT) main.o ReadRule.o dbAccess.o globalAccess.o dataUpdate.o translator.o help.o clearScr.o checkMath.o
 
 clean : 
 	-rm *.o

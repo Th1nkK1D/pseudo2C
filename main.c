@@ -99,8 +99,8 @@ int main ()
 
 		if ( option == 1 )
 			{
-			//pseudoRule();
-			printf("To be implement soon\n");
+			/* Call ReadRule Module */
+			ReadRule();
 			}
 
 		else if ( option == 2 )
@@ -115,6 +115,7 @@ int main ()
 	
 		else if ( option == 3 )
 			{
+			/* Call getHelp Module */
 			getHelp();
 			}
 		else
