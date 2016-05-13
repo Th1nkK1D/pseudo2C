@@ -107,6 +107,9 @@ int main ()
 			{
 			/* Call Translator Module */
 			translator();
+
+			printf("Please anykey to return to main menu!\n");
+			getchar();
 			}
 	
 		else if ( option == 3 )

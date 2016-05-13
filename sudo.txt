@@ -1,16 +1,14 @@
-PRINT "Hell o ... ppp"
-VARIABLE count is int
-VARIABLE name is string
-OPEN new.txt to read
-READ name from new.txt
-PRINT count
-WHILE "lo ok ki na poo enddd" == "ei ei"
-SET count to 26HE
-GET name
-IF name == "poo ooo"
-ENDIF
-ENDWHILE
-CLOSE new.txt
+VARIABLE lookkid is INT
+VARIABLE poo is double
+VARIABLE gide is char
+VARIABLE junior is string
+VARIABLE pm IS STRING
 
-PRINT "Hello Test"
-VARIABLE var1 is 
+if gide == 'a' && poo == 100.2
+endif
+else if junior == "jr      "
+endif
+else
+print gide
+print "aa"
+ENDELSE
