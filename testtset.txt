@@ -15,17 +15,22 @@ SET var1ans to 9194
 SET var2ans to 8294
 PRINT "Player one enter number"
 GET var1
+PRINT var1
 PRINT "Player two enter number"
 GET var2
+PRINT var2
 WHILE var1ans != var1 && var2ans != var2
 	PRINT "wrong answer!"	
+	PRINT turn
 	IF turn == 1
 		PRINT "player 1 guess"
 		GET var2ans
+		PRINT var2ans
 	ENDIF
 	ELSE
 		PRINT "player 2 guess"
 		GET var1ans
+		PRINT var1ans
 	ENDELSE
 	
 	IF turn == 0

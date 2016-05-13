@@ -174,9 +174,6 @@ int translator()
 	/* If user want to compile and run */
 	compileRun(outName);
 	
-	printf("Please anykey to return to main menu!\n");
-	getchar();
-	
 	return 1;
 	}
 
@@ -193,7 +190,7 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 	{
 	char key[16];			/* Key read */
 	char keyChild[16];		/* Possible child key read */
-	RULE_T* pRule = NULL;	/* Rule data of the key read */
+	RULE_T* pRule = NULL;		/* Rule data of the key read */
 	char target;			/* getKey target mode */
 	TEMP_T tempData;		/* Temporary data for traslation */
 	char inSet[64];			/* Expected pseudo for key read */
@@ -201,6 +198,9 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 	char printSet[64];		/* Output c pattern to print */
 	int varCount;			/* Number of argument to print  */
 	char arg[4][12];		/* Array of argument value to print */
+
+	memset(key,0,sizeof(key));
+	memset(keyChild,0,sizeof(keyChild));
 
 	/* Scan line for key and childKey */
 	sscanf(buffer,"%s %s",key,keyChild);

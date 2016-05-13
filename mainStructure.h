@@ -55,7 +55,7 @@ typedef struct _variable
 typedef struct _file
 	{
 	char handle[16];		/* Name of pointer file handle */
-	char path[32];			/* Variable type */
+	char path[64];			/* File name */
 	char mode[4];			/* Symbol of that variable */
 	struct _file *pNext;	/* Pointer to next item */
 	} FILE_T;
