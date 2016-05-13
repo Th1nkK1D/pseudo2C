@@ -5,6 +5,9 @@
 #include "mainStructure.h"
 #include "dbAccess.h"
 
+/* This function for get help from the structure and ask user
+ * and print the command that user wanna know how to use it.
+ */
 void getHelp()
 	{
 	char** help;
@@ -58,8 +61,7 @@ void getHelp()
 			clearScr();
 			printf("ERROR,plase enter the number between 1-15.\n");
 			printf("Please press any key to continue : ");
-			fgets(pCheck,sizeof(pCheck),stdin);
-			sscanf(pCheck,"%s",pCheck);
+			getchar();
 			clearScr();
 			}
 		for(i=0;i<strlen(input);i++)
@@ -79,8 +81,7 @@ void getHelp()
 			clearScr();
 			printf("ERROR,plase enter the number between 1-15.\n");
 			printf("Please press any key to continue : ");
-			fgets(pCheck,sizeof(pCheck),stdin);
-			sscanf(pCheck,"%s",pCheck);
+			getchar();;
 			clearScr();
 			}
 		else if(num == 0)
@@ -94,8 +95,7 @@ void getHelp()
 			if(command == NULL)
 				{
 				printf("Please press any key to continue : ");
-				fgets(input,sizeof(input),stdin);
-				sscanf(input,"%s",pCheck);
+				getchar();
 				}
 			clearScr();
 			if(command != NULL)
@@ -125,8 +125,7 @@ void getHelp()
 			clearScr();
 			printf("ERROR,plase enter the number between 1-15.\n");
 			printf("Please press any key to continue : ");
-			fgets(pCheck,sizeof(pCheck),stdin);
-			sscanf(pCheck,"%s",pCheck);
+			getchar();
 			clearScr();
 			}
 		}

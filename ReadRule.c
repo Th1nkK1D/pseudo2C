@@ -27,7 +27,7 @@ void ReadRule()
 		}
 	while(1)
 		{
-		printf("Do you want to see Pseudo Code example.(Y/N) :");
+		printf("\n\nDo you want to see Pseudo Code example.(Y/N) :");
 		fgets(input,sizeof(input),stdin);
 		sscanf(input,"%s",input);
 		if(strcasecmp(input,"Y") == 0 || strcasecmp(input,"N") == 0)
@@ -40,10 +40,15 @@ void ReadRule()
 		{
 		clearScr();
 		sudo = fopen("sudo.txt","r");
+		if(sudo == NULL)							/*if file does not exist.*/
+			{
+			printf("ERROR,file does not exist.\n");
+			}
 		while(fgets(pSudo,sizeof(pSudo),sudo) != 0)
 			{
 			printf("%s",pSudo);
 			}
+		getchar();
 		fclose(sudo);
 		}
 	fclose(ruletxt);
