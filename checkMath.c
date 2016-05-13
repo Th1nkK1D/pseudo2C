@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include "mainStructure.h"
+#include "globalAccess.h"
 
 int checkMath(char stm[],int length)
 	{
@@ -66,7 +68,12 @@ int checkMath(char stm[],int length)
 
 				strncpy(var,stm+i,j+1-i);
 
-				//Check if variable is valid
+				/* Check if variable is valid */
+				if(searchWord(var) == NULL)
+					{
+					printf("Variable %s not found\n",var);
+					return 0;
+					}
 
 				i = j;
 				allowOps = 1;
@@ -97,6 +104,7 @@ int checkMath(char stm[],int length)
 	return 1;
 	}
 
+/*
 int main()
 	{
 	char buffer[128];
@@ -125,3 +133,4 @@ int main()
 		}
 	while(buffer[0] != '\n');
 	}
+	*/

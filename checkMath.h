@@ -1,0 +1,1 @@
+int checkMath(char stm[],int length);

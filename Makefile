@@ -33,12 +33,15 @@ help.o :	dbAccess.c mainStructure.h
 
 clearScr.o : clearScr.c
 	gcc -c clearScr.c -D$(PLATFORM)
+	
+checkMath.o :	checkMath.c mainStructure.h globalAccess.h
+	gcc -c checkMath.c
 
 main.o :	main.c translator.h
 	gcc -c main.c
 
-Pseudo2C$(EXECEXT) : main.o dbAccess.o globalAccess.o dataUpdate.o translator.o help.o clearScr.o
-	gcc -o Pseudo2C$(EXECEXT) main.o dbAccess.o globalAccess.o dataUpdate.o translator.o help.o clearScr.o
+Pseudo2C$(EXECEXT) : main.o dbAccess.o globalAccess.o dataUpdate.o translator.o help.o clearScr.o checkMath.o
+	gcc -o Pseudo2C$(EXECEXT) main.o dbAccess.o globalAccess.o dataUpdate.o translator.o help.o clearScr.o checkMath.o
 
 clean : 
 	-rm *.o
