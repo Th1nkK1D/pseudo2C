@@ -154,6 +154,8 @@ int translator()
 		printf("Error: postKey not found at line %d\n",line);
 		printf(">>> -> %s\n",currentStack);
 		
+		freeAll();
+
 		return 0;
 		}
 
