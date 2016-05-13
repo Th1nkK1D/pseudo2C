@@ -10,7 +10,13 @@ static FILE_T* fTail = NULL;
 static NEST_T * head = NULL;
 static int i = 1;
 
-/*this function for search the word*/
+/* this function for search the word
+ * Argument : name --> name of the word that 
+ *                     user wanna search
+ * return the structure of that name if the name
+ * that user input can found
+ * return NULL if can not found.
+ */
 VARIABLE_T * searchWord(char name[])
     {
     VARIABLE_T* word = NULL;
@@ -29,7 +35,13 @@ VARIABLE_T * searchWord(char name[])
     return NULL;
     }
 
-/*this function for search the files*/
+/*this function for search the files
+ * Argument : name --> name of file that 
+ *                     user wanna search
+ * return the structure of that name if the name
+ * that user input can found
+ * return NULL if can not found.
+ */
 FILE_T * searchFile(char name[])
     {
     FILE_T* word = NULL;
@@ -47,7 +59,10 @@ FILE_T * searchFile(char name[])
         }
     return NULL;
     }
-
+/* this function for delete the structure's file that user
+ * wanna to delete
+ * Argument : fileName -> name of file that user wanna delete
+ */
 void deleteFile(char fileName[])
     {  
     FILE_T* found = NULL;
@@ -87,6 +102,7 @@ void deleteFile(char fileName[])
         }
     }
 
+/*This function for free the memory of linked list of Variable*/
 void freeVariable()
     {
     VARIABLE_T* pEntry = NULL;
@@ -100,6 +116,7 @@ void freeVariable()
     pTail = NULL;
     }
 
+/* This function for free the memory of linked list of file's name*/
 void freeFile()
     {
     FILE_T* pEntry = NULL;
@@ -113,9 +130,12 @@ void freeFile()
     fTail = NULL;
     }
 
- /*this function for push a data item onto the stack
-  return 1 if successful,0 if we have an overflow 
- */ 
+/* this function for push a data item onto the stack
+ * Argumant : data --> Pointer to generic data we 
+ *                     want to add to queue  
+ * return 1 if successful,0 if we have an overflow 
+ */
+
 int push(char data[])
     {
     int check = 1;
@@ -133,8 +153,10 @@ int push(char data[])
     return check;
 }
 
-/* Removes and returns the top item on the stack.
- * Returns 0 if the queue is empty.
+/* This function for Removes and returns the top item on the stack.
+ * Argument : postIn --> this is the structure that will store the top
+ *                       item on the stack
+ * Returns 0 if the queue is empty and return 1 and the structure on the top.
  */
 int pop(char postIn[])
     {
@@ -153,7 +175,11 @@ int pop(char postIn[])
         return 0;
         }
     }
-
+/* This function for insert the Name of pointer file handle
+ * file type and symbol of that file into linked-list and 
+ * set the top and tail of linked list.
+ * Arguments : pNewNode --> the structure of file
+ */
 void insertFile(FILE_T* pNewNode)
     {
     FILE_T* Entry = NULL;
@@ -177,8 +203,12 @@ void insertFile(FILE_T* pNewNode)
         fTail = Entry;
         }
     }
-
-void addFile(char nameFile[32],char type[6],char pointer[])
+/* This function for set the Name of pointer file handle
+ * and sent the structure of file to insertFile function
+ * Arguments : nameFile --> name of file
+ *             type     --> file type
+ */
+void addFile(char nameFile[32],char type[6])
     {
     FILE_T* inStruct = NULL;
     char name[32];
@@ -200,7 +230,11 @@ void addFile(char nameFile[32],char type[6],char pointer[])
         }
     }
 
-/*This function for insert the people in the trees*/
+/* This function for insert the name,type and symbol of variable
+ * into linked-list and set the top and tail of linked list.
+ * Arguments : pNewNode --> the structure of variable that 
+ *                          user want to insert.
+ */
 void insertVariable(VARIABLE_T* pNewNode)
     {
     VARIABLE_T* Entry = NULL;
@@ -224,7 +258,13 @@ void insertVariable(VARIABLE_T* pNewNode)
         pTail = Entry;
         }
     }
-/*this function for add the name of variable,type of variable and symbol*/
+
+/* This function for set the symbol of variable
+ * and sent the structure of variable  to 
+ * insertVariable function.
+ * Arguments : nameFile --> name of variable
+ *             type     --> variable type
+ */
 void addVariable(char in_word[],char in_type[])
     {
     char in_symbol;
@@ -256,39 +296,3 @@ void addVariable(char in_word[],char in_type[])
         insertVariable(in_variable);
         }
     }
-/*
-int main()
-    {
-    FILE_T* found = NULL;
-    char input[32];
-    char nVariable[32];
-    char type[5];
-    char frees[32];
-    char pCheck[32];
-    int i=0;
-    int a;
-    int b;
-    int c;
-    int d;
-    while(i<3)
-        {
-        printf("enter file name : ");
-        fgets(input,sizeof(input),stdin);
-        sscanf(input,"%s",nVariable);
-        printf("enter type : ");
-        fgets(input,sizeof(input),stdin);
-        sscanf(input,"%s",type);
-        push(nVariable);
-        i++;
-        }
-    a = pop(pCheck);
-    printf("%s\n",pCheck);
-    b = pop(pCheck);
-    printf("%s\n",pCheck);
-    c = pop(pCheck);
-    printf("%s\n",pCheck);
-    d = pop(pCheck);
-    printf("%s\n",pCheck);
-    printf("%d\n%d\n%d\n%d\n",a,b,c,d);
-    }
-*/
