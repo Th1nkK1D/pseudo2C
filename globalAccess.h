@@ -48,7 +48,7 @@ int pop(char postIn[]);
  * Arguments : nameFile --> name of file
  *             type     --> file type
  */
-void addFile(char nameFile[32],char type[6],char pointer[]);
+void addFile(char nameFile[],char type[],char pointer[]);
 
 /* This function for set the symbol of variable
  * and sent the structure of variable  to 

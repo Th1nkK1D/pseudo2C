@@ -27,8 +27,9 @@ void compileRun(char cName[]);
 const char stdHeaderFile[] = "stdHeader.in";
 
 /* Translator from Pseudocode to C
- *	Return:	1 = Success
- *			0 = Failed
+ *	Return:	0 = Failed
+ *			1 = Success
+ *			2 = Success and run
  */
 int translator()
 	{
@@ -173,6 +174,9 @@ int translator()
 	/* If user want to compile and run */
 	compileRun(outName);
 	
+	printf("Please anykey to return to main menu!\n");
+	getchar();
+	
 	return 1;
 	}
 
@@ -206,10 +210,10 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 	writeIndent(pOut,*indentCount);
 
 	/* Check if end nested found */
-	if (strncmp(buffer,"END",3) == 0)
+	if (strncasecmp(buffer,"END",3) == 0)
 		{
 		/* Check if postKey match with currentStack */
-		if(strcmp(buffer,currentStack) == 0)
+		if(strcasecmp(buffer,currentStack) == 0)
 			{
 			/* Get rule by end key */
 			target = 'e';
@@ -259,7 +263,7 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 			}
 			
 		/* Check for child function */
-		if(strcmp(keyChild,pRule->fChild) == 0)
+		if(strcasecmp(keyChild,pRule->fChild) == 0)
 			{
 			/* Print current Key */
 			fprintf(pOut,"%s ",pRule->preOut);
@@ -496,8 +500,6 @@ void cleanBuffer(char buffer[],int length)
 	/* Set new string end point */
 	buffer[length-j] = '\0';
 	
-	printf("Clean buffer: i=%d j=%d",i,j);
-
 	sprintf(buffer,"%s",buffer+i);
 	}
 
@@ -607,4 +609,6 @@ void compileRun(char cName[])
 			system(command);
 			}
 		}
+		
+		printf("\"%s\" finished\n",exeName);
 	}

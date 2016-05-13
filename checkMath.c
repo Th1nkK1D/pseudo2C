@@ -1,3 +1,9 @@
+/*  Mathematicala statement validator Header File - Pseudo2C Project
+ * 
+ * Withee Poositasai (Lookkid) 58070503429
+ * Team We Must Survive 
+ */
+ 
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -5,15 +11,21 @@
 #include "mainStructure.h"
 #include "globalAccess.h"
 
+/* Check if mathematical statement id valid 
+ *	Argument:	stm = Statement to check
+ *				length = Length of statement
+ *	Return:	1 if statement is valid, 0 if not
+ */
 int checkMath(char stm[],int length)
 	{
-	int i = 0;
-	int j = 0;
-	char ops[] = "+-*/%%";
-	char prt[] = "()";
-	int allowOps = 0;
-	int prtCount = 0;
-	char var[64];
+	/* Variable declaration */
+	int i = 0;				/* Counter 1 */
+	int j = 0;				/* Counter 2 */
+	char ops[] = "+-*/%%";	/* Allowed operator string */
+	char prt[] = "()";		/* Allowed parenthesis string */
+	int allowOps = 0;		/* Allowed operator status */
+	int prtCount = 0;		/* Parenthesis counter */
+	char var[64];			/* Variable name */
 
 	/* Looping in statement */
 	while(i < length)
@@ -103,34 +115,3 @@ int checkMath(char stm[],int length)
 
 	return 1;
 	}
-
-/*
-int main()
-	{
-	char buffer[128];
-
-	do
-		{
-		printf("Enter statement (leave blank to exit): ");
-		fgets(buffer,sizeof(buffer),stdin);
-
-		if(buffer[0] != '\n')
-				{
-			if(buffer[strlen(buffer)-1] == '\n')
-				{
-				buffer[strlen(buffer)-1] = '\0';
-				}
-
-			if(checkMath(buffer,strlen(buffer)) == 1)
-				{
-				printf("Statement is valid\n");
-				}
-			else
-				{
-				printf("Statement is invalid\n");
-				}
-			}
-		}
-	while(buffer[0] != '\n');
-	}
-	*/
