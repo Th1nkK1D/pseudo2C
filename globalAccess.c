@@ -57,6 +57,7 @@ FILE_T * searchFile(char name[])
             word = word->pNext;
             }
         }
+    i = 1;
     return NULL;
     }
 /* this function for delete the structure's file that user
