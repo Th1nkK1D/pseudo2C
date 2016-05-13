@@ -174,6 +174,9 @@ int translator()
 	/* If user want to compile and run */
 	compileRun(outName);
 	
+	printf("Please anykey to return to main menu!\n");
+	getchar();
+	
 	return 1;
 	}
 
@@ -606,4 +609,6 @@ void compileRun(char cName[])
 			system(command);
 			}
 		}
+		
+		printf("\"%s\" finished\n",exeName);
 	}

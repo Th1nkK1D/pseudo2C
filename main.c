@@ -106,11 +106,7 @@ int main ()
 		else if ( option == 2 )
 			{
 			/* Call Translator Module */
-			if(translator() == 0)
-				{
-				printf("\nPress any key to continue...");
-				getchar();
-				}
+			translator();
 			}
 	
 		else if ( option == 3 )
@@ -118,6 +114,7 @@ int main ()
 			/* Call getHelp Module */
 			getHelp();
 			}
+			
 		else
 			{
 			bExit = 1;
