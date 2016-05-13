@@ -57,7 +57,6 @@ FILE_T * searchFile(char name[])
             word = word->pNext;
             }
         }
-    i = 1;
     return NULL;
     }
 /* this function for delete the structure's file that user
@@ -129,6 +128,7 @@ void freeFile()
         }
     fHead = NULL;
     fTail = NULL;
+    i = 1;
     }
 
 /* this function for push a data item onto the stack
