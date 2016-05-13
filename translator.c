@@ -594,21 +594,21 @@ void compileRun(char cName[])
 		
 		/* Get run decision */
 		printf("Compiling completed!\n");
-		printf("Do you want to run %s now? (Y) : ",exeName);
+		printf("Do you want to run \"%s\" now? (Y) : ",exeName);
 		fgets(buffer,sizeof(buffer),stdin);
 		sscanf(buffer,"%s",action);
 		
 		if(strcasecmp("Y",action) == 0)
 			{
-			printf("Starting %s\n\n",exeName);
+			printf("Starting \"%s\"\n\n",exeName);
 			
 			/* Set command */
 			sprintf(command,"./%s",exeName);
 			
 			/* Run command */
 			system(command);
+			
+			printf("\"%s\" finished\n",exeName);
 			}
 		}
-		
-		printf("\"%s\" finished\n",exeName);
 	}
