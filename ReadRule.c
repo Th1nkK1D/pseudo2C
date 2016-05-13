@@ -48,6 +48,7 @@ void ReadRule()
 			{
 			printf("%s",pSudo);
 			}
+		printf("\n\nPlease press any key to continue : ");
 		getchar();
 		fclose(sudo);
 		}
