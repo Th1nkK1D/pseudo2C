@@ -209,12 +209,12 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 	
 	writeIndent(pOut,*indentCount);
 
+	printf("current/stack = %s/%s\n",key,currentStack);
+
 	/* Check if end nested found */
-	if (strncasecmp(buffer,"END",3) == 0)
+	if (strcasecmp(key,currentStack) == 0)
 		{
-		/* Check if postKey match with currentStack */
-		if(strcasecmp(buffer,currentStack) == 0)
-			{
+			printf(">%s\n",key);
 			/* Get rule by end key */
 			target = 'e';
 			pRule = getRule(target,key);
@@ -233,13 +233,14 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 			/* Update Stack */
 			*indentCount = *indentCount-1;
 			pop(currentStack);
+			printf("new current stack %s\n",currentStack);
 	
 			/* Set data from rule */
 			strcpy(inSet,pRule->postIn);
 			strcpy(varSet,pRule->postVar);
 			strcpy(printSet,pRule->postOut);
 			}
-		else
+		else if(strncasecmp(buffer,"END",3) == 0)
 			{
 			/* postKey doesn't match with currentStack */
 			printf("Error: Invalid postKey at line %d\n",line);
@@ -247,7 +248,6 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 			
 			return 0;
 			}
-		}
 	else
 		{
 		/* Get rule by key */
