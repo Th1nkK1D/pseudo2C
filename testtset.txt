@@ -15,20 +15,20 @@ PRINT "=== Guessing game ==="
 
 PRINT "Enter player 1 name: "
 GET name1
-PRINT "Player 1 enter number:"
+PRINT "Player 1 enter number(1-10):"
 GET var1
+
+FOR i = 0 UNTIL i < 30
+	PRINT "\n"
+ENDFOR
 
 PRINT "Enter player 2 name: "
 GET name2
 
-FOR i = 0 UNTIL i < 40
-	PRINT "\n"
-ENDFOR
-
-PRINT "Player 2 enter number:"
+PRINT "Player 2 enter number(1-10):"
 GET var2
 
-FOR i = 0 UNTIL i < 40
+FOR i = 0 UNTIL i < 30
 	PRINT "\n"
 ENDFOR
 
@@ -54,11 +54,9 @@ WHILE var1ans != var1 && var2ans != var2
 	ENDELSE
 	
 	IF turn == 0
-		PRINT "Set to turn 1"
 		SET turn TO 1
 	ENDIF	
 	ELSE
-		PRINT "Set to turn 2"
 		SET turn TO 0
 	ENDELSE
 ENDWHILE

@@ -249,7 +249,7 @@ int checkCondition ( char input[] , char con[])
 
 		if ( strcasecmp(type1,"string") == 0 )
 			{
-			strcat(tempCon,"strcasecmp(");
+			strcat(tempCon,"strcmp(");
 			strcat(tempCon,leftToken);
 			strcat(tempCon,",");
 			strcat(tempCon,rightToken);
@@ -302,7 +302,7 @@ int checkName ( char tempLine[] , char command[] , char varType[] )
 
 	if ( tempVar == NULL )
 		{
-		if ( strcasecmp(command,"print") != 0 )
+		if ( strcasecmp(command,"print") != 0 && strcasecmp(command,"write") != 0 )
 			{
 			printf("Error - variable is undeclared (first use in this function)\n");
 			return 0;
@@ -315,88 +315,17 @@ int checkName ( char tempLine[] , char command[] , char varType[] )
 		}
 	else
 		{
-		sprintf(type,"%c",tempVar->type[0]);
+		sprintf(type,"%c",tolower(tempVar->type[0]));
 
 		if ( strstr(varType,type) == NULL )
 			{
+			printf("t1 = %c, t2 = %s\n",varType[0],type);
+			printf("Error - this variable is not in support type\n");
 			return 0;
 			}	
 		}
 	return 1;		
 	}
-
-/* Function to check that line is in correct format 
- * Argument : 
- * pre_post_in => correct format of that line
- * lineCopied => string of that line
- * Return :
- * 1 => if it is in correct format
- * 0 => if it's not
- */
-int checkFormat (char style[], char input[], char command[])
-	{
-	int i = 0;
-	char lineCopied[512];
-	char *format;
-	char *line;
-	char pre_post_in[512];
-	char *temp_format = NULL;
-	char *temp_line = NULL;
-	int checkDollar = 0;
-	int format_space = 0;
-	int line_space = 0;	
-
-	strcpy(lineCopied,input);
-	strcpy(pre_post_in,style);
-
-	temp_format = pre_post_in;
-	temp_line = lineCopied;
-
-	for(i=0;i<strlen(temp_format);i++)
-		{
-		if ( isspace(temp_format[i]) )
-			{
-			format_space++;
-			}
-		}
-
-	for(i=0;i<strlen(temp_line);i++)
-		{
-		if ( isspace(temp_line[i]) )
-			{
-			line_space++;
-			}
-		}
-	if ( strcasecmp(temp_format,"$con") == 0 )
-		{
-		return 1;
-		}
-	
-
-	if ( format_space != line_space && strcasecmp(command,"for") != 0 )
-		{
-		return 0;
-		}
-
-	while ( (format = strtok_r(temp_format," ",&temp_format)) && (line = strtok_r(temp_line," ",&temp_line)) )
-		{
-		checkDollar = 0;
-		checkDollar = findDollar(format);
-		
-		if ( checkDollar == 0 )
-			{
-			if ( strcasecmp(format,line) != 0 )
-				{
-				return 0;
-				}
-			}
-		if ( strcasecmp(temp_format,"$con") == 0 )
-			{
-			return 1;
-			}
-		}
-	return 1;
-	}	
 
 int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 	{
@@ -418,6 +347,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 	char* delim = NULL;
 	int i = 0;
 	char tempString[512];
+	int bFree = 0;
 
 	memset(data->$con,0,sizeof(data->$con));
 	memset(data->$v_name,0,sizeof(data->$v_name));
@@ -615,7 +545,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 				memset(tempString,0,sizeof(tempString));
 				strcat(tempString,tempLine);
 				printf("tempString = %s\n",tempString);
-				printf("point 0.9\n");
+				printf("point 0.90\n");
 				if ( strstr(hold_line,"\"") == NULL )
 					{
 					printf("11\n");
@@ -623,26 +553,35 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 					return 0;
 					}
 				tempLine = strtok_r(NULL,"\"",&hold_line);
-				printf("tempLine = %s\n",tempLine);
-				printf("point 0.95\n");
+				printf("holdlin = %s\n",hold_line);
+				printf("point 0.950\n");
+				printf("HOL = %s\n",hold_line);
 				if ( tempLine != NULL )	
 					{
-					printf("point 1\n");
+					printf("HD = %s\n",hold_line);
+					printf("point 1ja\n");
 					strcat(tempString," ");
+					//sprintf(tempString,"%s%s",tempString,tempLine);
 					strcat(tempString,tempLine);
 					strcat(tempString,"\"");
 					printf("tempString2 = %s\n",tempString);
 					printf("point 2\n");
-					strcpy(tempLine,tempString);
+					tempLine = strdup(tempString);
+					bFree = 1;
+					//strcpy(tempLine,tempString);
 					printf("point 3\n");
 					memset(tempString,0,sizeof(tempString));
+					printf("H %s\n",hold_line);
 					}
+				printf("HL %s\n",hold_line);
 				}
+			printf("HLL %s\n",hold_line);
 			}
 		
+		printf("HLLLLL %s\n",hold_line);
 		while ( tempFormat != NULL )
 			{
-			
+			printf("A1\n");
 			foundDollar = 0;
 			foundDollar = findDollar(tempFormat);
 
@@ -650,6 +589,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 				{
 				if ( strcasecmp("$con",tempFormat) == 0 )
 					{
+					printf("A2\n");
 					memset(lineCondition,0,sizeof(lineCondition));
 					tempLine = strtok_r(NULL," ",&hold_line);
 					printf("TMP LN = %s\n",tempLine);				
@@ -662,6 +602,10 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 							if ( strstr(hold_line,"\"") == NULL )
 								{	
 								printf("Error - condition is invalid\n");
+								if ( bFree == 1 )
+									{
+									free(tempLine);	
+									}
 								return 0;
 								}
 							tempLine = strtok_r(NULL,"\"",&hold_line);
@@ -669,6 +613,10 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 							if ( tempLine == NULL )
 								{
 								printf("Error - condition is invalid\n");
+								if ( bFree == 1 )
+									{
+									free(tempLine);
+									}
 								return 0;
 								}
 							if ( tempLine != NULL )	
@@ -701,6 +649,10 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 						{
 						printf("type is %s\n",data->$v_type);
 						printf("Error - condition is invalid\n");
+						if ( bFree == 1 )
+							{
+							free(tempLine);
+							}
 						return 0;
 						}
 					}
@@ -712,6 +664,10 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 
 					if ( bName != 1 )
 						{
+						if ( bFree == 1 )
+							{
+							free(tempLine);
+							}
 						return 0;
 						}
 					strcpy(data->$v_name,tempLine);
@@ -758,6 +714,10 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 								if ( tempLine[0] != '\"' || tempLine[strlen(tempLine)-1] != '\"' )
 									{
 									printf("Error - this data must be a string\n");
+									if ( bFree == 1 )
+										{
+										free(tempLine);
+										}
 									return 0;
 									}
 								}
@@ -766,6 +726,10 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 								if ( checkMath(tempLine,strlen(tempLine)) == 0 )
 									{
 									printf("Error - this value is invalid\n");
+									if ( bFree == 1 )
+										{
+										free(tempLine);
+										}
 									return 0;
 									}
 								}
@@ -774,6 +738,10 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 								if ( strlen(tempLine) != 1 )
 									{
 									printf("Error - this data must be one character\n");
+									if ( bFree == 1 )
+										{
+										free(tempLine);
+										}
 									return 0;
 									}
 								}
@@ -781,10 +749,17 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 						}
 					else
 						{
-						if ( strcasecmp(tempVar->type,data->$v_type) != 0 )
+						if ( strcasecmp(tempVar->type,"int") != 0 && strcasecmp(tempVar->type,"double") != 0 && strcasecmp(data->$v_type,"int") != 0 && strcasecmp(data->$v_type,"double") != 0 )
 							{
-							printf("Error - type of value is invalid\n");
-							return 0;
+							if ( strcasecmp(tempVar->type,data->$v_type) != 0 )
+								{
+								printf("Error - type of value is invalid\n");
+								if ( bFree == 1 )
+									{
+									free(tempLine);
+									}
+								return 0;
+								}
 							}
 						}
 					strcpy(data->$value,tempLine);							
@@ -793,10 +768,15 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 					{
 					tempFile = NULL;
 					tempFile = searchFile(tempLine);
+					printf("search %s in temp line\n",tempLine);
 
 					if ( tempFile == NULL )
 						{
 						printf("Error - file is undeclared or deleted\n");
+						if ( bFree == 1 )
+							{
+							free(tempLine);
+							}
 						return 0;
 						}
 					else
@@ -806,6 +786,10 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 							if ( strcasecmp(tempFile->mode,"r") != 0 )
 								{
 								printf("Error - this file is not in the read mode\n");
+								if ( bFree == 1 )
+									{
+									free(tempLine);
+									}
 								return 0;
 								}
 							}
@@ -814,6 +798,10 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 							if ( strcasecmp(tempFile->mode,"w") != 0 )
 								{
 								printf("Error - this file is not in the write mode\n");
+								if ( bFree == 1 )
+									{
+									free(tempLine);
+									}
 								return 0;
 								}
 							}
@@ -822,6 +810,10 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 							if ( strcasecmp(tempFile->mode,"r") != 0 )
 								{
 								printf("Error - this file is not in the read mode\n");
+								if ( bFree == 1 )
+									{
+									free(tempLine);
+									}
 								return 0;
 								}
 							}
@@ -844,6 +836,10 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 				if ( strcasecmp(tempFormat,tempLine) != 0 )
 					{
 					printf("Error - incorrect format\n");
+					if ( bFree == 1 )
+						{
+						free(tempLine);
+						}
 					return 0;
 					}
 				}
@@ -859,12 +855,14 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 						strcat(tempString,tempLine);
 						printf("point 0.9\n");
 						tempLine = strtok_r(NULL,"\"",&hold_line);
-						printf("tempLine = %s\n",tempLine);
+						printf("tempLineEngja = %s\n",hold_line);
 						printf("point 0.95\n");
+						printf("tempLine == %s\n",tempLine);
 						if ( tempLine != NULL )	
 							{
 							printf("point 1\n");
 							strcat(tempString,tempLine);
+							printf("holdli = %s",hold_line);
 							printf("point 2\n");
 							strcpy(tempLine,tempString);
 							printf("point 3\n");
@@ -880,12 +878,20 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 	if ( tempLine != NULL )
 		{
 		printf("Error - this line is not in the correct format\n");
+		if ( bFree == 1 )
+			{
+			free(tempLine);
+			}
 		return 0;
 		}
 	printf("DATA CON is %s\n",data->$con);
 	for ( i=0;i<strlen(data->$v_type);i++ )
 		{
 		data->$v_type[i] = tolower(data->$v_type[i]);
+		}
+	if ( bFree == 1 )
+		{
+		free(tempLine);
 		}
 	return 1;
 	}

@@ -343,7 +343,6 @@ int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData)
 
 	while(var != NULL)
 		{
-		printf("arg %d : %s\n",i,var);
 		/* Push data from tempData to arg array */
 		if(strcmp(var,"$con") == 0)
 			{
