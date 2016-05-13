@@ -108,16 +108,17 @@ int translator()
 	while(fgets(buffer,sizeof(buffer),pIn) != NULL)
 		{
 		line++;
+		
+		/* Cleaning buffer */
+		cleanBuffer(buffer,strlen(buffer));
 
-		if(buffer[0] == '\n')
+		if(strlen(buffer) == 0)
 			{
 			/* Print blank line if blank line found */
 			fprintf(pOut,"\n");
 			}
 		else
 			{
-			/* Cleaning buffer */
-			cleanBuffer(buffer,strlen(buffer));
 
 			/* Check if it is a comment line */			
 			commentStatus = checkComment(commentStatus,buffer,strlen(buffer));
@@ -470,6 +471,12 @@ void cleanBuffer(char buffer[],int length)
 	{
 	int i = 0;	/* Pre buffer counter */
 	int j = 0;	/* Post buffer counter */
+	
+	if(buffer[length-1] == '\n')
+		{
+		buffer[length-1] = '\0';
+		length--;
+		}
 
 	/* Count pre tab and space */
 	while(buffer[i] == '\t' || buffer[i] == ' ')
@@ -478,13 +485,15 @@ void cleanBuffer(char buffer[],int length)
 		}
 		
 	/* Count post \n, tab and space */
-	while(buffer[length-j-1] == '\n' || buffer[length-j-1] == '\t' || buffer[length-j-1] == ' ')
+	while(buffer[length-j-1] == '\t' || buffer[length-j-1] == ' ')
 		{
 		j++;
 		}
 		
 	/* Set new string end point */
 	buffer[length-j] = '\0';
+	
+	printf("Clean buffer: i=%d j=%d",i,j);
 
 	sprintf(buffer,"%s",buffer+i);
 	}
