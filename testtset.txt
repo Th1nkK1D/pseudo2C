@@ -1,46 +1,66 @@
-PRINT "Hello Test"
-VARIABLE name is string
-PRINT "Enter your name: "
-GET name
-PRINT "Hello"
-PRINT name
+VARIABLE name1 is string
+VARIABLE name2 is string
 VARIABLE var1 is int
 VARIABLE var2 is int
 VARIABLE var1ans is int
 VARIABLE var2ans is int
 VARIABLE turn is int
+VARIABLE i is int
 
 SET turn to 0
-SET var1ans to 9194
-SET var2ans to 8294
-PRINT "Player one enter number"
+SET var1ans to -1
+SET var2ans to -1
+
+PRINT "=== Guessing game ==="
+
+PRINT "Enter player 1 name: "
+GET name1
+PRINT "Player 1 enter number:"
 GET var1
-PRINT var1
-PRINT "Player two enter number"
+
+PRINT "Enter player 2 name: "
+GET name2
+
+FOR i = 0 UNTIL i < 40
+	PRINT "\n"
+ENDFOR
+
+PRINT "Player 2 enter number:"
 GET var2
-PRINT var2
+
+FOR i = 0 UNTIL i < 40
+	PRINT "\n"
+ENDFOR
+
+PRINT "It's time to guess!"
+
 WHILE var1ans != var1 && var2ans != var2
-	PRINT "wrong answer!"	
-	PRINT turn
 	IF turn == 1
-		PRINT "player 1 guess"
+		PRINT name1
 		GET var2ans
-		PRINT var2ans
+		
+		IF var2ans != var2
+			PRINT "wrong answer!"
+		ENDIF
 	ENDIF
 	ELSE
-		PRINT "player 2 guess"
+		PRINT name2
 		GET var1ans
-		PRINT var1ans
+		
+		IF var1ans != var1
+			PRINT "wrong answer!"
+		ENDIF
+
 	ENDELSE
 	
 	IF turn == 0
+		PRINT "Set to turn 1"
 		SET turn TO 1
 	ENDIF	
-	IF turn == 1
+	ELSE
+		PRINT "Set to turn 2"
 		SET turn TO 0
-	ENDIF
+	ENDELSE
 ENDWHILE
 
-SET turn TO (turn+1)
-PRINT turn
-PRINT "WIN!!!!"
+PRINT "You are the winner"
