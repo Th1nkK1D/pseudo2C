@@ -3,20 +3,25 @@
 #include <string.h>
 #include "mainStructure.h"
 
+/*
+* this function for print the rule of pseudo code
+* and print the example of pseudo code if user 
+*  wanna see it.
+*/
 void ReadRule()
 	{
-	char rule[512];
-	char input[32];
-	char pSudo[512];
-	FILE* ruletxt = NULL;
-	FILE* sudo = NULL;
-	ruletxt = fopen("basicRules.txt","r");
-	if(ruletxt == NULL)
+	char rule[512];								/*variable that get the rule in the text file.*/
+	char input[32];				
+	char pSudo[512];							/*variable that get the example of pseudo code.*/
+	FILE* ruletxt = NULL;						/*Input rule file pointer,*/
+	FILE* sudo = NULL;							/*Input example of pseudo code pointer*/
+	ruletxt = fopen("basicRules.txt","r");		/*open basic rules of pseudo code file.*/
+	if(ruletxt == NULL)							/*if file does not exist.*/
 		{
 		printf("ERROR,file does not exist.\n");
 		}
 	clearScr();
-	while(fgets(rule,sizeof(rule),ruletxt) != NULL)
+	while(fgets(rule,sizeof(rule),ruletxt) != NULL)		/*this*/
 		{
 		printf("%s",rule);
 		}
@@ -43,9 +48,3 @@ void ReadRule()
 		}
 	fclose(ruletxt);
 	}
-
-int main()
-{
-	ReadRule();
-	return 0;
-}
