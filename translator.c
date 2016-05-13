@@ -20,6 +20,7 @@ int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData);
 int writeOut(char arg[4][12],char printSet[64],int count,FILE* pOut);
 void cleanBuffer(char buffer[],int length);
 int checkComment(int commentStatus,char buffer[],int length);
+void freeAll();
 void compileRun(char cName[]);
 
 /* Static Variable */
@@ -66,6 +67,7 @@ int translator()
 	if(pIn == NULL)
 		{
 		printf("Error: Can't open pseudo code file: \"%s\"\n",inName);
+		freeDB();
 		return 0;
 		}
 
@@ -84,6 +86,7 @@ int translator()
 	if(pOut == NULL)
 		{
 		printf("Error: Can't create C file: \"%s\"\n",outName);
+		freeDB();
 		return 0;
 		}
 
@@ -93,6 +96,7 @@ int translator()
 	if(writeStdFunction(pOut) == 0)
 		{
 		printf("Error: Writing standard header and function failed\n");
+		freeDB();
 		return 0;
 		}
 
@@ -136,6 +140,7 @@ int translator()
 					{
 					/* Process line failed */
 					printf("Translation aborted\n");
+					freeAll();
 					return 0;
 					}
 				}
@@ -155,15 +160,13 @@ int translator()
 	writeIndent(pOut,indentCount);
 	fprintf(pOut,"}");
 	indentCount--;
+	
+	/* Free all data structure */
+	freeAll();
 
 	/* Close file */
 	fclose(pIn);
 	fclose(pOut);
-
-	/* Free all the data structure */
-	freeVariable();
-	freeFile();
-	freeDB();
 
 	printf("Translation Completed!\n");
 	
@@ -544,6 +547,14 @@ int checkComment(int commentStatus,char buffer[],int length)
 			return 0;	/* No comment found */
 			}	
 		}
+	}
+
+/* Free all the data structure */
+void freeAll()
+	{
+	freeVariable();
+	freeFile();
+	freeDB();
 	}
 
 /* Compile and run the translated C code if user want 
