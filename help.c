@@ -63,11 +63,9 @@ void getHelp()
 		sscanf(input,"%s",input);
 		if(strlen(input) == 0)
 			{
-			clearScr();
 			printf("ERROR,plase enter the number between 1-15.\n");
 			printf("Please press any key to continue : ");
 			getchar();
-			clearScr();
 			}
 		for(i=0;i<strlen(input);i++)
 			{
@@ -83,11 +81,9 @@ void getHelp()
 			}
 		if(strcmp(input,"error") == 0)
 			{
-			clearScr();
 			printf("ERROR,plase enter the number between 1-15.\n");
 			printf("Please press any key to continue : ");
 			getchar();;
-			clearScr();
 			}
 		else if(num == 0)
 			{
@@ -127,11 +123,9 @@ void getHelp()
 			}
 		else
 			{
-			clearScr();
 			printf("ERROR,plase enter the number between 1-15.\n");
 			printf("Please press any key to continue : ");
 			getchar();
-			clearScr();
 			}
 		}
 	freeDB();
