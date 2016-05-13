@@ -349,15 +349,15 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 	char tempString[512];
 	int bFree = 0;
 
-	memset(data->$con,0,sizeof(data->$con));
-	memset(data->$v_name,0,sizeof(data->$v_name));
-	memset(data->$v_type,0,sizeof(data->$v_type));
-	memset(data->$v_symbol,0,sizeof(data->$v_symbol));
-	memset(data->$value,0,sizeof(data->$value));
-	memset(data->$increm,0,sizeof(data->$increm));
-	memset(data->$f_pointer,0,sizeof(data->$f_pointer));
-	memset(data->$f_path,0,sizeof(data->$f_path));
-	memset(data->$f_mode,0,sizeof(data->$f_mode));
+	memset(data->con,0,sizeof(data->con));
+	memset(data->v_name,0,sizeof(data->v_name));
+	memset(data->v_type,0,sizeof(data->v_type));
+	memset(data->v_symbol,0,sizeof(data->v_symbol));
+	memset(data->value,0,sizeof(data->value));
+	memset(data->increm,0,sizeof(data->increm));
+	memset(data->f_pointer,0,sizeof(data->f_pointer));
+	memset(data->f_path,0,sizeof(data->f_path));
+	memset(data->f_mode,0,sizeof(data->f_mode));
 	memset(tempString,0,sizeof(tempString));
 
 	printf("start\n");
@@ -434,25 +434,25 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 						printf("Error - cannot begin a variable name with a space\n");
 						return 0;
 						}
-					strcpy(data->$v_name,tempLine);
+					strcpy(data->v_name,tempLine);
 					}
 				else if ( strcasecmp("$v_type",tempFormat) == 0 )
 					{
 					if ( strcasecmp(tempLine,"int") == 0 )
 						{						
-						strcpy(data->$v_type,tempLine);
+						strcpy(data->v_type,tempLine);
 						}
 					else if ( strcasecmp(tempLine,"char") == 0 )
 						{
-						strcpy(data->$v_type,tempLine);
+						strcpy(data->v_type,tempLine);
 						}
 					else if ( strcasecmp(tempLine,"double") == 0 )
 						{
-						strcpy(data->$v_type,tempLine);
+						strcpy(data->v_type,tempLine);
 						}
 					else if ( strcasecmp(tempLine,"string") == 0 )
 						{
-						strcpy(data->$v_type,tempLine);
+						strcpy(data->v_type,tempLine);
 						}
 					else
 						{
@@ -470,11 +470,11 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 					}
 				}
 			}
-		addVariable(data->$v_name,data->$v_type);
-		if ( strcasecmp(data->$v_type,"string") == 0 )
+		addVariable(data->v_name,data->v_type);
+		if ( strcasecmp(data->v_type,"string") == 0 )
 			{
-			strcpy(data->$v_type,"char");
-			strcat(data->$v_name,"[256]");
+			strcpy(data->v_type,"char");
+			strcat(data->v_name,"[256]");
 			}
 		}
 
@@ -496,17 +496,17 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 						printf("Error - this file is opening\n");
 						return 0;
 						}
-					strcpy(data->$f_path,tempLine);
+					strcpy(data->f_path,tempLine);
 					}
 				else if ( strcasecmp("$f_mode",tempFormat) == 0 )
 					{
 					if ( strcasecmp(tempLine,"read") == 0 )
 						{
-						strcpy(data->$f_mode,"r");
+						strcpy(data->f_mode,"r");
 						}
 					else if ( strcasecmp(tempLine,"write") == 0 )
 						{
-						strcpy(data->$f_mode,"w");
+						strcpy(data->f_mode,"w");
 						}
 					else
 						{
@@ -524,7 +524,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 					}
 				}
 			}
-		addFile(data->$f_path,data->$f_mode,data->$f_pointer);
+		addFile(data->f_path,data->f_mode,data->f_pointer);
 		}
 
 	else
@@ -643,11 +643,11 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 					
 					bCondition = 0;
 					printf("L C is %s\n",lineCondition);
-					bCondition = checkCondition(lineCondition,data->$con);
+					bCondition = checkCondition(lineCondition,data->con);
 					
 					if ( bCondition != 1 )
 						{
-						printf("type is %s\n",data->$v_type);
+						printf("type is %s\n",data->v_type);
 						printf("Error - condition is invalid\n");
 						if ( bFree == 1 )
 							{
@@ -670,36 +670,36 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 							}
 						return 0;
 						}
-					strcpy(data->$v_name,tempLine);
+					strcpy(data->v_name,tempLine);
 
 					tempVar = NULL;
-					tempVar = searchWord(data->$v_name);
+					tempVar = searchWord(data->v_name);
 					if ( tempVar == NULL )
 						{
-						strcpy(data->$v_symbol,"%s");
+						strcpy(data->v_symbol,"%s");
 						}
 					else
 						{
-						strcpy(data->$v_type,tempVar->type);
-						if ( strcasecmp(data->$v_type,"int") == 0 )
+						strcpy(data->v_type,tempVar->type);
+						if ( strcasecmp(data->v_type,"int") == 0 )
 							{
-							strcpy(data->$v_symbol,"%d");
+							strcpy(data->v_symbol,"%d");
 							}
-						else if ( strcasecmp(data->$v_type,"char") == 0 )
+						else if ( strcasecmp(data->v_type,"char") == 0 )
 							{
-							strcpy(data->$v_symbol,"%c");
+							strcpy(data->v_symbol,"%c");
 							}
-						else if ( strcasecmp(data->$v_type,"double") == 0 )
+						else if ( strcasecmp(data->v_type,"double") == 0 )
 							{
-							strcpy(data->$v_symbol,"%lf");
+							strcpy(data->v_symbol,"%lf");
 							}
 						else
 							{
-							strcpy(data->$v_symbol,"%s");
+							strcpy(data->v_symbol,"%s");
 							}
 						}
-					strcat(data->$increm,data->$v_name);
-					strcat(data->$increm,"++");			
+					strcat(data->increm,data->v_name);
+					strcat(data->increm,"++");			
 					}
 				else if ( strcasecmp("$value",tempFormat) == 0 )
 					{
@@ -721,7 +721,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 									return 0;
 									}
 								}
-							else if ( strcasecmp(data->$v_type,"int") == 0 || strcasecmp(data->$v_type,"double") == 0 )
+							else if ( strcasecmp(data->v_type,"int") == 0 || strcasecmp(data->v_type,"double") == 0 )
 								{
 								if ( checkMath(tempLine,strlen(tempLine)) == 0 )
 									{
@@ -733,7 +733,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 									return 0;
 									}
 								}
-							else if ( strcasecmp(data->$v_type,"char") == 0 )
+							else if ( strcasecmp(data->v_type,"char") == 0 )
 								{
 								if ( strlen(tempLine) != 1 )
 									{
@@ -749,9 +749,9 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 						}
 					else
 						{
-						if ( strcasecmp(tempVar->type,"int") != 0 && strcasecmp(tempVar->type,"double") != 0 && strcasecmp(data->$v_type,"int") != 0 && strcasecmp(data->$v_type,"double") != 0 )
+						if ( strcasecmp(tempVar->type,"int") != 0 && strcasecmp(tempVar->type,"double") != 0 && strcasecmp(data->v_type,"int") != 0 && strcasecmp(data->v_type,"double") != 0 )
 							{
-							if ( strcasecmp(tempVar->type,data->$v_type) != 0 )
+							if ( strcasecmp(tempVar->type,data->v_type) != 0 )
 								{
 								printf("Error - type of value is invalid\n");
 								if ( bFree == 1 )
@@ -762,7 +762,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 								}
 							}
 						}
-					strcpy(data->$value,tempLine);							
+					strcpy(data->value,tempLine);							
 					}
 				else if ( strcasecmp("$f_path",tempFormat) == 0 )
 					{
@@ -819,15 +819,15 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 							}
 						else if ( strcasecmp(command,"close") == 0 )
 							{
-							strcpy(data->$f_mode,tempFile->mode);
-							strcpy(data->$f_pointer,tempFile->handle);
+							strcpy(data->f_mode,tempFile->mode);
+							strcpy(data->f_pointer,tempFile->handle);
 							deleteFile(tempLine);
 							}
 						}
 					if ( strcasecmp(command,"close") != 0 )
 						{
-						strcpy(data->$f_path,tempLine);
-						strcpy(data->$f_pointer,tempFile->handle);
+						strcpy(data->f_path,tempLine);
+						strcpy(data->f_pointer,tempFile->handle);
 						}
 					}
 				}
@@ -884,10 +884,10 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 			}
 		return 0;
 		}
-	printf("DATA CON is %s\n",data->$con);
-	for ( i=0;i<strlen(data->$v_type);i++ )
+	printf("DATA CON is %s\n",data->con);
+	for ( i=0;i<strlen(data->v_type);i++ )
 		{
-		data->$v_type[i] = tolower(data->$v_type[i]);
+		data->v_type[i] = tolower(data->v_type[i]);
 		}
 	if ( bFree == 1 )
 		{

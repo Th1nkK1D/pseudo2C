@@ -349,39 +349,39 @@ int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData)
 		/* Push data from tempData to arg array */
 		if(strcmp(var,"$con") == 0)
 			{
-			strcpy(arg[i],tempData.$con);
+			strcpy(arg[i],tempData.con);
 			}
 		else if(strcmp(var,"$value") == 0)
 			{
-			strcpy(arg[i],tempData.$value);
+			strcpy(arg[i],tempData.value);
 			}
 		else if(strcmp(var,"$v_name") == 0)
 			{
-			strcpy(arg[i],tempData.$v_name);
+			strcpy(arg[i],tempData.v_name);
 			}
 		else if(strcmp(var,"$v_symbol") == 0)
 			{
-			strcpy(arg[i],tempData.$v_symbol);
+			strcpy(arg[i],tempData.v_symbol);
 			}
 		else if(strcmp(var,"$v_type") == 0)
 			{
-			strcpy(arg[i],tempData.$v_type);
+			strcpy(arg[i],tempData.v_type);
 			}
 		else if(strcmp(var,"$increm") == 0)
 			{
-			strcpy(arg[i],tempData.$increm);
+			strcpy(arg[i],tempData.increm);
 			}
 		else if(strcmp(var,"$f_pointer") == 0)
 			{
-			strcpy(arg[i],tempData.$f_pointer);
+			strcpy(arg[i],tempData.f_pointer);
 			}
 		else if(strcmp(var,"$f_path") == 0)
 			{
-			strcpy(arg[i],tempData.$f_path);
+			strcpy(arg[i],tempData.f_path);
 			}
 		else if(strcmp(var,"$f_mode") == 0)
 			{
-			strcpy(arg[i],tempData.$f_mode);
+			strcpy(arg[i],tempData.f_mode);
 			}
 		else 
 			{
