@@ -208,7 +208,7 @@ void insertFile(FILE_T* pNewNode)
  * Arguments : nameFile --> name of file
  *             type     --> file type
  */
-void addFile(char nameFile[32],char type[6])
+void addFile(char nameFile[32],char type[6],char pointer[])
     {
     FILE_T* inStruct = NULL;
     char name[32];
