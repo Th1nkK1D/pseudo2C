@@ -36,6 +36,11 @@ void getHelp()
 		}
 	count = countRule();
 	help = (char**) calloc(count,sizeof(char*));
+	if(help == NULL)
+		{
+		printf("Cannot allocated.\n");
+        exit(0);
+		}
 	for(i=0;i<count;i++)
 		{
 		help[i] = (char*) calloc(16,sizeof(char));
