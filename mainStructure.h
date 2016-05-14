@@ -46,7 +46,7 @@ typedef struct _variable
 	{
 	char name[16];				/* Variable name */
 	char type[8];				/* Variable type */
-	char symbol[64];			/* Symbol of that variable */
+	char symbol[4];			/* Symbol of that variable */
 	struct _variable *pNext;	/* Pointer to next item */
 	} VARIABLE_T;
 
