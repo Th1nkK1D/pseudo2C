@@ -353,7 +353,7 @@ int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData)
 		/* Push data from tempData to arg array */
 		if(strcmp(var,"$condition") == 0)
 			{
-			strcpy(arg[i],tempData.con);
+			strcpy(arg[i],tempData.condition);
 			}
 		else if(strcmp(var,"$value") == 0)
 			{
@@ -361,15 +361,15 @@ int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData)
 			}
 		else if(strcmp(var,"$varName") == 0)
 			{
-			strcpy(arg[i],tempData.v_name);
+			strcpy(arg[i],tempData.varName);
 			}
 		else if(strcmp(var,"$varSymbol") == 0)
 			{
-			strcpy(arg[i],tempData.v_symbol);
+			strcpy(arg[i],tempData.varSymbol);
 			}
 		else if(strcmp(var,"$varType") == 0)
 			{
-			strcpy(arg[i],tempData.v_type);
+			strcpy(arg[i],tempData.varType);
 			}
 		else if(strcmp(var,"$increm") == 0)
 			{
@@ -377,15 +377,15 @@ int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData)
 			}
 		else if(strcmp(var,"$filePointer") == 0)
 			{
-			strcpy(arg[i],tempData.f_pointer);
+			strcpy(arg[i],tempData.filePointer);
 			}
 		else if(strcmp(var,"$filePath") == 0)
 			{
-			strcpy(arg[i],tempData.f_path);
+			strcpy(arg[i],tempData.filePath);
 			}
 		else if(strcmp(var,"$fileMode") == 0)
 			{
-			strcpy(arg[i],tempData.f_mode);
+			strcpy(arg[i],tempData.fileMode);
 			}
 		else 
 			{
