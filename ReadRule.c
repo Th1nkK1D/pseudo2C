@@ -39,7 +39,7 @@ void ReadRule()
 	if(strcasecmp(input,"Y") == 0)
 		{
 		clearScr();
-		sudo = fopen("sudo.txt","r");
+		sudo = fopen("example.sudo","r");
 		if(sudo == NULL)							/*if file does not exist.*/
 			{
 			printf("ERROR,file does not exist.\n");
