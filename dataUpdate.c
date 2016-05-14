@@ -6,26 +6,6 @@
 #include "globalAccess.h"
 #include "checkMath.h"
 
-/* Function to find dollar sign
- * Argument :
- * input => string that we want to look
- * Return :
- * 1 => if it has a dollar sign
- * 0 => if not
- */
-int findDollar (char input[])
-	{
-	int i = 0;
-	for (i=0;i<strlen(input);i++)
-		{
-		if ( input[i] == '$' )
-			{
-			return 1;
-			}
-		}
-	return 0;
-	}
-
 /* Function to check type of data and store its type into string
  * Argument:
  * input => string that we want to check
@@ -50,12 +30,10 @@ int checkType(char input[], char type[])
 			/* if it has only one quote, return 0 */
 			if ( input[0] != '\"' && input[strlen(input)-1] == '\"' )
 				{
-				printf("22");
 				return 0;
 				}
 			else if ( input[0] == '\"' && input[strlen(input)-1] != '\"' )					
 				{
-				printf("33");
 				return 0;
 				}
 			/* if it doesn't have any quote, we absolutely know that it must be an int or double or char */ 
@@ -67,12 +45,10 @@ int checkType(char input[], char type[])
 					}
 				else if ( input[0] != '\'' && input[strlen(input)-1] == '\'' )
 					{
-					printf("44");
 					return 0;
 					}
 				else if ( input[0] == '\'' && input[strlen(input)-1] != '\'' )
 					{
-					printf("55");
 					return 0;
 					}
 				else
@@ -82,12 +58,10 @@ int checkType(char input[], char type[])
 						{
 						if ( isalpha(input[i]) )
 							{
-							printf("66");
 							return 0;
 							}
 						else if ( isspace(input[i]) )
 							{
-							printf("77");
 							return 0;
 							}
 						/* if we found dot, we suddenly know it is a double */
@@ -143,56 +117,50 @@ int checkCondition ( char input[] , char con[])
 	memset(tempCon,0,sizeof(tempCon));
 	memset(tempDelim,0,sizeof(tempDelim));
 	strcpy(tempData,input);
-	hold_input = tempData;
-	pToken = strtok_r(hold_input," ",&hold_input);
+	hold_input = tempData;				/* pointer to temorary data of line */
+	pToken = strtok_r(hold_input," ",&hold_input);	/* pop the first token */
 	while ( pToken != NULL )
 		{
-		printf("pToken == %s\n",pToken);
+		/* if it's a string that has a space, we need to strtok again */
 		if ( pToken[0] == '\"' && pToken[strlen(pToken)-1] != '\"')
 			{
 			strcat(tempDelim,pToken);
 			strcat(tempDelim," ");
 			if ( strstr(hold_input,"\"") == NULL )
 				{
-				printf("m1\n");
 				return 0;
 				}
 			pToken = strtok_r(NULL,"\"",&hold_input);
 			strcat(tempDelim,pToken);
 			strcat(tempDelim,"\"");
 			strcpy(item,tempDelim);
-			printf("token 1 = %s\n",item);
 			memset(tempDelim,0,sizeof(tempDelim));
 			}
+		/* if not, we can copy it suddenly */
 		else
 			{
 			strcpy(item,pToken);
-			printf("token 2 = %s\n",item);
 			}
 		memset(type1,0,sizeof(type1));
 		memset(type2,0,sizeof(type2));
 
 		if ( checkType(item,type1) == 0 )
 			{
-			printf("m2\n");
 			return 0;
 			}
 		strcpy(leftToken,item);
-		printf("HOLD in = %s\n",hold_input);
+
 		/* checking the middle token */
 		pToken = NULL;
 		pToken = strtok_r(NULL," ",&hold_input);
-		printf("EDEL = %s\n",pToken);
 		if ( pToken == NULL )
 			{
-			printf("m3\n");
 			return 0;
 			}	
 		
 		/* if it's not a valid sign, return 0 */
 		if ( strcasecmp(pToken,">") != 0 && strcasecmp(pToken,"<") != 0 && strcasecmp(pToken,"==") != 0 && strcasecmp(pToken,"!=") != 0 && strcasecmp(pToken,">=") != 0 && strcasecmp(pToken,"<=") != 0 )
 			{
-			printf("m4\n");
 			return 0;
 			}
 		strcpy(sign,pToken);
@@ -202,17 +170,14 @@ int checkCondition ( char input[] , char con[])
 		pToken = strtok_r(NULL," ",&hold_input);
 		if ( pToken == NULL )
 			{
-			printf("m5\n");
 			return 0;
 			}	
 		if ( pToken[0] == '\"' && pToken[strlen(pToken)-1] != '\"' )
 			{
-			printf("p3\n");
 			strcat(tempDelim,pToken);
 			strcat(tempDelim," ");
 			if ( strstr(hold_input,"\"") == NULL )
-				{	
-				printf("m6\n");
+				{
 				return 0;
 				}
 			pToken = strtok_r(NULL,"\"",&hold_input);
@@ -225,10 +190,8 @@ int checkCondition ( char input[] , char con[])
 			{
 			strcpy(item,pToken);
 			}
-		printf("TOKEN 2 == %s\n",item);
 		if ( checkType(item,type2) == 0 )
 			{
-			printf("m7\n");
 			return 0;
 			}
 		/* if type of the two data in condition is not the same, return 0 */
@@ -236,17 +199,11 @@ int checkCondition ( char input[] , char con[])
 			{
 			if ( strcasecmp(type1,type2) != 0 )
 				{
-				printf("type1 = %s\n",type1);
-				printf("type2 = %s\n",type2);
-				printf("m8\n");
 				return 0;
 				}
 			}
 
 		strcpy(rightToken,item);
-
-		printf("lefTOKEN = %s\n",leftToken);
-		printf("rightTOKEN = %s\n",rightToken);
 
 		if ( strcasecmp(type1,"string") == 0 )
 			{
@@ -266,7 +223,6 @@ int checkCondition ( char input[] , char con[])
 			strcat(tempCon," ");
 			strcat(tempCon,rightToken);
 			}
-		printf("tempCon = %s\n",tempCon);
 
 		/* pop the next token, it must be && or || */
 		pToken = NULL;
@@ -274,11 +230,8 @@ int checkCondition ( char input[] , char con[])
 
 		if ( pToken != NULL )
 			{
-			printf("PTOK = %s\n",pToken);
-			printf("holdinput = %s\n",hold_input);
 			if ( strcasecmp(pToken,"||") != 0 && strcasecmp(pToken,"&&") != 0 )
 				{
-				printf("m9\n");
 				return 0;
 				}
 			else if ( strlen(hold_input) == 0 )
@@ -296,19 +249,27 @@ int checkCondition ( char input[] , char con[])
 		pToken = strtok_r(NULL," ",&hold_input);
 		}
 	strcpy(con,tempCon);
-	printf("type1 is %s\n",type1);
-	printf("type2 is %s\n",type2);
 	return 1;
 	}
 
+/* function to check that name is available
+ * Arguments:
+ * - tempLine => string of that name
+ * - command => its command
+ * - varType => types that name can be
+ * Return:
+ * 1 -> if we find that it's an available 
+ * 0 -> if not
+ */
 int checkName ( char tempLine[] , char command[] , char varType[] )
 	{
-	VARIABLE_T* tempVar = NULL;
+	VARIABLE_T* tempVar = NULL;			/* temporary for variable */
 	int i = 0;
-	char type[512];
+	char type[512];					/* store type of tempLine */
 
 	tempVar = searchWord(tempLine);
 
+	/* if it's not a variable, we need to find that is it match with command */ 
 	if ( tempVar == NULL )
 		{
 		if ( strcasecmp(command,"print") != 0 && strcasecmp(command,"write") != 0 )
@@ -322,13 +283,12 @@ int checkName ( char tempLine[] , char command[] , char varType[] )
 			return 0;
 			}
 		}
+	/* if it's a variable, check its type */
 	else
 		{
 		sprintf(type,"%c",tolower(tempVar->type[0]));
-
 		if ( strstr(varType,type) == NULL )
 			{
-			printf("t1 = %c, t2 = %s\n",varType[0],type);
 			printf("Error - this variable is not in supported type\n");
 			return 0;
 			}	
@@ -346,8 +306,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 	char* tempLine;					/* hold each token of line */
 	char lineCondition[512];			/* store condition for checking */
 	char* hold_format = NULL;			/* pointer to prein/postin */
-	char* hold_line = NULL;				/* pointer to line */
-	int foundDollar = 0;				/* boolean to check it's a variable in structure */				
+	char* hold_line = NULL;				/* pointer to line */			
 	int bFormat = 0;				/* boolean to check format */
 	int bName = 0;					/* boolean to check name */
 	VARIABLE_T* tempVar = NULL;			/* store temporary of variable */
@@ -373,57 +332,32 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 	memset(pre_post_in,0,sizeof(pre_post_in));
 	memset(lineCondition,0,sizeof(lineCondition));
 
-	printf("input = %s\n",input);
-
 	tempRule = rule;
 	strcpy(command,input);
-
-	printf("A\n");
 	
 	delim = strpbrk(command," ");
-	printf("B\n");
 	if ( delim == NULL )
 		{
-		printf("C\n");
 		return 1;
 		}
-	printf("C.D\n");
 	*delim = '\0';
 	strcpy(line,delim+1);
 
-	printf("D\n");
-
 	if ( strlen(tempRule->preIn) != 0 )
 		{
-		printf("E\n");
 		strcpy(pre_post_in,tempRule->preIn);
 		}
 	else
 		{
-		printf("F\n");
 		strcpy(pre_post_in,tempRule->postIn);
 		}
 
-	
-
-	//bFormat = checkFormat(pre_post_in,line,command);
-
-	//if ( bFormat != 1 )
-		//{
-		//printf("Error - incorrect format\n");
-		//return 0;
-		//}
-	printf("G\n");
 	hold_format = pre_post_in;
 	hold_line = line;
-	printf("hold == %s\n",hold_line);
-	printf("H\n");
 	if ( strcasecmp("variable",command) == 0 )
 		{
-		printf("D1\n");
 		tempFormat = strtok_r(hold_format," ",&hold_format);
 		tempLine = strtok_r(hold_line," ",&hold_line);
-		printf("D2\n");
 		while ( tempFormat != NULL )
 			{
 			if ( tempLine == NULL )
@@ -431,14 +365,9 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 				printf("Error - missing argument for this command\n");
 				return 0;
 				}
-			printf("D3\n");
-			foundDollar = 0;
-			foundDollar = findDollar(tempFormat);
 			bName = 0;
-			printf("D4\n");
 			if ( tempFormat[0] == '$' )
 				{
-				printf("D5\n");
 				if ( strcasecmp("$varName",tempFormat) == 0 )
 					{
 					tempVar = NULL;
@@ -489,7 +418,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 				{
 				if ( strcasecmp(tempFormat,tempLine) != 0 )
 					{
-					printf("Error - incorrect format1\n");
+					printf("Error - incorrect format\n");
 					return 0;
 					}
 				}
@@ -516,8 +445,6 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 				printf("Error - missing argument for this command\n");
 				return 0;
 				}
-			foundDollar = 0;
-			foundDollar = findDollar(tempFormat);
 			tempFile = NULL;
 
 			if ( tempFormat[0] == '$' )
@@ -553,7 +480,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 				{
 				if ( strcasecmp(tempFormat,tempLine) != 0 )
 					{
-					printf("Error - incorrect format3\n");
+					printf("Error - incorrect format\n");
 					return 0;
 					}
 				}
@@ -565,62 +492,32 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 
 	else
 		{
-		printf("I\n");
 		tempFormat = strtok_r(hold_format," ",&hold_format);
-		printf("J\n");
-		printf("holdrline === %s\n",hold_line);
 		if ( strcasecmp(tempFormat,"$condition") != 0 )
 			{
-			printf("K\n");
 			tempLine = strtok_r(hold_line," ",&hold_line);
-			printf("T L I S %s\n",tempLine);
-			printf("L\n");
-	
 			if ( (tempLine[0] == '\"' && tempLine[strlen(tempLine)-1] != '\"') || (tempLine[0] == '\"' && strlen(tempLine) == 1) )
 				{
-				printf("tempLinee = %s\n",tempLine);
-				printf("holdlin = %s\n",hold_line);
-				printf("point 0.85\n");
 				memset(tempString,0,sizeof(tempString));
 				strcat(tempString,tempLine);
-				printf("tempString = %s\n",tempString);
-				printf("point 0.90\n");
 				if ( strstr(hold_line,"\"") == NULL )
 					{
-					printf("11\n");
 					printf("Error - condition is invalid\n");
 					return 0;
 					}
 				tempLine = strtok_r(NULL,"\"",&hold_line);
-				printf("holdlin = %s\n",hold_line);
-				printf("point 0.950\n");
-				printf("HOL = %s\n",tempLine);
-				//if ( tempLine != NULL )	
-				//{
-				printf("HD = %s\n",hold_line);
-				printf("point 1ja\n");
 				strcat(tempString," ");
-				//sprintf(tempString,"%s%s",tempString,tempLine);
 				if ( tempLine != NULL )
 					{
 					strcat(tempString,tempLine);
 					}
 				strcat(tempString,"\"");
-				printf("tempString2 = %s\n",tempString);
-				printf("point 2\n");
 				tempLine = strdup(tempString);
 				bFree = 1;
-				//strcpy(tempLine,tempString);
-				printf("point 3\n");
 				memset(tempString,0,sizeof(tempString));
-				printf("H %s\n",hold_line);
-					//}
-				printf("HL %s\n",hold_line);
 				}
-			printf("HLL %s\n",hold_line);
 			}
 		
-		printf("HLLLLL %s\n",hold_line);
 		while ( tempFormat != NULL )
 			{
 			if ( strcasecmp(tempFormat,"$condition") != 0 && (tempLine == NULL ) )
@@ -628,32 +525,23 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 				printf("Error - missing argument for this command\n");
 				return 0;
 				}
-			printf("tempFormat = %s.\n",tempFormat);
-			printf("tempLine = %s.\n",tempLine);
-			printf("hold rine = %s\n",hold_line);
-			printf("A1\n");
-			foundDollar = 0;
-			foundDollar = findDollar(tempFormat);
 
 			if ( tempFormat[0] == '$' )
 				{
 				if ( strcasecmp("$condition",tempFormat) == 0 )
 					{
-					printf("A2\n");
 					memset(lineCondition,0,sizeof(lineCondition));
 					tempLine = strtok_r(NULL," ",&hold_line);
 					if ( tempLine == NULL )
 						{
 						printf("Error - missing argument for this command\n");
 						return 0;
-						}
-					printf("TMP LN = %s\n",tempLine);				
+						}				
 					while ( tempLine != NULL )
 						{
 						if ( tempLine[0] == '\"' && tempLine[strlen(tempLine)-1] != '\"')
 							{
 							strcat(tempString,tempLine);
-							printf("temppp = %s\n",tempString);
 							if ( strstr(hold_line,"\"") == NULL )
 								{	
 								printf("Error - condition is invalid\n");
@@ -664,7 +552,6 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 								return 0;
 								}
 							tempLine = strtok_r(NULL,"\"",&hold_line);
-							printf("TEMPPP = %s\n",tempLine);
 							if ( tempLine == NULL )
 								{
 								printf("Error - condition is invalid\n");
@@ -679,9 +566,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 								strcat(tempString," ");
 								strcat(tempString,tempLine);
 								strcat(tempString,"\"");
-								printf("tempS = %s\n",tempString);
 								}
-							printf("tempSTR = %s\n",tempString);
 							strcat(lineCondition,tempString);
 							memset(tempString,0,sizeof(tempString));
 							}
@@ -697,12 +582,10 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 						}
 					
 					bCondition = 0;
-					printf("L C is %s\n",lineCondition);
 					bCondition = checkCondition(lineCondition,data->condition);
 					
 					if ( bCondition != 1 )
 						{
-						printf("type is %s\n",data->varType);
 						printf("Error - condition is invalid\n");
 						if ( bFree == 1 )
 							{
@@ -712,35 +595,9 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 						}
 					}
 				else if ( strcasecmp("$varName",tempFormat) == 0 )
-					{
-					printf("A99\n");
-					/*if ( tempLine[0] == '\"' )
-						{
-						strcat(tempString,tempLine);
-						strcat(tempString," ");
-						if ( strstr(hold_line,"\"") == NULL )
-							{
-							printf("Error - quote for string is missing\n");
-							return 0;
-							}
-						printf("A98\n");
-						printf("holdlid = %s\n",hold_line);
-						tempLine = strtok_r(NULL,"\"",&hold_line);
-						printf("A97\n");
-						printf("temp LIne is %s\n",tempLine);
-						printf("temp string is %s\n",tempString);
-						printf("A96\n");
-						if ( tempLine == NULL )
-							{
-							strcat(tempString," ");
-							printf("A95\n");
-							}
-						strcat(tempString,"\"");
-						strcpy(tempLine,tempString);
-						}*/					
+					{			
 					bName = 0;
 					bName = checkName(tempLine,command,tempRule->varType);
-					printf("tempLine = %s\n",tempLine);
 
 					if ( bName != 1 )
 						{
@@ -751,19 +608,16 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 						return 0;
 						}
 					strcpy(data->varName,tempLine);
-					printf("data->varName = %s\n",data->varName);
 
 					tempVar = NULL;
 					tempVar = searchWord(data->varName);
 					if ( tempVar == NULL )
 						{
 						strcpy(data->varSymbol,"%s");
-						//sprintf(data->varType,"%s","string");
 						}
 					else
 						{
 						strcpy(data->varType,tempVar->type);
-						printf("VARTYPE is %s\n",data->varType);
 						if ( strcasecmp(data->varType,"int") == 0 )
 							{
 							strcpy(data->varSymbol,"%d");
@@ -790,7 +644,6 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 
 					if ( tempVar == NULL )
 						{
-						printf("type is %s\n",data->varType);
 						if ( strcasecmp(command,"SETSTRING") == 0 )
 							{
 							if ( tempLine[0] != '\"' || tempLine[strlen(tempLine)-1] != '\"' )
@@ -805,10 +658,8 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 							}
 						else if ( strcasecmp(data->varType,"int") == 0 || strcasecmp(data->varType,"double") == 0 )
 							{
-							printf("AA\n");
 							if ( checkMath(tempLine,strlen(tempLine)) == 0 )
 								{
-								printf("BB\n");
 								printf("Error - this value is invalid\n");
 								if ( bFree == 1 )
 									{
@@ -816,7 +667,6 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 									}
 								return 0;
 								}
-							printf("CC\n");
 							}
 						else if ( strcasecmp(data->varType,"char") == 0 )
 							{
@@ -840,16 +690,11 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 								} 
 								
 							}
-						printf("AA2\n");
 						}
 					else
 						{
-						printf("AA8\n");
 						if ( strcasecmp(data->varType,"char") == 0 || strcasecmp(data->varType,"string") == 0 || strcasecmp(tempVar->type,"char") == 0 || strcasecmp(tempVar->type,"string") == 0 )
 							{
-							printf("tempV type+ = %s\n",tempVar->type);
-							printf("type+ = %s\n",data->varType);
-							printf("AA8\n");
 							if ( strcasecmp(tempVar->type,data->varType) != 0 )
 								{
 								printf("Error - value type is not supported\n");
@@ -860,23 +705,13 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 								return 0;
 								}
 							}
-						printf("AA9\n");
 						}
-					strcpy(data->value,tempLine);
-					
-					//if ( strcasecmp(data->varType,"char") == 0 && strlen(data->value) != 3 )	
-						//{
-						//printf("Error - this must be one character2");	
-						//return 0;
-						//}			
-						
-					printf("AA3\n");							
+					strcpy(data->value,tempLine);						
 					}
 				else if ( strcasecmp("$filePath",tempFormat) == 0 )
 					{
 					tempFile = NULL;
 					tempFile = searchFile(tempLine);
-					printf("search %s in temp line\n",tempLine);
 
 					if ( tempFile == NULL )
 						{
@@ -938,15 +773,11 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 						strcpy(data->filePointer,tempFile->handle);
 						}
 					}
-				printf("AA4\n");
 				}
 			else
 				{
 				if ( strcasecmp(tempFormat,tempLine) != 0 )
 					{
-					printf("tempFormat = %s.\n",tempFormat);
-					printf("tempLine = %s.\n",tempLine);
-					printf("Error - incorrect format2\n");
 					if ( bFree == 1 )
 						{
 						free(tempLine);
@@ -954,21 +785,12 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 					return 0;
 					}
 				}
-			printf("holdLINEE = %s\n",hold_line);
-			printf("AA5\n");
-			printf("tempFormat- = %s.\n",tempFormat);
-			printf("tempLine- = %s.\n",tempLine);
 			tempFormat = strtok_r(NULL," ",&hold_format);
 			if ( tempFormat != NULL )
 				{
-				printf("a1\n");
 				if ( strcmp(tempFormat,"$condition") != 0 )
 					{
-					printf("a2\n");
-					printf("holdLINE = %s\n",hold_line);
-					tempLine = strtok_r(NULL," ",&hold_line);	
-					printf("a3\n");
-					printf("tempLINE = %s\n",tempLine);
+					tempLine = strtok_r(NULL," ",&hold_line);
 					if ( tempLine != NULL )
 						{
 						if ( tempLine[0] == '\"' )
@@ -987,31 +809,18 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 						}
 					}
 				}
-			printf("tempFormat+ = %s.\n",tempFormat);
-			printf("tempLine+ = %s.\n",tempLine);
-			printf("AA6\n");
 			}
-		printf("hold line now = %s\n",hold_line);
 		}
 	tempLine = strtok_r(NULL," ",&hold_line);
 	if ( tempLine != NULL )
 		{
-		printf("Error - incorrect format6\n");
+		printf("Error - incorrect format\n");
 		if ( bFree == 1 )
 			{
 			free(tempLine);
 			}
 		return 0;
 		}
-	printf("condition = %s\n",data->condition);
-	printf("varName = %s\n",data->varName);
-	printf("varType = %s\n",data->varType);
-	printf("varSymbol = %s\n",data->varSymbol);
-	printf("value = %s\n",data->value);
-	printf("increm = %s\n",data->increm);
-	printf("filePointer = %s\n",data->filePointer);
-	printf("filePath = %s\n",data->filePath);
-	printf("fileMode = %s\n",data->fileMode);
 	for ( i=0;i<strlen(data->varType);i++ )
 		{
 		data->varType[i] = tolower(data->varType[i]);
@@ -1020,6 +829,5 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 		{
 		free(tempLine);
 		}
-	printf("poo\n");
 	return 1;
 	}
