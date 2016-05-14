@@ -299,12 +299,10 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 					return 0;
 					}
 					
-				
+				printf("> Line %d: %s\n",line,key);
 				}
 			}
 			
-		printf("*preIN: %s\n",pRule->preIn);
-
 		/* Set data from rule */
 		if(strcasecmp(pRule->preIn,"$key") != 0)
 			{
@@ -314,8 +312,6 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		strcpy(printSet,pRule->preOut);
 		}
 		
-	printf("*Inset = >%s<, second = >%s<\n",inSet,second);
-
 	if(strlen(inSet) != 0 && strlen(second) == 0)
 		{
 		/* Empty property */
