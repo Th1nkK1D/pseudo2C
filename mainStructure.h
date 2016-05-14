@@ -13,7 +13,7 @@ typedef struct
  	char key[16];			/* “Key” of function, which is the first word of each pseudocode line. */
  	char preIn[64];			/* Expect input pseudocode format. Containing “Keyword” to compare with pseudo code and extract input data. */
  	char preOut[64];		/* Output correct C format to be write. */
- 	char preVar[32];		/* List of “Keyword” in order to be print out in C syntax. */
+ 	char preVar[64];		/* List of “Keyword” in order to be print out in C syntax. */
  	char postKey[16];		/* End “Key” of function, in case of this function create a scope. */
  	char postIn[64];		/* Expect input pseudocode format after scope (If it create new scope). Containing “Keyword” like preIn. */
  	char postOut[64];		/* Output correct C format for end line. (If this function create new scope) */
