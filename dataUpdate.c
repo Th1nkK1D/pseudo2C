@@ -335,7 +335,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 	char pre_post_in[256];				/* store temporary of prein/postin */
 	char* tempFormat;				/* hold each token of prein/postin */
 	char* tempLine;					/* hold each token of line */
-	char lineCondition[512];
+	char lineCondition[512];			/* store condition for checking */
 	char* hold_format = NULL;			/* pointer to prein/postin */
 	char* hold_line = NULL;				/* pointer to line */
 	int foundDollar = 0;				/* boolean to check it's a variable in structure */				
@@ -344,10 +344,10 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 	VARIABLE_T* tempVar = NULL;			/* store temporary of variable */
 	FILE_T* tempFile = NULL;			/* store temporary of pointer to file */
 	int bCondition = 0;				/* boolean to check condition */
-	char* delim = NULL;
-	int i = 0;
-	char tempString[512];
-	int bFree = 0;
+	char* delim = NULL;				/* break between command and line */
+	char tempString[512];				/* temporary of string that has a space ( need to strtok 2 times ) */
+	int bFree = 0;					/* boolean to check that strdup is used */
+	int i = 0;	
 
 	memset(data->condition,0,sizeof(data->condition));
 	memset(data->varName,0,sizeof(data->varName));
@@ -359,6 +359,10 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 	memset(data->filePath,0,sizeof(data->filePath));
 	memset(data->fileMode,0,sizeof(data->fileMode));
 	memset(tempString,0,sizeof(tempString));
+	memset(line,0,sizeof(line));
+	memset(command,0,sizeof(command));
+	memset(pre_post_in,0,sizeof(pre_post_in));
+	memset(lineCondition,0,sizeof(lineCondition));
 
 	printf("start\n");
 
@@ -371,8 +375,10 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 	printf("B\n");
 	if ( delim == NULL )
 		{
+		printf("C\n");
 		return 1;
 		}
+	printf("C.D\n");
 	*delim = '\0';
 	strcpy(line,delim+1);
 
@@ -917,7 +923,15 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 			}
 		return 0;
 		}
-	printf("DATA CON is %s\n",data->condition);
+	printf("condition = %s\n",data->condition);
+	printf("varName = %s\n",data->varName);
+	printf("varType = %s\n",data->varType);
+	printf("varSymbol = %s\n",data->varSymbol);
+	printf("value = %s\n",data->value);
+	printf("increm = %s\n",data->increm);
+	printf("filePointer = %s\n",data->filePointer);
+	printf("filePath = %s\n",data->filePath);
+	printf("fileMode = %s\n",data->fileMode);
 	for ( i=0;i<strlen(data->varType);i++ )
 		{
 		data->varType[i] = tolower(data->varType[i]);
@@ -926,5 +940,6 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 		{
 		free(tempLine);
 		}
+	printf("poo\n");
 	return 1;
 	}
