@@ -192,24 +192,26 @@ int translator()
 int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* indentCount)
 	{
 	char key[64];			/* Key read */
-	char keyChild[64];		/* Possible child key read */
-	RULE_T* pRule = NULL;		/* Rule data of the key read */
+	char second[64];		/* Second string read */
+	char third[64];			/* Third string read */
+	RULE_T* pRule = NULL;	/* Rule data of the key read */
 	char target;			/* getKey target mode */
 	TEMP_T tempData;		/* Temporary data for traslation */
-	char inSet[128];			/* Expected pseudo for key read */
+	char inSet[128];		/* Expected pseudo for key read */
 	char varSet[128];		/* Set of variable to print */
 	char printSet[128];		/* Output c pattern to print */
 	int varCount;			/* Number of argument to print  */
 	char arg[5][64];		/* Array of argument value to print */
 
 	memset(key,0,sizeof(key));
-	memset(keyChild,0,sizeof(keyChild));
+	memset(second,0,sizeof(second));
+	memset(third,0,sizeof(third));
 	memset(inSet,0,sizeof(inSet));
 	memset(varSet,0,sizeof(varSet));
 	memset(printSet,0,sizeof(printSet));
 
 	/* Scan line for key and childKey */
-	sscanf(buffer,"%s %s",key,keyChild);
+	sscanf(buffer,"%s %s %s",key,second,third);
 
 	printf("> Line %d: %s\n",line,key);
 	
@@ -276,14 +278,15 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		/* Check for child function */
 		if(strlen(pRule->fChild) > 0)
 			{
-			if(strcasecmp(keyChild,pRule->fChild) == 0)
+			if(strcasecmp(second,pRule->fChild) == 0)
 				{
 				/* Print current Key */
 				fprintf(pOut,"%s ",pRule->preOut);
 				
 				/* Shift key and buffer */
 				strcpy(buffer,buffer + strlen(key) + 1);
-				strcpy(key,keyChild);
+				strcpy(key,second);
+				strcpy(second,third);
 				
 				/* Get rule from new key */
 				pRule = getRule(target,key);
@@ -295,8 +298,12 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		
 					return 0;
 					}
+					
+				
 				}
 			}
+			
+		printf("*preIN: %s\n",pRule->preIn);
 
 		/* Set data from rule */
 		if(strcasecmp(pRule->preIn,"$key") != 0)
@@ -306,8 +313,10 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		strcpy(varSet,pRule->preVar);
 		strcpy(printSet,pRule->preOut);
 		}
+		
+	printf("*Inset = >%s<, second = >%s<\n",inSet,second);
 
-	if(strlen(inSet) != 0 && strlen(keyChild) == 0)
+	if(strlen(inSet) != 0 && strlen(second) == 0)
 		{
 		/* Empty property */
 		printf("Error: Detail is needed at line %d\n",line);
@@ -316,7 +325,7 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		return 0;
 		}
 		
-	if(strlen(inSet) == 0 && strlen(keyChild) != 0)
+	if(strlen(inSet) == 0 && strlen(second) != 0)
 		{
 		/* Over-detail */
 		printf("Error: This command is completed by itself at line %d\n",line);
