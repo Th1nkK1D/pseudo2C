@@ -212,8 +212,6 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 	
 	writeIndent(pOut,*indentCount);
 
-	printf("current/stack = %s/%s\n",key,currentStack);
-
 	/* Check if end nested found */
 	if (strcasecmp(key,currentStack) == 0)
 		{
@@ -236,18 +234,24 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		/* Update Stack */
 		*indentCount = *indentCount-1;
 		pop(currentStack);
-		printf("new current stack %s\n",currentStack);
-	
+
 		/* Set data from rule */
 		strcpy(inSet,pRule->postIn);
 		strcpy(varSet,pRule->postVar);
 		strcpy(printSet,pRule->postOut);
+		
+		/* Check if postOut got something */
+		if(strlen(printSet) > 0)
+			{
+			fprintf(pOut,"\n");
+			writeIndent(pOut,*indentCount);
+			}
 		}
 	else if(strncasecmp(buffer,"END",3) == 0)
 		{
 		/* postKey doesn't match with currentStack */
 		printf("Error: Invalid postKey at line %d\n",line);
-		printf(">>> %s --> %s?",buffer,currentStack);
+		printf(">>> %s --> %s?\n",buffer,currentStack);
 			
 		return 0;
 		}
