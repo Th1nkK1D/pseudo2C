@@ -204,6 +204,9 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 
 	memset(key,0,sizeof(key));
 	memset(keyChild,0,sizeof(keyChild));
+	memset(inSet,0,sizeof(inSet));
+	memset(varSet,0,sizeof(varSet));
+	memset(printSet,0,sizeof(printSet));
 
 	/* Scan line for key and childKey */
 	sscanf(buffer,"%s %s",key,keyChild);
@@ -338,13 +341,16 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		strcpy(printSet,pRule->preOut);
 		}
 
-	/* Update temp data */
-	if(dataUpdate(pRule,buffer,&tempData) == 0)
+	if(strlen(inSet) > 0)
 		{
-		printf("Error: Invalid Syntax at line %d\n",line);
-		printf(">>> %s --> %s\n",buffer,inSet);
-		
-		return -1;
+		/* Update temp data */
+		if(dataUpdate(pRule,buffer,&tempData) == 0)
+			{
+			printf("Error: Invalid Syntax at line %d\n",line);
+			printf(">>> %s --> %s\n",buffer,inSet);
+			
+			return -1;
+			}
 		}
 
 	/* Prepare Argument */
