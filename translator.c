@@ -16,8 +16,8 @@
 int writeStdFunction(FILE* pOut);
 void writeIndent(FILE* pOut,int indentCount);
 int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* indentCount);
-int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData);
-int writeOut(char arg[4][12],char printSet[64],int count,FILE* pOut);
+int prepareArg(char arg[4][32],char varSet[64],TEMP_T tempData);
+int writeOut(char arg[4][32],char printSet[64],int count,FILE* pOut);
 void cleanBuffer(char buffer[],int length);
 int checkComment(int commentStatus,char buffer[],int length);
 void freeAll();
@@ -145,6 +145,7 @@ int translator()
 					
 					return 0;
 					}
+				printf("Out of processline");
 				}
 			}
 		}
@@ -200,7 +201,7 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 	char varSet[64];		/* Set of variable to print */
 	char printSet[64];		/* Output c pattern to print */
 	int varCount;			/* Number of argument to print  */
-	char arg[4][12];		/* Array of argument value to print */
+	char arg[4][32];		/* Array of argument value to print */
 
 	memset(key,0,sizeof(key));
 	memset(keyChild,0,sizeof(keyChild));
@@ -300,14 +301,18 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 	/* Update temp data */
 	if(dataUpdate(pRule,buffer,&tempData) == 0)
 		{
+		printf("***Failed dataupdate\n");
 		printf("Error: Invalid Syntax at line %d\n",line);
 		printf(">>> %s --> %s\n",buffer,inSet);
 		
 		return -1;
 		}
+	printf("***Complete dataupdate\n");
 
 	/* Prepare Argument */
 	varCount = prepareArg(arg,varSet,tempData);
+	
+	printf("***Complete prepareArg\n");
 
 	/* Write to the C file */
 	if(varCount < 0 || writeOut(arg,printSet,varCount,pOut) == 0)
@@ -317,10 +322,13 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		
 		return -2;
 		}
+		
+	printf("***Complete writeOut\n");
 
 	/* Check if this key crete new nested */
 	if(target == 'k' && strlen(pRule->postKey) > 0)
 		{
+		printf("***Create new nested\n");
 		/* Update stack */
 		push(currentStack);
 		strcpy(currentStack,pRule->postKey);
@@ -330,6 +338,7 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		writeIndent(pOut,*indentCount);
 		fprintf(pOut, "{\n");
 		}
+	printf("***End processline\n");
 
 	return 1;
 	}
@@ -340,7 +349,7 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
  *				tempData = Temp data structure
  *	Return:	Number of variable, -1 if varSet is invalid
  */
-int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData)
+int prepareArg(char arg[4][32],char varSet[64],TEMP_T tempData)
 	{
 	int i = 0;			/* Argument counter */
 	char* var = NULL;	/* Variable token */
@@ -406,7 +415,7 @@ int prepareArg(char arg[4][12],char varSet[64],TEMP_T tempData)
  				pOut = Pointer to output file
  *	Return:	1 if success, 0 if not
  */
-int writeOut(char arg[4][12],char printSet[64],int count,FILE* pOut)
+int writeOut(char arg[4][32],char printSet[64],int count,FILE* pOut)
 	{
 	if(count == 0)
 		{
