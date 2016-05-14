@@ -341,7 +341,7 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		strcpy(printSet,pRule->preOut);
 		}
 
-	if(strlen(inSet) > 0)
+	if(strlen(inSet) > 0 && strcmp(inSet,"$key") == 0)
 		{
 		/* Update temp data */
 		if(dataUpdate(pRule,buffer,&tempData) == 0)
