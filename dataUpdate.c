@@ -718,10 +718,12 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 					if ( tempVar == NULL )
 						{
 						strcpy(data->varSymbol,"%s");
+						strcpy(data->varType,"string");
 						}
 					else
 						{
 						strcpy(data->varType,tempVar->type);
+						printf("VARTYPE is %s\n",data->varType);
 						if ( strcasecmp(data->varType,"int") == 0 )
 							{
 							strcpy(data->varSymbol,"%d");
