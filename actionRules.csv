@@ -1,16 +1,16 @@
 15
-If|IF|$con|if(%s)|$con|ENDIF|-|-|-|idcs|else|Doing an action if the statement is true.
+If|IF|$condition|if(%s)|$condition|ENDIF|-|-|-|idcs|else|Doing an action if the statement is true.
 Else|ELSE|$key|else|-|ENDELSE|-|-|-|-|IF|Doing an action if statement inside IF is not true.
-Print|PRINT|$v_name|printf("%s\n",%s);|$v_symbol,$v_name|-|-|-|-|idcs|-|Print text or variable on the console.
-Do While|DO|-|do|-|WHILE|$con|while(%s);|$con|idcs|-|Do an action once then keep doing it while the condition is true.
-While|WHILE|$con|while(%s)|$con|ENDWHILE|-|-|-|idcs|-|While the condition is true, keep doing an action.
-For Loop|FOR|$v_name = $value UNTIL $con |for(%s = %s;%s;%s)|$v_name,$value,$con,$increm|ENDFOR|-|-|-|id|-|Doing an action using variable as a counter (From initial value until reach the stop value).
-Get|GET|$v_name|getData(&%s,"%s",stdin);|$v_name,$v_symbol|-|-|-|-|idcs|-|Custom function to get data from user (Including of gets and sscanf).
-Set|SET|$v_name TO $value|%s = %s;|$v_name,$value|-|-|-|-|idc|-|Set digit or char variable to have some value. Can be a calculation.
-Set String|SETSTRING|$v_name TO $value|strcpy(%s,%s);|$v_name,$value|-|-|-|-|s|-|Set string variable to have some value. To set as a string, "<string>" is needed
-Variable|VARIABLE|$v_name IS $v_type|%s %s;|$v_type,$v_name|-|-|-|-|idcs|-|Declare variable name and type. Must be declare before use.
-Open|OPEN|$f_path TO $f_mode|FILE* %s = fopen("%s","%s");|$f_pointer,$f_path,$f_mode|-|-|-|-|-|-|Open target file with specific mode. Mode can be "r" (read) or "w" (write).
-Read|READ|$v_name FROM $f_path|getData(&%s,"%s",%s);|$v_name,$v_symbol,$f_pointer|-|-|-|-|idcs|-|Get data from the target file and put it into a variable. Type must be matched.
-Get Line|GETLINE|$v_name FROM $f_path|fgets(%s,sizeof(%s),%s);|$v_name,$v_name,$f_pointer|-|-|-|-|s|-|Get the whole line from the target file into a string.
-Write|WRITE|$v_name TO $f_path|fprintf(%s,"%s",%s);|$f_pointer,$v_symbol,$v_name|-|-|-|-|idcs|-|Write data to the target file.
-Close|CLOSE|$f_path|fclose(%s);|$f_pointer|-|-|-|-|-|-|Close the opened file. Every file must be closed before the program finished.
+Print|PRINT|$varName|printf("%s\n",%s);|$varSymbol,$varName|-|-|-|-|idcs|-|Print text or variable on the console.
+Do While|DO|-|do|-|WHILE|$condition|while(%s);|$condition|idcs|-|Do an action once then keep doing it while the condition is true.
+While|WHILE|$condition|while(%s)|$condition|ENDWHILE|-|-|-|idcs|-|While the condition is true, keep doing an action.
+For Loop|FOR|$varName = $value UNTIL $condition |for(%s = %s;%s;%s)|$varName,$value,$condition,$increm|ENDFOR|-|-|-|id|-|Doing an action using variable as a counter (From initial value until reach the stop value).
+Get|GET|$varName|getData(&%s,"%s",stdin);|$varName,$varSymbol|-|-|-|-|idcs|-|Custom function to get data from user (Including of gets and sscanf).
+Set|SET|$varName TO $value|%s = %s;|$varName,$value|-|-|-|-|idc|-|Set digit or char variable to have some value. Can be a calculation.
+Set String|SETSTRING|$varName TO $value|strcpy(%s,%s);|$varName,$value|-|-|-|-|s|-|Set string variable to have some value. To set as a string, "<string>" is needed
+Variable|VARIABLE|$varName IS $varType|%s %s;|$varType,$varName|-|-|-|-|idcs|-|Declare variable name and type. Must be declare before use.
+Open|OPEN|$filePath TO $fileMode|FILE* %s = fopen("%s","%s");|$filePointer,$filePath,$fileMode|-|-|-|-|-|-|Open target file with specific mode. Mode can be "r" (read) or "w" (write).
+Read|READ|$varName FROM $filePath|getData(&%s,"%s",%s);|$varName,$varSymbol,$filePointer|-|-|-|-|idcs|-|Get data from the target file and put it into a variable. Type must be matched.
+Get Line|GETLINE|$varName FROM $filePath|fgets(%s,sizeof(%s),%s);|$varName,$varName,$filePointer|-|-|-|-|s|-|Get the whole line from the target file into a string.
+Write|WRITE|$varName TO $filePath|fprintf(%s,"%s",%s);|$filePointer,$varSymbol,$varName|-|-|-|-|idcs|-|Write data to the target file.
+Close|CLOSE|$filePath|fclose(%s);|$filePointer|-|-|-|-|-|-|Close the opened file. Every file must be closed before the program finished.
