@@ -10,7 +10,7 @@ Basic Rules
 Syntax Rule
 -------------
 1. In conditional statement, operator must be use like standard C.
-2. Comment can be use like standard C.
+2. Comment can be use like normal, but can't be in the same line with command.
 3. Indenting is optional, but will be generated automatically in C file.
 4. Empty line will be remained in C file.
 5. Don't type Semi-colon.
