@@ -29,15 +29,15 @@ typedef struct
  */
 typedef struct 	
 	{
- 	char con[256];			/* Condition statement */
- 	char v_name[16];		/* Variable name */
-	char v_type[64];		/* Type of variable (Related to v_name) */
-	char v_symbol[4];		/* Symbol of that variable type (%d,%lf,%c,%s) (Related to v_name) */
+ 	char condition[256];			/* Condition statement */
+ 	char varName[16];		/* Variable name */
+	char varType[64];		/* Type of variable (Related to v_name) */
+	char varSymbol[4];		/* Symbol of that variable type (%d,%lf,%c,%s) (Related to v_name) */
 	char value[64];		/* Value or calculation statement that give a value */
 	char increm[4];		/* For loop increment (—,++) */
-	char f_pointer[8];		/* File pointer */
-	char f_path[64];		/* File path/name (Related to f_pointer) */
-	char f_mode[8];		/* File open mode (“r” = read, “w” = write) (Related to f_pointer) */
+	char filePointer[8];		/* File pointer */
+	char filePath[64];		/* File path/name (Related to f_pointer) */
+	char fileMode[8];		/* File open mode (“r” = read, “w” = write) (Related to f_pointer) */
 	} TEMP_T;
 
 /* 3. Variable Sorted-Tree (globalAccess Module)
