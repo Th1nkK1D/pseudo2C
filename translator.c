@@ -325,17 +325,16 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		return 0;
 		}
 
-	if(strlen(inSet) > 0 && strcmp(inSet,"$key") == 0)
+
+	/* Update temp data */
+	if(dataUpdate(pRule,buffer,&tempData) == 0)
 		{
-		/* Update temp data */
-		if(dataUpdate(pRule,buffer,&tempData) == 0)
-			{
-			printf("Error: Invalid Syntax at line %d\n",line);
-			printf(">>> %s --> %s\n",buffer,inSet);
+		printf("Error: Invalid Syntax at line %d\n",line);
+		printf(">>> %s --> %s\n",buffer,inSet);
 			
-			return -1;
-			}
+		return -1;
 		}
+		
 
 	/* Prepare Argument */
 	varCount = prepareArg(arg,varSet,tempData);
