@@ -16,8 +16,8 @@
 int writeStdFunction(FILE* pOut);
 void writeIndent(FILE* pOut,int indentCount);
 int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* indentCount);
-int prepareArg(char arg[4][32],char varSet[64],TEMP_T tempData);
-int writeOut(char arg[4][32],char printSet[64],int count,FILE* pOut);
+int prepareArg(char arg[5][64],char varSet[128],TEMP_T tempData);
+int writeOut(char arg[5][64],char printSet[128],int count,FILE* pOut);
 void cleanBuffer(char buffer[],int length);
 int checkComment(int commentStatus,char buffer[],int length);
 void freeAll();
@@ -145,7 +145,6 @@ int translator()
 					
 					return 0;
 					}
-				printf("Out of processline");
 				}
 			}
 		}
@@ -192,16 +191,16 @@ int translator()
  */
 int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* indentCount)
 	{
-	char key[16];			/* Key read */
-	char keyChild[16];		/* Possible child key read */
+	char key[64];			/* Key read */
+	char keyChild[64];		/* Possible child key read */
 	RULE_T* pRule = NULL;		/* Rule data of the key read */
 	char target;			/* getKey target mode */
 	TEMP_T tempData;		/* Temporary data for traslation */
-	char inSet[64];			/* Expected pseudo for key read */
-	char varSet[64];		/* Set of variable to print */
-	char printSet[64];		/* Output c pattern to print */
+	char inSet[128];			/* Expected pseudo for key read */
+	char varSet[128];		/* Set of variable to print */
+	char printSet[128];		/* Output c pattern to print */
 	int varCount;			/* Number of argument to print  */
-	char arg[4][32];		/* Array of argument value to print */
+	char arg[5][64];		/* Array of argument value to print */
 
 	memset(key,0,sizeof(key));
 	memset(keyChild,0,sizeof(keyChild));
@@ -226,6 +225,24 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 			printf("Error: postKey not found at line %d\n",line);
 			printf(">>> %s --> %s?\n",buffer,key);
 	
+			return 0;
+			}
+			
+		if(strlen(pRule->postIn) != 0 && strlen(keyChild) == 0)
+			{
+			/* Empty property */
+			printf("Error: Detail is needed at line %d\n",line);
+			printf(">>> %s --> %s %s\n",buffer,key,pRule->postIn);
+			
+			return 0;
+			}
+		
+		if(strlen(pRule->postIn) == 0 && strlen(keyChild) != 0)
+			{
+			/* Over-detail */
+			printf("Error: This command is completed by itself at line %d\n",line);
+			printf(">>> %s --> %s\n",buffer,key);
+			
 			return 0;
 			}
 		
@@ -270,26 +287,49 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 			return 0;
 			}
 			
+		
 		/* Check for child function */
-		if(strcasecmp(keyChild,pRule->fChild) == 0)
+		if(strlen(pRule->fChild) > 0)
 			{
-			/* Print current Key */
-			fprintf(pOut,"%s ",pRule->preOut);
-			
-			/* Shift key and buffer */
-			strcpy(buffer,buffer + strlen(key) + 1);
-			strcpy(key,keyChild);
-			
-			/* Get rule from new key */
-			pRule = getRule(target,key);
-
-			if(pRule == NULL)
+			if(strcasecmp(keyChild,pRule->fChild) == 0)
 				{
-				printf("Error: Key not found at line %d\n",line);
-				printf(">>> %s --> %s?\n",buffer,key);
+				/* Print current Key */
+				fprintf(pOut,"%s ",pRule->preOut);
+				
+				/* Shift key and buffer */
+				strcpy(buffer,buffer + strlen(key) + 1);
+				strcpy(key,keyChild);
+				
+				/* Get rule from new key */
+				pRule = getRule(target,key);
 	
-				return 0;
+				if(pRule == NULL)
+					{
+					printf("Error: Key not found at line %d\n",line);
+					printf(">>> %s --> %s?\n",buffer,key);
+		
+					return 0;
+					}
 				}
+			}
+			
+			
+		if(strcasecmp(pRule->preIn,"$key") != 0 && strlen(keyChild) == 0)
+			{
+			/* Empty property */
+			printf("Error: Detail is needed at line %d\n",line);
+			printf(">>> %s --> %s %s\n",buffer,key,pRule->preIn);
+			
+			return 0;
+			}
+		
+		if(strlen(pRule->preIn) == 0 && strlen(keyChild) != 0)
+			{
+			/* Over-detail */
+			printf("Error: This command is completed by itself at line %d\n",line);
+			printf(">>> %s --> %s\n",buffer,key);
+			
+			return 0;
 			}
 
 		/* Set data from rule */
@@ -301,18 +341,15 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 	/* Update temp data */
 	if(dataUpdate(pRule,buffer,&tempData) == 0)
 		{
-		printf("***Failed dataupdate\n");
 		printf("Error: Invalid Syntax at line %d\n",line);
 		printf(">>> %s --> %s\n",buffer,inSet);
 		
 		return -1;
 		}
-	printf("***Complete dataupdate\n");
 
 	/* Prepare Argument */
 	varCount = prepareArg(arg,varSet,tempData);
 	
-	printf("***Complete prepareArg\n");
 
 	/* Write to the C file */
 	if(varCount < 0 || writeOut(arg,printSet,varCount,pOut) == 0)
@@ -323,12 +360,10 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		return -2;
 		}
 		
-	printf("***Complete writeOut\n");
 
 	/* Check if this key crete new nested */
 	if(target == 'k' && strlen(pRule->postKey) > 0)
 		{
-		printf("***Create new nested\n");
 		/* Update stack */
 		push(currentStack);
 		strcpy(currentStack,pRule->postKey);
@@ -338,7 +373,6 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 		writeIndent(pOut,*indentCount);
 		fprintf(pOut, "{\n");
 		}
-	printf("***End processline\n");
 
 	return 1;
 	}
@@ -349,7 +383,7 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
  *				tempData = Temp data structure
  *	Return:	Number of variable, -1 if varSet is invalid
  */
-int prepareArg(char arg[4][32],char varSet[64],TEMP_T tempData)
+int prepareArg(char arg[5][64],char varSet[128],TEMP_T tempData)
 	{
 	int i = 0;			/* Argument counter */
 	char* var = NULL;	/* Variable token */
@@ -415,7 +449,7 @@ int prepareArg(char arg[4][32],char varSet[64],TEMP_T tempData)
  				pOut = Pointer to output file
  *	Return:	1 if success, 0 if not
  */
-int writeOut(char arg[4][32],char printSet[64],int count,FILE* pOut)
+int writeOut(char arg[5][64],char printSet[128],int count,FILE* pOut)
 	{
 	if(count == 0)
 		{
@@ -454,7 +488,7 @@ int writeOut(char arg[4][32],char printSet[64],int count,FILE* pOut)
 int writeStdFunction(FILE* pOut)
 	{
 	FILE* pHeader = NULL;	/* Header file pointer */
-	char buffer[128];		/* Read buffer */
+	char buffer[256];		/* Read buffer */
 
 	/* Open standard header file */
 	pHeader = fopen(stdHeaderFile,"r");
