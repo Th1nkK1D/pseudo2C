@@ -230,24 +230,6 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 	
 			return 0;
 			}
-			
-		if(strlen(pRule->postIn) != 0 && strlen(keyChild) == 0)
-			{
-			/* Empty property */
-			printf("Error: Detail is needed at line %d\n",line);
-			printf(">>> %s --> %s %s\n",buffer,key,pRule->postIn);
-			
-			return 0;
-			}
-		
-		if(strlen(pRule->postIn) == 0 && strlen(keyChild) != 0)
-			{
-			/* Over-detail */
-			printf("Error: This command is completed by itself at line %d\n",line);
-			printf(">>> %s --> %s\n",buffer,key);
-			
-			return 0;
-			}
 		
 		/* End nested (close function) */
 		fprintf(pOut,"}");
@@ -315,30 +297,32 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 					}
 				}
 			}
-			
-			
-		if(strcasecmp(pRule->preIn,"$key") != 0 && strlen(keyChild) == 0)
-			{
-			/* Empty property */
-			printf("Error: Detail is needed at line %d\n",line);
-			printf(">>> %s --> %s %s\n",buffer,key,pRule->preIn);
-			
-			return 0;
-			}
-		
-		if(strlen(pRule->preIn) == 0 && strlen(keyChild) != 0)
-			{
-			/* Over-detail */
-			printf("Error: This command is completed by itself at line %d\n",line);
-			printf(">>> %s --> %s\n",buffer,key);
-			
-			return 0;
-			}
 
 		/* Set data from rule */
-		strcpy(inSet,pRule->preIn);
+		if(strcasecmp(pRule->preIn,"$key") != 0)
+			{
+			strcpy(inSet,pRule->preIn);
+			}
 		strcpy(varSet,pRule->preVar);
 		strcpy(printSet,pRule->preOut);
+		}
+
+	if(strlen(inSet) != 0 && strlen(keyChild) == 0)
+		{
+		/* Empty property */
+		printf("Error: Detail is needed at line %d\n",line);
+		printf(">>> %s --> %s %s\n",buffer,key,pRule->preIn);
+			
+		return 0;
+		}
+		
+	if(strlen(inSet) == 0 && strlen(keyChild) != 0)
+		{
+		/* Over-detail */
+		printf("Error: This command is completed by itself at line %d\n",line);
+		printf(">>> %s --> %s\n",buffer,key);
+			
+		return 0;
 		}
 
 	if(strlen(inSet) > 0 && strcmp(inSet,"$key") == 0)
