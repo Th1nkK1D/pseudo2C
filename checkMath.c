@@ -57,7 +57,6 @@ int checkMath(char stm[],int length)
 				/* Found operator */
 				if(allowOps == 1 || (i == 0 && stm[i] == '-'))
 					{
-					printf("Found Operator: %c\n",stm[i]);
 					allowOps = 0;
 					}
 				else

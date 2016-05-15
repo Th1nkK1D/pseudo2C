@@ -220,7 +220,6 @@ int processLine(char buffer[],FILE* pOut,int line, char currentStack[], int* ind
 	/* Check if end nested found */
 	if (strcasecmp(key,currentStack) == 0)
 		{
-		printf(">%s\n",key);
 		/* Get rule by end key */
 		target = 'e';
 		pRule = getRule(target,key);
