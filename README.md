@@ -1,13 +1,13 @@
 # pseudo2C
-Convert pseudo code to compilable and standard C language
-CPE113 Project, CPE, KMUTT
+Convert pseudo code to compilable and standard C language. Run Pseudo2C to start a program.
 
 **Team We Must Survive!**
-- Withee Poositasai (Lookkid)     58070503429 
-- Siriwimon Suksukhon  (Poo) 	    58070503436
-- Gittipat Ariyaprayoon (Gide) 	58070503440
+* Withee Poositasai (Lookkid)     58070503429 
+* Siriwimon Suksukhon  (Poo) 	    58070503436
+* Gittipat Ariyaprayoon (Gide) 	58070503440
+* Special Thanks to Aj.Sally E. Gouldin
 
-Run Pseudo2C to start a program.
+CPE113 Project, CPE, KMUTT
 
 ### Rule
 
