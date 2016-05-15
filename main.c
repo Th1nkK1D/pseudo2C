@@ -17,6 +17,7 @@
 #include "mainStructure.h"
 #include "translator.h"
 #include "help.h"
+#include "ReadRule.h"
 
 /* Function to check that user choose option 0,1,2,3 only
  * Argument:
