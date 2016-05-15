@@ -1,3 +1,13 @@
+/* 
+ * dataUpdate.c
+ *
+ * Module for updating data ( prepare for writing to output file )
+ * 
+ * Created by Siriwimon Suksukhon (Poo), ID 3436
+ * 15 May 2016
+ * - Team We Must Survive -
+ */
+
 #include <stdio.h>
 #include <string.h>
 #include <ctype.h>
@@ -296,6 +306,15 @@ int checkName ( char tempLine[] , char command[] , char varType[] )
 	return 1;		
 	}
 
+/* function to separate line into each argument of command and store it into temporary data
+ * Arguments:
+ * - rule => rule for that command
+ * - input => line
+ * - data => an empty temporary data
+ * Return:
+ * - 1 if data update success and store line into data already
+ * - 0 if something wrong with that line
+ */
 int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 	{
 	RULE_T* tempRule = NULL;			/* store temporary of rule */
@@ -332,10 +351,12 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 	memset(pre_post_in,0,sizeof(pre_post_in));
 	memset(lineCondition,0,sizeof(lineCondition));
 
-	tempRule = rule;
-	strcpy(command,input);
+	tempRule = rule;				/* store rule into temporary */
+	strcpy(command,input);				/* store line into temporary */
 	
-	delim = strpbrk(command," ");
+	delim = strpbrk(command," ");			/* separate between command and arguments */
+
+	/* if it doesn't have any space, we know it's a postkey, then return 1 */
 	if ( delim == NULL )
 		{
 		return 1;
@@ -343,6 +364,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 	*delim = '\0';
 	strcpy(line,delim+1);
 
+	/* storing format of command */
 	if ( strlen(tempRule->preIn) != 0 )
 		{
 		strcpy(pre_post_in,tempRule->preIn);
@@ -352,22 +374,30 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 		strcpy(pre_post_in,tempRule->postIn);
 		}
 
-	hold_format = pre_post_in;
-	hold_line = line;
+	hold_format = pre_post_in;			/* pointer to format */
+	hold_line = line;				/* pointer to line */
+
+	/* if user wants to declare a variable, we need to update data and also put it into linked list of variable */
 	if ( strcasecmp("variable",command) == 0 )
 		{
+		/* strtok both format and line */
 		tempFormat = strtok_r(hold_format," ",&hold_format);
 		tempLine = strtok_r(hold_line," ",&hold_line);
+
+		/* loop until format is empty */
 		while ( tempFormat != NULL )
 			{
+			/* if format is not empty but line is empty , return 0 */
 			if ( tempLine == NULL )
 				{
 				printf("Error - missing argument for this command\n");
 				return 0;
 				}
 			bName = 0;
+			/* if the first character of format is '$', then we know that need to store line as argument */
 			if ( tempFormat[0] == '$' )
 				{
+				/* in variable name, it cannot be a duplicate name, cannot begin with a number and uppercase */
 				if ( strcasecmp("$varName",tempFormat) == 0 )
 					{
 					tempVar = NULL;
@@ -389,6 +419,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 						}
 					strcpy(data->varName,tempLine);
 					}
+				/* in variable type, now we support noly int / char / double / string */
 				else if ( strcasecmp("$varType",tempFormat) == 0 )
 					{
 					if ( strcasecmp(tempLine,"int") == 0 )
@@ -414,6 +445,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 						}
 					}
 				}
+			/* if it doesn't begin with a dollar sign, we know it is some keyword and line must be matched */
 			else
 				{
 				if ( strcasecmp(tempFormat,tempLine) != 0 )
@@ -422,10 +454,13 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 					return 0;
 					}
 				}
+			/* pop the next token of format and line */
 			tempFormat = strtok_r(NULL," ",&hold_format);
 			tempLine = strtok_r(NULL," ",&hold_line);
 			}
-		addVariable(data->varName,data->varType);
+		
+		addVariable(data->varName,data->varType);		/* put a variable into linked list */
+		/* if it's a string, we need to assign size for declaring */
 		if ( strcasecmp(data->varType,"string") == 0 )
 			{
 			strcpy(data->varType,"char");
@@ -433,13 +468,17 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 			}
 		}
 
+	/* if command is open, we need to update data and put it into linked list of file */
 	else if ( strcasecmp("open",command) == 0 )
 		{
+		/* strtok first token of format and line */
 		tempFormat = strtok_r(hold_format," ",&hold_format);
 		tempLine = strtok_r(hold_line," ",&hold_line);
 
+		/* loop until format is empty */
 		while ( tempFormat != NULL )
 			{
+			/* if format doesn't empty but line do, return 0 */
 			if ( tempLine == NULL )
 				{
 				printf("Error - missing argument for this command\n");
@@ -447,11 +486,15 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 				}
 			tempFile = NULL;
 
+			/* if format begins with a dollar sign , we need to store it as an argument */
 			if ( tempFormat[0] == '$' )
 				{
+				/* store the name of file into filePath */
 				if ( strcasecmp("$filePath",tempFormat) == 0 )
 					{
 					tempFile = searchFile(tempLine);
+
+					/* if there is a file that has the same name opening already, return 0 */
 					if ( tempFile != NULL )
 						{
 						printf("Error - this file is opening\n");
@@ -459,6 +502,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 						}
 					strcpy(data->filePath,tempLine);
 					}
+				/* store mode of file into data, now support read / wrtie */
 				else if ( strcasecmp("$fileMode",tempFormat) == 0 )
 					{
 					if ( strcasecmp(tempLine,"read") == 0 )
@@ -476,6 +520,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 						}
 					}
 				}
+			/* if format doesn't begin with a dollar sign, we know it is some keyword that line must be matched */
 			else
 				{
 				if ( strcasecmp(tempFormat,tempLine) != 0 )
@@ -484,18 +529,28 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 					return 0;
 					}
 				}
+			/* pop the next token of format and line */
 			tempFormat = strtok_r(NULL," ",&hold_format);
 			tempLine = strtok_r(NULL," ",&hold_line);
 			}
+		/* add it into a linked list of file */
 		addFile(data->filePath,data->fileMode,data->filePointer);
 		}
 
+	/* in the others command, we don't need to add anything into linked list */
 	else
 		{
-		tempFormat = strtok_r(hold_format," ",&hold_format);
+		
+		tempFormat = strtok_r(hold_format," ",&hold_format);		/* pop the first token of format */
+
+		/* if format is not a condition, we will pop the first token of line */
+		/* if it's a condition we need to strtok it in several times because we need to collect all components of condition */
 		if ( strcasecmp(tempFormat,"$condition") != 0 )
 			{
 			tempLine = strtok_r(hold_line," ",&hold_line);
+
+			/* if the first character of tempLine is a quote but in the end is not, 
+			we need to check that Is it a string that has a space between itself? */
 			if ( (tempLine[0] == '\"' && tempLine[strlen(tempLine)-1] != '\"') || (tempLine[0] == '\"' && strlen(tempLine) == 1) )
 				{
 				memset(tempString,0,sizeof(tempString));
@@ -518,27 +573,34 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 				}
 			}
 		
+		/* loop until format is empty */
 		while ( tempFormat != NULL )
 			{
+			/* if format is not condition but line is nothing, we return 0 */
 			if ( strcasecmp(tempFormat,"$condition") != 0 && (tempLine == NULL ) )
 				{
 				printf("Error - missing argument for this command\n");
 				return 0;
 				}
 
+			/* if format begins with a dollar sign, we need to store it as an argument */
 			if ( tempFormat[0] == '$' )
 				{
+				/* if format is condition, we need to collect all of condition and send it to check that it is valid */
 				if ( strcasecmp("$condition",tempFormat) == 0 )
 					{
 					memset(lineCondition,0,sizeof(lineCondition));
 					tempLine = strtok_r(NULL," ",&hold_line);
+					/* if the first token is nothing, return 0 */
 					if ( tempLine == NULL )
 						{
 						printf("Error - missing argument for this command\n");
 						return 0;
 						}				
+					/* strtok until line is empty */
 					while ( tempLine != NULL )
 						{
+						/* if it's a string that has a space between itself */
 						if ( tempLine[0] == '\"' && tempLine[strlen(tempLine)-1] != '\"')
 							{
 							strcat(tempString,tempLine);
@@ -570,6 +632,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 							strcat(lineCondition,tempString);
 							memset(tempString,0,sizeof(tempString));
 							}
+						/* if not, we put it into lineCondition suddenly */
 						else
 							{
 							strcat(lineCondition,tempLine);
@@ -581,6 +644,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 							}
 						}
 					
+					/* send lineCondition to function for condition checking */
 					bCondition = 0;
 					bCondition = checkCondition(lineCondition,data->condition);
 					
@@ -594,6 +658,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 						return 0;
 						}
 					}
+				/* if format is a variable name, we put it for checking first */
 				else if ( strcasecmp("$varName",tempFormat) == 0 )
 					{			
 					bName = 0;
@@ -611,10 +676,12 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 
 					tempVar = NULL;
 					tempVar = searchWord(data->varName);
+					/* if it's not a variable in linked list, we know it is a string that covered by two quotes */
 					if ( tempVar == NULL )
 						{
 						strcpy(data->varSymbol,"%s");
 						}
+					/* if we found it in a linked list of variable, we catch its type for setting its symbol */
 					else
 						{
 						strcpy(data->varType,tempVar->type);
@@ -635,15 +702,19 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 							strcpy(data->varSymbol,"%s");
 							}
 						}
+					/* just add the last condition of for loop into data (i++) */
 					strcat(data->increm,data->varName);
 					strcat(data->increm,"++");			
 					}
+				/* if it's a value, we need to check that what is the command require */
 				else if ( strcasecmp("$value",tempFormat) == 0 )
 					{
 					tempVar = searchWord(tempLine);
 
+					/* if value is not a variable it must be matched with some case of command */
 					if ( tempVar == NULL )
 						{
+						/* in SETSTRING, it must covered by two quotes */
 						if ( strcasecmp(command,"SETSTRING") == 0 )
 							{
 							if ( tempLine[0] != '\"' || tempLine[strlen(tempLine)-1] != '\"' )
@@ -656,6 +727,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 								return 0;
 								}
 							}
+						/* if variable type require int or double, we need to check it is an operation in Maths */
 						else if ( strcasecmp(data->varType,"int") == 0 || strcasecmp(data->varType,"double") == 0 )
 							{
 							if ( checkMath(tempLine,strlen(tempLine)) == 0 )
@@ -668,6 +740,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 								return 0;
 								}
 							}
+						/* if variable type require char,value must have length=3 and covered by single 2 quotes */
 						else if ( strcasecmp(data->varType,"char") == 0 )
 							{
 							if ( strlen(tempLine) != 3 )
@@ -691,8 +764,10 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 								
 							}
 						}
+					/* if value is a variable, we need to check that its type match with varType */
 					else
 						{
+						/* in double and int we can use it together but char and string cannot */
 						if ( strcasecmp(data->varType,"char") == 0 || strcasecmp(data->varType,"string") == 0 || strcasecmp(tempVar->type,"char") == 0 || strcasecmp(tempVar->type,"string") == 0 )
 							{
 							if ( strcasecmp(tempVar->type,data->varType) != 0 )
@@ -708,11 +783,14 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 						}
 					strcpy(data->value,tempLine);						
 					}
+				/* if command is filePath, we need to store the name of file as an argument */
 				else if ( strcasecmp("$filePath",tempFormat) == 0 )
 					{
 					tempFile = NULL;
 					tempFile = searchFile(tempLine);
 
+					/* in this case, we will not found 'open' command,
+					so for using the others command, the file must be declared first */
 					if ( tempFile == NULL )
 						{
 						printf("Error - file is undeclared or deleted\n");
@@ -722,6 +800,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 							}
 						return 0;
 						}
+					/* if the file is opened, check that it's in the correct mode */
 					else
 						{
 						if ( strcasecmp(command,"read") == 0 )
@@ -760,6 +839,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 								return 0;
 								}
 							}
+						/* if command is close, we don't need to check anything, just delete it */
 						else if ( strcasecmp(command,"close") == 0 )
 							{
 							strcpy(data->fileMode,tempFile->mode);
@@ -767,6 +847,8 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 							deleteFile(tempLine);
 							}
 						}
+					
+					/* store filePath and filePointer into data */
 					if ( strcasecmp(command,"close") != 0 )
 						{
 						strcpy(data->filePath,tempLine);
@@ -774,6 +856,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 						}
 					}
 				}
+			/* if format doesn't begin with a dollar sign, we know it is some keyword and line must be matched */
 			else
 				{
 				if ( strcasecmp(tempFormat,tempLine) != 0 )
@@ -785,7 +868,9 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 					return 0;
 					}
 				}
+			/* pop the next token of format */
 			tempFormat = strtok_r(NULL," ",&hold_format);
+			/* if it still has format and it's not condition, we strtok it as tempLine suddenly */
 			if ( tempFormat != NULL )
 				{
 				if ( strcmp(tempFormat,"$condition") != 0 )
@@ -793,24 +878,29 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 					tempLine = strtok_r(NULL," ",&hold_line);
 					if ( tempLine != NULL )
 						{
+						/* just for strtok string that has a space between itself */
 						if ( tempLine[0] == '\"' )
 							{
-							strcat(tempString,tempLine);
-							strcat(tempString," ");
-							tempLine = strtok_r(NULL,"\"",&hold_line);
-							if ( tempLine != NULL )
+							if ( strlen(hold_line) != 0 )
 								{
 								strcat(tempString,tempLine);
+								strcat(tempString," ");
+								tempLine = strtok_r(NULL,"\"",&hold_line);
+								if ( tempLine != NULL )
+									{
+									strcat(tempString,tempLine);
+									}
+								strcat(tempString,"\"");
+								tempLine = strdup(tempString);
+								bFree = 1;
 								}
-							strcat(tempString,"\"");
-							tempLine = strdup(tempString);
-							bFree = 1;
 							}
 						}
 					}
 				}
 			}
 		}
+	/* if format is empty but line is not, return 0 */
 	tempLine = strtok_r(NULL," ",&hold_line);
 	if ( tempLine != NULL )
 		{
@@ -821,6 +911,7 @@ int dataUpdate ( RULE_T* rule, char input[], TEMP_T* data )
 			}
 		return 0;
 		}
+	/* make varType be a lowercase */
 	for ( i=0;i<strlen(data->varType);i++ )
 		{
 		data->varType[i] = tolower(data->varType[i]);
