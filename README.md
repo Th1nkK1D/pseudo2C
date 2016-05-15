@@ -1,5 +1,5 @@
 # pseudo2C
-Convert pseudo code to compilable and standard C language. Run Pseudo2C to start a program.
+Convert pseudo code to compilable and standard C language. Make and run Pseudo2C to start a program.
 
 **Team We Must Survive!**
 * Withee Poositasai (Lookkid)     58070503429 
