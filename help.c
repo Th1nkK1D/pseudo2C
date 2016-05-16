@@ -73,7 +73,7 @@ void getHelp()
 		if(strlen(input) == 0)
 			{
 			printf("ERROR,plase enter the number between 1-15.\n");
-			printf("Please press any key to continue : ");
+			printf("Please press Enter to continue : ");
 			getchar();
 			}
 		for(i=0;i<strlen(input);i++)
@@ -91,8 +91,8 @@ void getHelp()
 		if(strcmp(input,"error") == 0)
 			{
 			printf("ERROR,plase enter the number between 1-15.\n");
-			printf("Please press any key to continue : ");
-			getchar();;
+			printf("Please press Enter to continue : ");
+			getchar();
 			}
 		else if(num == 0)
 			{
@@ -104,7 +104,7 @@ void getHelp()
 			command = getRule('n',help[num-1]);
 			if(command == NULL)
 				{
-				printf("Please press any key to continue : ");
+				printf("Please press Enter to continue : ");
 				getchar();
 				}
 			clearScr();
@@ -124,7 +124,7 @@ void getHelp()
 					}
 				printf("	%s %s\n",command->postKey,command->postIn);			
 				printf("<><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><><>\n");
-				printf("Please press any key to continue : ");
+				printf("Please press Enter to continue : ");
 				fgets(pCheck,sizeof(pCheck),stdin);
 				sscanf(pCheck,"%s",pCheck);
 				clearScr();
@@ -133,7 +133,7 @@ void getHelp()
 		else
 			{
 			printf("ERROR,plase enter the number between 1-15.\n");
-			printf("Please press any key to continue : ");
+			printf("Please press Enter to continue : ");
 			getchar();
 			}
 		}
