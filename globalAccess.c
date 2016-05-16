@@ -1,3 +1,12 @@
+/********************************************************
+*		  <><><><><><><><><>			*
+*		  <>globalAccess.c<>			*
+*	   	  <><><><><><><><><>			*
+*   This globalAccess.c this the function for add,remove*
+* ,search and free memory of variable.			*
+*	Created by Gittipat Ariyaprayoon ID:58070503440	*
+*				   Section : D		*
+*********************************************************/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

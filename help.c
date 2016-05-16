@@ -1,3 +1,12 @@
+/********************************************************
+*		  <><><><><><><><><>			*
+*		  <>    help.c    <>			*
+*	   	  <><><><><><><><><>			*
+*   This help.c is file that help people to know about	*
+* Pseudo’s command					*
+*	Created by Gittipat Ariyaprayoon ID:58070503440	*
+*				   Section : D		*
+*********************************************************/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

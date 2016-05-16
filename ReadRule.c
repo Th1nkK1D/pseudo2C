@@ -1,3 +1,12 @@
+/********************************************************
+*		  <><><><><><><><><>			*
+*		  <>  ReadRule.c  <>			*
+*	   	  <><><><><><><><><>			*
+*   This help.c is file that help people to know about	*
+* rule of Pseudo code.					*
+*	Created by Gittipat Ariyaprayoon ID:58070503440	*
+*				   Section : D		*
+*********************************************************/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
